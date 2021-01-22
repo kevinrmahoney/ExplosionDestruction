@@ -9,11 +9,20 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/Controller.h"
 #include "Camera/CameraComponent.h"
+#include "EDWeapon.h"
 
 DEFINE_LOG_CATEGORY_STATIC(SideScrollerCharacter, Log, All);
 
 //////////////////////////////////////////////////////////////////////////
 // AExplosionDestructionCharacter
+
+void AExplosionDestructionCharacter::Fire()
+{
+	if (CurrentWeapon)
+	{
+		CurrentWeapon->Fire();
+	}
+}
 
 AExplosionDestructionCharacter::AExplosionDestructionCharacter()
 {
@@ -77,6 +86,8 @@ AExplosionDestructionCharacter::AExplosionDestructionCharacter()
 	// Enable replication on the Sprite component so animations show up when networked
 	GetSprite()->SetIsReplicated(true);
 	bReplicates = true;
+
+	WeaponSocketName = "WeaponSocket";
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -102,6 +113,21 @@ void AExplosionDestructionCharacter::Tick(float DeltaSeconds)
 	UpdateCharacter();	
 }
 
+void AExplosionDestructionCharacter::BeginPlay()
+{
+	Super::BeginPlay();
+
+	FActorSpawnParameters SpawnParams;
+	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+
+	CurrentWeapon = GetWorld()->SpawnActor<AEDWeapon>(StarterWeaponClass, FVector::ZeroVector, FRotator::ZeroRotator, SpawnParams);
+	if (CurrentWeapon)
+	{
+		CurrentWeapon->SetOwner(this);
+		CurrentWeapon->AttachToComponent(GetCapsuleComponent(), FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+	}
+}
+
 
 //////////////////////////////////////////////////////////////////////////
 // Input
@@ -115,6 +141,8 @@ void AExplosionDestructionCharacter::SetupPlayerInputComponent(class UInputCompo
 
 	PlayerInputComponent->BindTouch(IE_Pressed, this, &AExplosionDestructionCharacter::TouchStarted);
 	PlayerInputComponent->BindTouch(IE_Released, this, &AExplosionDestructionCharacter::TouchStopped);
+
+	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &AExplosionDestructionCharacter::Fire);
 }
 
 void AExplosionDestructionCharacter::MoveRight(float Value)

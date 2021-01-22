@@ -7,6 +7,7 @@
 #include "ExplosionDestructionCharacter.generated.h"
 
 class UTextRenderComponent;
+class AEDWeapon;
 
 /**
  * This class is the default character for ExplosionDestruction, and it is responsible for all
@@ -32,6 +33,8 @@ class AExplosionDestructionCharacter : public APaperCharacter
 	UTextRenderComponent* TextComponent;
 	virtual void Tick(float DeltaSeconds) override;
 protected:
+	virtual void BeginPlay() override;
+
 	// The animation to play while running around
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Animations)
 	class UPaperFlipbook* RunningAnimation;
@@ -57,6 +60,16 @@ protected:
 	// APawn interface
 	virtual void SetupPlayerInputComponent(class UInputComponent* InputComponent) override;
 	// End of APawn interface
+
+	AEDWeapon* CurrentWeapon;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Player")
+	TSubclassOf<AEDWeapon> StarterWeaponClass;
+
+	UPROPERTY(VisibleDefaultsOnly, Category = "Player")
+	FName WeaponSocketName;
+
+	void Fire();
 
 public:
 	AExplosionDestructionCharacter();
