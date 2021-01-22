@@ -15,6 +15,11 @@ AEDWeapon::AEDWeapon()
 	RootComponent = SpriteComp;
 }
 
+void AEDWeapon::Tick(float DeltaSeconds)
+{
+	CooldownProgress += DeltaSeconds;
+}
+
 void AEDWeapon::Fire()
 {
 	AActor* MyOwner = GetOwner();
@@ -44,4 +49,6 @@ void AEDWeapon::Fire()
 
 		DrawDebugLine(GetWorld(), ActorLocation, TraceEnd, FColor::Red, false, 1.f, 0, 5.f);
 	}
+
+	CooldownProgress = 0.f;
 }

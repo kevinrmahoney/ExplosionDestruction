@@ -19,9 +19,18 @@ public:
 	AEDWeapon();
 
 protected:
+	virtual void Tick(float DeltaSeconds) override;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	UPaperSpriteComponent* SpriteComp;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
+	float Cooldown = 1.f;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
+	float Ammo = 1.f;
+
+	float CooldownProgress = 0.f;
 
 public:	
 

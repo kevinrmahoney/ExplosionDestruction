@@ -4,8 +4,17 @@
 #include "EDProjectileWeapon.h"
 #include "PaperSpriteComponent.h"
 
+void AEDProjectileWeapon::Tick(float DeltaSeconds)
+{
+	Super::Tick(DeltaSeconds);
+}
+
 void AEDProjectileWeapon::Fire()
 {
+	// Dont shoot if we're still cooling down
+	if(CooldownProgress < Cooldown)
+		return;
+
 	AActor* MyOwner = GetOwner();
 	if (MyOwner && ProjectileClass)
 	{
@@ -26,4 +35,8 @@ void AEDProjectileWeapon::Fire()
 		GetWorld()->SpawnActor<AActor>(ProjectileClass, MuzzleLocation, MouseRotation, SpawnParams);
 		UE_LOG(LogTemp, Warning, TEXT("World Rotation: %s"), *MouseRotation.ToString());
 	}
+
+	UE_LOG(LogTemp, Warning, TEXT("Cooldown Progress: %f"), CooldownProgress);
+
+	CooldownProgress = 0.f;
 }
