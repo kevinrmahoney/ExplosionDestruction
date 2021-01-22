@@ -1,0 +1,125 @@
+{"frames": {
+
+"LaserAnimated 1 (1).png":
+{
+	"frame": {"x":1,"y":260,"w":84,"h":256},
+	"rotated": true,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":84,"h":256},
+	"sourceSize": {"w":84,"h":256}
+},
+"LaserAnimated 1 (2).png":
+{
+	"frame": {"x":101,"y":1,"w":38,"h":257},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":38,"h":257},
+	"sourceSize": {"w":38,"h":257}
+},
+"LaserAnimated 1 (3).png":
+{
+	"frame": {"x":141,"y":1,"w":84,"h":256},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":84,"h":256},
+	"sourceSize": {"w":84,"h":256}
+},
+"LaserAnimated2 (1).png":
+{
+	"frame": {"x":227,"y":1,"w":84,"h":256},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":84,"h":256},
+	"sourceSize": {"w":84,"h":256}
+},
+"LaserAnimated2 (2).png":
+{
+	"frame": {"x":55,"y":1,"w":44,"h":257},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":44,"h":257},
+	"sourceSize": {"w":44,"h":257}
+},
+"LaserAnimated2 (3).png":
+{
+	"frame": {"x":1,"y":346,"w":84,"h":256},
+	"rotated": true,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":84,"h":256},
+	"sourceSize": {"w":84,"h":256}
+},
+"LaserAnimated3 (1).png":
+{
+	"frame": {"x":313,"y":1,"w":84,"h":256},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":84,"h":256},
+	"sourceSize": {"w":84,"h":256}
+},
+"LaserAnimated3 (2).png":
+{
+	"frame": {"x":1,"y":1,"w":52,"h":257},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":52,"h":257},
+	"sourceSize": {"w":52,"h":257}
+},
+"LaserAnimated3 (3).png":
+{
+	"frame": {"x":399,"y":1,"w":84,"h":256},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":84,"h":256},
+	"sourceSize": {"w":84,"h":256}
+},
+"LaserAnimated4 (1).png":
+{
+	"frame": {"x":227,"y":1,"w":84,"h":256},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":84,"h":256},
+	"sourceSize": {"w":84,"h":256}
+},
+"LaserAnimated4 (2).png":
+{
+	"frame": {"x":55,"y":1,"w":44,"h":257},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":44,"h":257},
+	"sourceSize": {"w":44,"h":257}
+},
+"LaserAnimated4 (3).png":
+{
+	"frame": {"x":1,"y":346,"w":84,"h":256},
+	"rotated": true,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":84,"h":256},
+	"sourceSize": {"w":84,"h":256}
+},
+"LaserBottom.png":
+{
+	"frame": {"x":1,"y":432,"w":84,"h":45},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":84,"h":45},
+	"sourceSize": {"w":84,"h":45}
+},
+"LaserTop.png":
+{
+	"frame": {"x":87,"y":432,"w":84,"h":45},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":84,"h":45},
+	"sourceSize": {"w":84,"h":45}
+}},
+"meta": {
+	"app": "https://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"target": "paper2d", 
+	"image": "lasers.png",
+	"format": "RGBA8888",
+	"size": {"w":512,"h":512},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:a2527446172a34c03b7df588426f0703:0cd27157702c602600ddfd21475253b9:212d911c18abc692c6c324c5ce48fae4$"
+}
+}

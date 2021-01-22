@@ -1,0 +1,29 @@
+{"frames": {
+
+"Yellow_Bullet_01.png":
+{
+	"frame": {"x":1,"y":13,"w":12,"h":6},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":10,"y":13,"w":12,"h":6},
+	"sourceSize": {"w":32,"h":32}
+},
+"Yellow_Bullet_02.png":
+{
+	"frame": {"x":1,"y":1,"w":12,"h":10},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":10,"y":11,"w":12,"h":10},
+	"sourceSize": {"w":32,"h":32}
+}},
+"meta": {
+	"app": "https://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"target": "paper2d", 
+	"image": "yellowbullet.png",
+	"format": "RGBA8888",
+	"size": {"w":14,"h":20},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:a958b10effe5cca65d9701451ae1ab9e:060b85c4f00cf26839ea331bbf4ddba2:b448e60c24b2a947c916429059990c80$"
+}
+}

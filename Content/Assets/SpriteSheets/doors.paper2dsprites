@@ -1,0 +1,29 @@
+{"frames": {
+
+"DoorLocked.png":
+{
+	"frame": {"x":1,"y":1,"w":283,"h":467},
+	"rotated": true,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":283,"h":467},
+	"sourceSize": {"w":283,"h":467}
+},
+"DoorUnlocked.png":
+{
+	"frame": {"x":1,"y":286,"w":283,"h":467},
+	"rotated": true,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":283,"h":467},
+	"sourceSize": {"w":283,"h":467}
+}},
+"meta": {
+	"app": "https://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"target": "paper2d", 
+	"image": "doors.png",
+	"format": "RGBA8888",
+	"size": {"w":512,"h":1024},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:a4fa823e216f0170dd55939e9217603b:7bda0b58b7756a6e18f403a843a38515:c398c8144e43cdeb3ca16aee65f0179a$"
+}
+}

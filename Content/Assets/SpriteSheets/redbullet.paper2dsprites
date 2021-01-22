@@ -1,0 +1,29 @@
+{"frames": {
+
+"Player_Red_Bullet_01.png":
+{
+	"frame": {"x":1,"y":13,"w":12,"h":6},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":10,"y":13,"w":12,"h":6},
+	"sourceSize": {"w":32,"h":32}
+},
+"Player_Red_Bullet_02.png":
+{
+	"frame": {"x":1,"y":1,"w":12,"h":10},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":10,"y":11,"w":12,"h":10},
+	"sourceSize": {"w":32,"h":32}
+}},
+"meta": {
+	"app": "https://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"target": "paper2d", 
+	"image": "redbullet.png",
+	"format": "RGBA8888",
+	"size": {"w":14,"h":20},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:d91aa07aaa1874c3a04d3d7649880a2d:eec2aa23d86859d1fdf05f9ecb4eda9f:ab72c51858a1730488611a6d7cf61cfa$"
+}
+}

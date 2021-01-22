@@ -1,0 +1,37 @@
+{"frames": {
+
+"Guy_Idle_01.png":
+{
+	"frame": {"x":1,"y":1,"w":18,"h":29},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":7,"y":3,"w":18,"h":29},
+	"sourceSize": {"w":32,"h":32}
+},
+"Guy_Idle_02.png":
+{
+	"frame": {"x":41,"y":1,"w":18,"h":28},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":7,"y":4,"w":18,"h":28},
+	"sourceSize": {"w":32,"h":32}
+},
+"Guy_Idle_03.png":
+{
+	"frame": {"x":21,"y":1,"w":18,"h":29},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":7,"y":3,"w":18,"h":29},
+	"sourceSize": {"w":32,"h":32}
+}},
+"meta": {
+	"app": "https://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"target": "paper2d", 
+	"image": "redidle.png",
+	"format": "RGBA8888",
+	"size": {"w":60,"h":31},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:250daa18b9a368a9aa5afac9000d7485:9a4888d0fb66b41dd3e1b9cbf0fff606:bc0e04184cbc7fa24b7fee5e45a53716$"
+}
+}

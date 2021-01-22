@@ -1,0 +1,61 @@
+{"frames": {
+
+"DoorAnimated (1).png":
+{
+	"frame": {"x":1,"y":1,"w":283,"h":467},
+	"rotated": true,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":283,"h":467},
+	"sourceSize": {"w":283,"h":467}
+},
+"DoorAnimated (2).png":
+{
+	"frame": {"x":470,"y":1,"w":283,"h":467},
+	"rotated": true,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":283,"h":467},
+	"sourceSize": {"w":283,"h":467}
+},
+"DoorAnimated (3).png":
+{
+	"frame": {"x":1,"y":286,"w":283,"h":467},
+	"rotated": true,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":283,"h":467},
+	"sourceSize": {"w":283,"h":467}
+},
+"DoorAnimated (4).png":
+{
+	"frame": {"x":470,"y":286,"w":283,"h":467},
+	"rotated": true,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":283,"h":467},
+	"sourceSize": {"w":283,"h":467}
+},
+"DoorAnimated (5).png":
+{
+	"frame": {"x":1,"y":571,"w":283,"h":467},
+	"rotated": true,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":283,"h":467},
+	"sourceSize": {"w":283,"h":467}
+},
+"DoorAnimated (6).png":
+{
+	"frame": {"x":470,"y":571,"w":283,"h":467},
+	"rotated": true,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":283,"h":467},
+	"sourceSize": {"w":283,"h":467}
+}},
+"meta": {
+	"app": "https://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"target": "paper2d", 
+	"image": "dooranimated.png",
+	"format": "RGBA8888",
+	"size": {"w":1024,"h":1024},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:1c7140774d882f757ce17578faecf65b:c1e754205d3d1e7f0513f53d9ecaaf71:947ca75d9d0889ee18b32c15422d5ff7$"
+}
+}

@@ -1,0 +1,53 @@
+{"frames": {
+
+"Guy_Crouch_01.png":
+{
+	"frame": {"x":1,"y":1,"w":18,"h":28},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":7,"y":4,"w":18,"h":28},
+	"sourceSize": {"w":32,"h":32}
+},
+"Guy_Crouch_02.png":
+{
+	"frame": {"x":21,"y":1,"w":18,"h":26},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":7,"y":6,"w":18,"h":26},
+	"sourceSize": {"w":32,"h":32}
+},
+"Guy_Crouch_03.png":
+{
+	"frame": {"x":41,"y":1,"w":19,"h":24},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":6,"y":8,"w":19,"h":24},
+	"sourceSize": {"w":32,"h":32}
+},
+"Guy_Crouch_04.png":
+{
+	"frame": {"x":83,"y":1,"w":19,"h":23},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":6,"y":9,"w":19,"h":23},
+	"sourceSize": {"w":32,"h":32}
+},
+"Guy_Crouch_05.png":
+{
+	"frame": {"x":62,"y":1,"w":19,"h":24},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":6,"y":8,"w":19,"h":24},
+	"sourceSize": {"w":32,"h":32}
+}},
+"meta": {
+	"app": "https://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"target": "paper2d", 
+	"image": "redcrouch.png",
+	"format": "RGBA8888",
+	"size": {"w":103,"h":30},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:4c5cdbe75c2ec1df8f3fddfbbb90ec1c:85051a21f280cf38e808ed99cf43a769:9635c3e8fc1ed0fa39af6286f4da341c$"
+}
+}

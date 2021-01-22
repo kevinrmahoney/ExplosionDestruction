@@ -1,0 +1,45 @@
+{"frames": {
+
+"FlameLoop (1).png":
+{
+	"frame": {"x":1,"y":508,"w":459,"h":217},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":88,"w":459,"h":217},
+	"sourceSize": {"w":518,"h":331}
+},
+"FlameLoop (2).png":
+{
+	"frame": {"x":1,"y":252,"w":465,"h":254},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":48,"w":465,"h":254},
+	"sourceSize": {"w":518,"h":331}
+},
+"FlameLoop (3).png":
+{
+	"frame": {"x":1,"y":1,"w":502,"h":249},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":50,"w":502,"h":249},
+	"sourceSize": {"w":518,"h":331}
+},
+"FlameLoop (4).png":
+{
+	"frame": {"x":1,"y":252,"w":465,"h":254},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":48,"w":465,"h":254},
+	"sourceSize": {"w":518,"h":331}
+}},
+"meta": {
+	"app": "https://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"target": "paper2d", 
+	"image": "flameloop.png",
+	"format": "RGBA8888",
+	"size": {"w":512,"h":1024},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:11931f3736e26c06f4efbeac10d872ce:2611cea7dfddfa7b4315f8b414bb2e13:3a9fb23a0e7c26f1f0e91d5686ef5580$"
+}
+}

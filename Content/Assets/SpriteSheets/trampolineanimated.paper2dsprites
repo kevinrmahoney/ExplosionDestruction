@@ -1,0 +1,45 @@
+{"frames": {
+
+"Trampoline (1).png":
+{
+	"frame": {"x":1,"y":1,"w":256,"h":264},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":256,"h":264},
+	"sourceSize": {"w":256,"h":264}
+},
+"Trampoline (2).png":
+{
+	"frame": {"x":1,"y":267,"w":256,"h":209},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":46,"w":256,"h":209},
+	"sourceSize": {"w":256,"h":255}
+},
+"Trampoline (3).png":
+{
+	"frame": {"x":259,"y":1,"w":256,"h":162},
+	"rotated": true,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":93,"w":256,"h":162},
+	"sourceSize": {"w":256,"h":255}
+},
+"Trampoline (4).png":
+{
+	"frame": {"x":1,"y":267,"w":256,"h":209},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":46,"w":256,"h":209},
+	"sourceSize": {"w":256,"h":255}
+}},
+"meta": {
+	"app": "https://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"target": "paper2d", 
+	"image": "trampolineanimated.png",
+	"format": "RGBA8888",
+	"size": {"w":512,"h":512},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:f34c6a6391f4fa6d9a4c83ea30ff2db1:518959a8f78c52d65f6c520e4141f0be:197652fcc9d632ec73f84ed7bb6a4b68$"
+}
+}

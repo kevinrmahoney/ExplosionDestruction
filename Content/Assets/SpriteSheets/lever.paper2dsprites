@@ -1,0 +1,45 @@
+{"frames": {
+
+"ObjectsAnimated.cdr_1.png":
+{
+	"frame": {"x":129,"y":1,"w":122,"h":82},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":4,"y":33,"w":122,"h":82},
+	"sourceSize": {"w":188,"h":115}
+},
+"ObjectsAnimated.cdr_2.png":
+{
+	"frame": {"x":1,"y":79,"w":76,"h":113},
+	"rotated": true,
+	"trimmed": true,
+	"spriteSourceSize": {"x":50,"y":2,"w":76,"h":113},
+	"sourceSize": {"w":188,"h":115}
+},
+"ObjectsAnimated.cdr_3.png":
+{
+	"frame": {"x":1,"y":157,"w":85,"h":110},
+	"rotated": true,
+	"trimmed": true,
+	"spriteSourceSize": {"x":60,"y":5,"w":85,"h":110},
+	"sourceSize": {"w":188,"h":115}
+},
+"ObjectsAnimated.cdr_4.png":
+{
+	"frame": {"x":1,"y":1,"w":126,"h":76},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":60,"y":39,"w":126,"h":76},
+	"sourceSize": {"w":188,"h":115}
+}},
+"meta": {
+	"app": "https://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"target": "paper2d", 
+	"image": "lever.png",
+	"format": "RGBA8888",
+	"size": {"w":256,"h":256},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:57feda045a03d3f468d103e70843e13e:2fed3e07a581a80f9907c42e58f1bba8:e740e655a12f3e9a0657294b719f5666$"
+}
+}

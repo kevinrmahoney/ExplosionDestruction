@@ -1,0 +1,53 @@
+{"frames": {
+
+"Guy_HangShoot_01.png":
+{
+	"frame": {"x":111,"y":1,"w":23,"h":29},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":5,"y":3,"w":23,"h":29},
+	"sourceSize": {"w":32,"h":32}
+},
+"Guy_HangShoot_02.png":
+{
+	"frame": {"x":85,"y":1,"w":24,"h":29},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":5,"y":3,"w":24,"h":29},
+	"sourceSize": {"w":32,"h":32}
+},
+"Guy_HangShoot_03.png":
+{
+	"frame": {"x":30,"y":1,"w":26,"h":29},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":5,"y":3,"w":26,"h":29},
+	"sourceSize": {"w":32,"h":32}
+},
+"Guy_HangShoot_04.png":
+{
+	"frame": {"x":1,"y":1,"w":27,"h":29},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":5,"y":3,"w":27,"h":29},
+	"sourceSize": {"w":32,"h":32}
+},
+"Guy_HangShoot_05.png":
+{
+	"frame": {"x":58,"y":1,"w":25,"h":29},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":5,"y":3,"w":25,"h":29},
+	"sourceSize": {"w":32,"h":32}
+}},
+"meta": {
+	"app": "https://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"target": "paper2d", 
+	"image": "redhangshoot.png",
+	"format": "RGBA8888",
+	"size": {"w":135,"h":31},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:be18d3c1e1ae8ed373e82ec1421215f1:e58cc887cfb6d719d450225ece7a4fef:f53b51f8630b730c785fecd9eac6240b$"
+}
+}

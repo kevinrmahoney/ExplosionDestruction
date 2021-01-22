@@ -1,0 +1,53 @@
+{"frames": {
+
+"Guy_Jump_01.png":
+{
+	"frame": {"x":1,"y":128,"w":23,"h":28},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":5,"y":4,"w":23,"h":28},
+	"sourceSize": {"w":32,"h":32}
+},
+"Guy_Jump_02.png":
+{
+	"frame": {"x":1,"y":97,"w":25,"h":29},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":4,"y":3,"w":25,"h":29},
+	"sourceSize": {"w":32,"h":32}
+},
+"Guy_Jump_03.png":
+{
+	"frame": {"x":1,"y":1,"w":25,"h":30},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":4,"y":2,"w":25,"h":30},
+	"sourceSize": {"w":32,"h":32}
+},
+"Guy_Jump_04.png":
+{
+	"frame": {"x":1,"y":33,"w":25,"h":30},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":4,"y":2,"w":25,"h":30},
+	"sourceSize": {"w":32,"h":32}
+},
+"Guy_Jump_05.png":
+{
+	"frame": {"x":1,"y":65,"w":25,"h":30},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":4,"y":2,"w":25,"h":30},
+	"sourceSize": {"w":32,"h":32}
+}},
+"meta": {
+	"app": "https://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"target": "paper2d", 
+	"image": "redjump.png",
+	"format": "RGBA8888",
+	"size": {"w":27,"h":157},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:8db8b55e25d0a4bdd5cd8bd7e9c56119:27166bed45dec0880f6cac711b805d09:1c88b759551aebdf4c84f449cd00a30b$"
+}
+}

@@ -1,0 +1,29 @@
+{"frames": {
+
+"Guy_Damage_01.png":
+{
+	"frame": {"x":26,"y":1,"w":22,"h":29},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":6,"y":3,"w":22,"h":29},
+	"sourceSize": {"w":32,"h":32}
+},
+"Guy_Damage_02.png":
+{
+	"frame": {"x":1,"y":1,"w":23,"h":29},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":4,"y":3,"w":23,"h":29},
+	"sourceSize": {"w":32,"h":32}
+}},
+"meta": {
+	"app": "https://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"target": "paper2d", 
+	"image": "reddamage.png",
+	"format": "RGBA8888",
+	"size": {"w":49,"h":31},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:db3e95f4d0804a2654135d7290d181ee:bb954d447a5471e81eb16719625ea778:7868aa739d8ff4edefa41537d3f4347e$"
+}
+}

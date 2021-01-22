@@ -1,0 +1,45 @@
+{"frames": {
+
+"Guy_JumpShoot_01.png":
+{
+	"frame": {"x":1,"y":22,"w":21,"h":28},
+	"rotated": true,
+	"trimmed": true,
+	"spriteSourceSize": {"x":10,"y":4,"w":21,"h":28},
+	"sourceSize": {"w":32,"h":32}
+},
+"Guy_JumpShoot_02.png":
+{
+	"frame": {"x":1,"y":1,"w":19,"h":29},
+	"rotated": true,
+	"trimmed": true,
+	"spriteSourceSize": {"x":9,"y":3,"w":19,"h":29},
+	"sourceSize": {"w":32,"h":32}
+},
+"Guy_JumpShoot_03.png":
+{
+	"frame": {"x":31,"y":22,"w":22,"h":30},
+	"rotated": true,
+	"trimmed": true,
+	"spriteSourceSize": {"x":9,"y":2,"w":22,"h":30},
+	"sourceSize": {"w":32,"h":32}
+},
+"Guy_JumpShoot_04.png":
+{
+	"frame": {"x":32,"y":1,"w":19,"h":30},
+	"rotated": true,
+	"trimmed": true,
+	"spriteSourceSize": {"x":9,"y":2,"w":19,"h":30},
+	"sourceSize": {"w":32,"h":32}
+}},
+"meta": {
+	"app": "https://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"target": "paper2d", 
+	"image": "redjumpshoot.png",
+	"format": "RGBA8888",
+	"size": {"w":63,"h":45},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:3c09cdc06d9f42238533be5c33ec345b:c4e0a49654d05e3c1426cb5b1fa760e7:fa0709caf5dc1ace177c0bf175122ffe$"
+}
+}
