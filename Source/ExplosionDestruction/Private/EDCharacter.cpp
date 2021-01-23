@@ -27,6 +27,19 @@ AEDCharacter::AEDCharacter()
 	GetCapsuleComponent()->SetCapsuleHalfHeight(96.0f);
 	GetCapsuleComponent()->SetCapsuleRadius(40.0f);
 
+	// Hit boxes for the wallkicks
+	WallKickTopComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("WallKickTopComponent"));
+	WallKickTopComponent->SetupAttachment(GetSprite());
+
+	WallKickBottomComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("WallKickBottomComponent"));
+	WallKickBottomComponent->SetupAttachment(GetSprite());
+
+	WallKickLeftComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("WallKickLeftComponent"));
+	WallKickLeftComponent->SetupAttachment(GetSprite());
+
+	WallKickRightComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("WallKickRightComponent"));
+	WallKickRightComponent->SetupAttachment(GetSprite());
+
 	// Create a camera boom attached to the root (capsule)
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
 	CameraBoom->SetupAttachment(RootComponent);
@@ -54,9 +67,9 @@ AEDCharacter::AEDCharacter()
 	GetCharacterMovement()->AirControl = 1.8f;
 	GetCharacterMovement()->JumpZVelocity = 800.f;
 	GetCharacterMovement()->GroundFriction = 4.0f;
-	GetCharacterMovement()->MaxWalkSpeed = 975.0f;
+	GetCharacterMovement()->MaxWalkSpeed = 900.0f;
 	GetCharacterMovement()->MaxFlySpeed = 600.0f;
-	GetCharacterMovement()->SetWalkableFloorAngle(45.f);
+	GetCharacterMovement()->SetWalkableFloorAngle(44.f);
 	JumpMaxCount = 2;
 	JumpMaxHoldTime = 0.25f;
 
@@ -110,11 +123,14 @@ void AEDCharacter::Tick(float DeltaSeconds)
 	// Reset JumpCount if we are on the ground
 	if(Grounded)
 		JumpCount = 0;
+	// If we aren't on the ground and we haven't jumped yet, too bad, only get one jump in midair
+	else if(JumpCount == 0)
+		JumpCount = 1;
 
 	// Fire weapon if we are firing
 	if(Shooting && CurrentWeapon)
 	{
-		CurrentWeapon->Fire();
+		CurrentWeapon->Shoot();
 	}
 
 	// We can jump if we are on the ground and trying to jump,
@@ -127,6 +143,9 @@ void AEDCharacter::Tick(float DeltaSeconds)
 
 	// Reset states
 	Jumping = false;
+	
+	if(GetCharacterMovement()->Velocity.Size() > 900.f)
+		UE_LOG(LogTemp, Warning, TEXT("Velocity: %s (%f)"), *GetCharacterMovement()->Velocity.ToString(), GetCharacterMovement()->Velocity.Size());
 }
 
 void AEDCharacter::BeginPlay()
@@ -142,6 +161,16 @@ void AEDCharacter::BeginPlay()
 		CurrentWeapon->SetOwner(this);
 		CurrentWeapon->AttachToComponent(GetCapsuleComponent(), FAttachmentTransformRules::SnapToTargetNotIncludingScale);
 	}
+
+	// Add event for each of the wallkick box components. Need to be in BeginPlay for some reason?
+	WallKickTopComponent->OnComponentBeginOverlap.AddDynamic(this, &AEDCharacter::OnWallKickTopComponentBeginOverlap);
+	WallKickTopComponent->OnComponentEndOverlap.AddDynamic(this, &AEDCharacter::OnWallKickTopComponentEndOverlap);
+	WallKickBottomComponent->OnComponentBeginOverlap.AddDynamic(this, &AEDCharacter::OnWallKickBottomComponentBeginOverlap);
+	WallKickBottomComponent->OnComponentEndOverlap.AddDynamic(this, &AEDCharacter::OnWallKickBottomComponentEndOverlap);
+	WallKickLeftComponent->OnComponentBeginOverlap.AddDynamic(this, &AEDCharacter::OnWallKickLeftComponentBeginOverlap);
+	WallKickLeftComponent->OnComponentEndOverlap.AddDynamic(this, &AEDCharacter::OnWallKickLeftComponentEndOverlap);
+	WallKickRightComponent->OnComponentBeginOverlap.AddDynamic(this, &AEDCharacter::OnWallKickRightComponentBeginOverlap);
+	WallKickRightComponent->OnComponentEndOverlap.AddDynamic(this, &AEDCharacter::OnWallKickRightComponentEndOverlap);
 }
 
 void AEDCharacter::UpdateCharacter()
@@ -186,4 +215,48 @@ void AEDCharacter::SetShooting(bool NewShooting)
 void AEDCharacter::SetJumping(bool NewJumping)
 {
 	Jumping = NewJumping;
+}
+
+// Top
+void AEDCharacter::OnWallKickTopComponentBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	UE_LOG(LogTemp, Warning, TEXT("OnWallKickTopComponentBeginOverlap"));
+}
+
+void AEDCharacter::OnWallKickTopComponentEndOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+	UE_LOG(LogTemp, Warning, TEXT("OnWallKickTopComponentEndOverlap"));
+}
+
+// Bottom
+void AEDCharacter::OnWallKickBottomComponentBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	UE_LOG(LogTemp, Warning, TEXT("OnWallKickBottomComponentBeginOverlap"));
+}
+
+void AEDCharacter::OnWallKickBottomComponentEndOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+	UE_LOG(LogTemp, Warning, TEXT("OnWallKickBottomComponentEndOverlap"));
+}
+
+// Left
+void AEDCharacter::OnWallKickLeftComponentBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	UE_LOG(LogTemp, Warning, TEXT("OnWallKickLeftComponentBeginOverlap"));
+}
+
+void AEDCharacter::OnWallKickLeftComponentEndOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+	UE_LOG(LogTemp, Warning, TEXT("OnWallKickLeftComponentEndOverlap"));
+}
+
+// Right
+void AEDCharacter::OnWallKickRightComponentBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	UE_LOG(LogTemp, Warning, TEXT("OnWallKickRightComponentBeginOverlap"));
+}
+
+void AEDCharacter::OnWallKickRightComponentEndOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+	UE_LOG(LogTemp, Warning, TEXT("OnWallKickRightComponentEndOverlap"));
 }

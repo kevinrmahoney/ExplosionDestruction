@@ -34,5 +34,5 @@ protected:
 
 public:	
 
-	virtual void Fire();
+	virtual void Shoot();
 };
