@@ -9,7 +9,7 @@ void AEDProjectileWeapon::Tick(float DeltaSeconds)
 	Super::Tick(DeltaSeconds);
 }
 
-void AEDProjectileWeapon::Fire()
+void AEDProjectileWeapon::Shoot()
 {
 	// Dont shoot if we're still cooling down
 	if(CooldownProgress < Cooldown)
