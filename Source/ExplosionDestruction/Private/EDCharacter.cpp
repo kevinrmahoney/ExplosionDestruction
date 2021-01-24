@@ -10,6 +10,7 @@
 #include "GameFramework/Controller.h"
 #include "Camera/CameraComponent.h"
 #include "EDWeapon.h"
+#include "Logger.h"
 
 DEFINE_LOG_CATEGORY_STATIC(SideScrollerCharacter, Log, All);
 
@@ -168,6 +169,8 @@ void AEDCharacter::UpdateAnimation(float DeltaSeconds)
 void AEDCharacter::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
+
+	Logger::Info(TEXT("This is a test! Velocity: %s, Speed: %f"), *GetCharacterMovement()->Velocity.ToString(), GetCharacterMovement()->Velocity.Size());
 
 	// Set if the character is on the grounded
 	Grounded = !GetCharacterMovement()->IsFalling();
