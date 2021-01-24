@@ -35,8 +35,16 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Projectile")
 	float MaxSpeed = 2000.f;
 
-	UFUNCTION(BlueprintInternalUseOnly)
-	void HandleHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
+	UPROPERTY(EditDefaultsOnly, Category = "Projectile")
+	float BaseDamage = 100.f;
+
+	UFUNCTION()
+	virtual void HandleHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
+
+	UFUNCTION()
+	virtual void HandleOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
+	virtual void ApplyDamage(AActor* DamagedActor, const FHitResult& Hit);
 
 
 public:	

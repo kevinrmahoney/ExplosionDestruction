@@ -28,7 +28,7 @@ void AEDProjectileWeapon::Fire()
 		MuzzleLocation.Y = 0.f;
 		FActorSpawnParameters SpawnParams;
 		SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-		SpawnParams.Owner = this;
+		SpawnParams.Owner = MyOwner;
 
 		// calculate rotation
 		FRotator MouseRotation = (MouseWorldLocation - MuzzleLocation).Rotation();
