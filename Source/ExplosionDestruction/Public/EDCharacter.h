@@ -49,6 +49,15 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Movement)
 	UBoxComponent* WallKickRightComponent;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Movement)
+	float WallKickSpeed = 800;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Movement)
+	int MaxJumpCount = 2;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Movement)
+	int JumpSpeed = 1000.f;
+
 	// The animation to play while running around
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Animations)
 	class UPaperFlipbook* RunningAnimation;
@@ -61,30 +70,52 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animations)
 	class UPaperFlipbook* JumpingAnimation;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animations)
+	float JumpingAnimationMaxDuration;
+
 	// The animation to play while hanging of a wall/ledge
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animations)
 	class UPaperFlipbook* HangingAnimation;
 
+	// The animation to play while falling
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animations)
+	class UPaperFlipbook* FallingAnimation;
+
 	/** Called to choose the correct animation to play based on the character's movement state */
-	void UpdateAnimation();
+	void UpdateAnimation(float DeltaSeconds);
+
+	float AnimationDuration = 0.f;
 
 	void UpdateCharacter();
 
 	AEDWeapon* CurrentWeapon;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Player")
+	UPROPERTY(EditDefaultsOnly, Category = Weapons)
 	TSubclassOf<AEDWeapon> StarterWeaponClass;
 
-	UPROPERTY(VisibleDefaultsOnly, Category = "Player")
+	UPROPERTY(VisibleDefaultsOnly, Category = Weapons)
 	FName WeaponSocketName;
 
 // States
 	bool Jumping = false;
 	bool Shooting = false;
+	bool Falling = false;
+	bool WallKicking = false;
 	bool Grounded = true;
-	float MovementInput = 0.f;
+	FVector MovementInput = FVector::ZeroVector;
+	float Facing = 1.f; // 1.f if facing right, -1.f if facing left.
+	bool CanWallKick = false; // can only wall kick when we get close to a new wall
 	int JumpCount = 0;
-	int MaxJumpCount = 2;
+	bool Jumped = false; // If we actually jumped
+
+	// If we are overlapping objects to our left, right, top, bottom of character.
+	bool OverlapLeft = false;
+	bool OverlapRight = false;
+	bool OverlapTop = false;
+	bool OverlapBottom = false;
+
+	// Represents the actively set vectors available to wall kick off.
+	FVector WallKickVectorsAvailable = FVector::ZeroVector;
 
 public:
 	AEDCharacter();
