@@ -6,7 +6,6 @@
 #include "GameFramework/Actor.h"
 #include "EDWeapon.generated.h"
 
-class USkeletalMeshComponent;
 class UPaperSpriteComponent;
 
 UCLASS()

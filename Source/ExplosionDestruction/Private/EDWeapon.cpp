@@ -12,6 +12,7 @@ AEDWeapon::AEDWeapon()
 	PrimaryActorTick.bCanEverTick = true;
 
 	SpriteComp = CreateDefaultSubobject<UPaperSpriteComponent>(TEXT("SpriteComp"));
+	SpriteComp->BodyInstance.SetCollisionProfileName(TEXT("NoCollision"));
 	RootComponent = SpriteComp;
 }
 
