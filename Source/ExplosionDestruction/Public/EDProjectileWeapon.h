@@ -6,6 +6,8 @@
 #include "EDWeapon.h"
 #include "EDProjectileWeapon.generated.h"
 
+class AEDProjectile;
+
 /**
  * 
  */
@@ -20,5 +22,7 @@ protected:
 	virtual void Fire() override;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
-	TSubclassOf<AActor> ProjectileClass;
+	TSubclassOf<AEDProjectile> ProjectileClass;
+
+	AEDProjectile* FiredProjectile;
 };

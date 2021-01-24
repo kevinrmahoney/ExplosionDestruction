@@ -3,6 +3,7 @@
 
 #include "EDProjectileWeapon.h"
 #include "PaperSpriteComponent.h"
+#include "EDProjectile.h"
 
 void AEDProjectileWeapon::Tick(float DeltaSeconds)
 {
@@ -27,16 +28,13 @@ void AEDProjectileWeapon::Fire()
 		MuzzleLocation.Y = 0.f;
 		FActorSpawnParameters SpawnParams;
 		SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+		SpawnParams.Owner = this;
 
 		// calculate rotation
 		FRotator MouseRotation = (MouseWorldLocation - MuzzleLocation).Rotation();
-		//FRotator MouseRotation = FRotator(100.01f, 0.f, 100.f);
 
-		GetWorld()->SpawnActor<AActor>(ProjectileClass, MuzzleLocation, MouseRotation, SpawnParams);
-		UE_LOG(LogTemp, Warning, TEXT("World Rotation: %s"), *MouseRotation.ToString());
+		GetWorld()->SpawnActor<AEDProjectile>(ProjectileClass, MuzzleLocation, MouseRotation, SpawnParams);
 	}
-
-	UE_LOG(LogTemp, Warning, TEXT("Cooldown Progress: %f"), CooldownProgress);
 
 	CooldownProgress = 0.f;
 }
