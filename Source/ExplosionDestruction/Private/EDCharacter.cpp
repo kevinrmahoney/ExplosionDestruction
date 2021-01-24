@@ -96,6 +96,7 @@ void AEDCharacter::BeginPlay()
 
 	FActorSpawnParameters SpawnParams;
 	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	SpawnParams.Owner = this;
 
 	CurrentWeapon = GetWorld()->SpawnActor<AEDWeapon>(StarterWeaponClass, FVector::ZeroVector, FRotator::ZeroRotator, SpawnParams);
 	if(CurrentWeapon)
@@ -262,8 +263,6 @@ void AEDCharacter::Tick(float DeltaSeconds)
 
 		// We can only wall kick once per wall. Reset when we get close to another wall
 		CanWallKick = false;
-		WallKickVectorsAvailable = FVector::ZeroVector;
-		WallKicking = true;
 	}
 
 	// Update animation to match the motion
