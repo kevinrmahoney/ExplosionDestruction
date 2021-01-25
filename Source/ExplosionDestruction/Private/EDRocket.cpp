@@ -6,14 +6,7 @@
 #include "DrawDebugHelpers.h"
 #include "PaperSpriteComponent.h"
 #include "Kismet/GameplayStatics.h"
-
-static int32 DebugWeaponDrawing = 0;
-FAutoConsoleVariableRef CVARDebugWeaponDrawing(
-	TEXT("DebugWeapons"),
-	DebugWeaponDrawing,
-	TEXT("Draw debug lines for weapons"),
-	ECVF_Cheat
-);
+#include "Environment.h"
 
 AEDRocket::AEDRocket()
 {
@@ -48,7 +41,7 @@ void AEDRocket::Explode(AActor* DirectHitActor)
 {
 	RadialForceComp->FireImpulse();
 
-	if (DebugWeaponDrawing > 0)
+	if (Environment::DebugWeapons > 0)
 	{
 		DrawDebugSphere(GetWorld(), RadialForceComp->GetComponentLocation(), BlastRadius, 12, FColor::White, false, 1.f, 0, 3.f);
 	}
