@@ -1,0 +1,21 @@
+{"frames": {
+
+"redhangright.png":
+{
+	"frame": {"x":0,"y":0,"w":23,"h":92},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":23,"h":92},
+	"sourceSize": {"w":23,"h":92}
+}},
+"meta": {
+	"app": "https://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"target": "paper2d", 
+	"image": "redhang_right.png",
+	"format": "RGBA8888",
+	"size": {"w":23,"h":92},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:4c1290ba1183597757b2c9674b2c9150:eef81973a46e689dc38df50c42e87408:0f3c290ce558913b3a2ea9bd36cf2bc2$"
+}
+}

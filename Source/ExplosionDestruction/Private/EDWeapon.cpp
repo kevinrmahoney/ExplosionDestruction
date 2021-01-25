@@ -12,6 +12,7 @@ AEDWeapon::AEDWeapon()
 	PrimaryActorTick.bCanEverTick = true;
 
 	SpriteComp = CreateDefaultSubobject<UPaperSpriteComponent>(TEXT("SpriteComp"));
+	SpriteComp->BodyInstance.SetCollisionProfileName(TEXT("NoCollision"));
 	RootComponent = SpriteComp;
 }
 
@@ -20,7 +21,7 @@ void AEDWeapon::Tick(float DeltaSeconds)
 	CooldownProgress += DeltaSeconds;
 }
 
-void AEDWeapon::Fire()
+void AEDWeapon::Shoot()
 {
 	AActor* MyOwner = GetOwner();
 	if (MyOwner)

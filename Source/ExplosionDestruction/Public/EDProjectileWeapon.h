@@ -6,6 +6,8 @@
 #include "EDWeapon.h"
 #include "EDProjectileWeapon.generated.h"
 
+class AEDProjectile;
+
 /**
  * 
  */
@@ -17,8 +19,10 @@ class EXPLOSIONDESTRUCTION_API AEDProjectileWeapon : public AEDWeapon
 protected:
 	virtual void Tick(float DeltaSeconds) override;
 
-	virtual void Fire() override;
+	virtual void Shoot() override;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
-	TSubclassOf<AActor> ProjectileClass;
+	TSubclassOf<AEDProjectile> ProjectileClass;
+
+	AEDProjectile* FiredProjectile;
 };

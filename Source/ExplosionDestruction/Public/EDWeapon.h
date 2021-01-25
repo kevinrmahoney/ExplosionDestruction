@@ -6,7 +6,6 @@
 #include "GameFramework/Actor.h"
 #include "EDWeapon.generated.h"
 
-class USkeletalMeshComponent;
 class UPaperSpriteComponent;
 
 UCLASS()
@@ -34,5 +33,5 @@ protected:
 
 public:	
 
-	virtual void Fire();
+	virtual void Shoot();
 };
