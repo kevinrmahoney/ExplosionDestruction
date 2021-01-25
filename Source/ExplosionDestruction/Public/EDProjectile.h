@@ -38,6 +38,12 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Projectile")
 	float BaseDamage = 100.f;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Projectile")
+	bool bShouldDestroyOnHit;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Projectile")
+	bool bShouldDestroyOnOverlap;
+
 	UFUNCTION()
 	virtual void HandleHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
 
