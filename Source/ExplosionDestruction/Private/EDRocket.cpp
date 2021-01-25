@@ -8,11 +8,13 @@
 #include "Kismet/GameplayStatics.h"
 #include "Environment.h"
 #include "Logger.h"
+#include "TimerManager.h"
 
 AEDRocket::AEDRocket()
 {
-	BlastRadius = 100.f;
+	BlastRadius = 150.f;
 	BlastStrength = 2000.f;
+	ExplosionDelay = 0.f;
 	RadialForceComp = CreateDefaultSubobject<URadialForceComponent>(TEXT("RadialForceComp"));
 	RadialForceComp->Radius = BlastRadius;
 	RadialForceComp->ForceStrength = 0.f; // we aren't using the force
@@ -26,6 +28,8 @@ void AEDRocket::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	GetWorldTimerManager().SetTimer(TimerHandle_ExplosionDelay, this, &AEDRocket::DestroySelf, ExplosionDelay, true);
+
 	OnDestroyed.AddDynamic(this, &AEDRocket::Explode);
 }
 
@@ -34,13 +38,12 @@ void AEDRocket::HandleHit(UPrimitiveComponent* HitComponent, AActor* OtherActor,
 {
 	// later, add custom handling for damage since it will deal radial damage
 	Super::HandleHit(HitComponent, OtherActor, OtherComp, NormalImpulse, Hit);
-
-	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), BlastEffect, Hit.ImpactPoint, Hit.ImpactNormal.Rotation());
 }
 
 void AEDRocket::Explode(AActor* DirectHitActor)
 {
 	RadialForceComp->FireImpulse();
+	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), BlastEffect, DirectHitActor->GetActorLocation(), DirectHitActor->GetActorRotation());
 
 	Logger::Info(TEXT("%f"), BlastRadius);
 
@@ -49,3 +52,9 @@ void AEDRocket::Explode(AActor* DirectHitActor)
 		DrawDebugSphere(GetWorld(), RadialForceComp->GetComponentLocation(), BlastRadius, 12, FColor::White, false, 1.f, 0, 3.f);
 	}
 }
+
+void AEDRocket::DestroySelf()
+{
+	Destroy();
+}
+

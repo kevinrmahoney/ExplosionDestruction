@@ -11,6 +11,10 @@
 #include "Camera/CameraComponent.h"
 #include "EDWeapon.h"
 #include "Logger.h"
+#include "Engine/Canvas.h"
+#include "Engine/Texture2D.h"
+#include "TextureResource.h"
+#include "Blueprint/UserWidget.h"
 
 DEFINE_LOG_CATEGORY_STATIC(SideScrollerCharacter, Log, All);
 
@@ -251,6 +255,7 @@ void AEDCharacter::Tick(float DeltaSeconds)
 		GetCharacterMovement()->Velocity.Z = JumpSpeed;
 		GetCharacterMovement()->SetMovementMode(MOVE_Falling); // If we don't do this, the movement isn't applied.
 		Jumped = true;
+		//PlayJumpSound();
 	}
 
 	// Apply the input to the character motion from left/right input
