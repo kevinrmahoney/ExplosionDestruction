@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "PaperCharacter.h"
 #include "Components/BoxComponent.h"
+#include "EDHealthBar.h"
 #include "EDCharacter.generated.h"
 
 class UTextRenderComponent;
@@ -23,19 +24,86 @@ class AEDCharacter : public APaperCharacter
 {
 	GENERATED_BODY()
 
+public:
+	AEDCharacter();
+
+	/** Returns SideViewCameraComponent subobject **/
+	FORCEINLINE class UCameraComponent* GetSideViewCameraComponent() const { return SideViewCameraComponent; }
+	/** Returns CameraBoom subobject **/
+	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
+
+	/** Called for side to side input */
+	void SetMoving(float Value);
+
+	void SetShooting(bool NewShooting);
+
+	void SetJumping(bool NewJumping);
+
+	UFUNCTION(BlueprintCallable)
+	float GetHealth();
+
+	UFUNCTION(BlueprintCallable)
+	float GetMaxHealth();
+
+	UFUNCTION(BlueprintCallable)
+	float GetAmmo();
+
+	UFUNCTION(BlueprintCallable)
+	float GetSpeed();
+
+	// Wall Kick Overlap Events
+	// Top
+	UFUNCTION()
+	void OnWallKickTopComponentBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
+	UFUNCTION()
+	void OnWallKickTopComponentEndOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+
+	// Bottom
+	UFUNCTION()
+	void OnWallKickBottomComponentBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
+	UFUNCTION()
+	void OnWallKickBottomComponentEndOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+
+	// Left
+	UFUNCTION()
+	void OnWallKickLeftComponentBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
+	UFUNCTION()
+	void OnWallKickLeftComponentEndOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+
+	// Right
+	UFUNCTION()
+	void OnWallKickRightComponentBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
+	UFUNCTION()
+	void OnWallKickRightComponentEndOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+
+private:
+	/** Crosshair asset pointer */
+	UPROPERTY(EditAnywhere, Category = "Crosshair")
+	UTexture2D* CrosshairTexture;
+
+	UPROPERTY(EditAnywhere, Category = "Health")
+	TSubclassOf<class UEDHealthBar> HUDWidgetClass;
+
+	UPROPERTY(EditAnywhere, Category = "Health")
+	class UEDHealthBar* CurrentWidget;
+
+protected:
+	virtual void Tick(float DeltaSeconds) override;
+	virtual void BeginPlay() override;
+
 	/** Side view camera */
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera, meta=(AllowPrivateAccess="true"))
-	class UCameraComponent* SideViewCameraComponent;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+		class UCameraComponent* SideViewCameraComponent;
 
 	/** Camera boom positioning the camera beside the character */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-	class USpringArmComponent* CameraBoom;
+		class USpringArmComponent* CameraBoom;
 
 	UTextRenderComponent* TextComponent;
-	virtual void Tick(float DeltaSeconds) override;
-
-protected:
-	virtual void BeginPlay() override;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Movement)
 	UBoxComponent* WallKickTopComponent;
@@ -96,6 +164,9 @@ protected:
 	UPROPERTY(VisibleDefaultsOnly, Category = Weapons)
 	FName WeaponSocketName;
 
+	UPROPERTY(EditDefaultsOnly, Category = Character)
+	float MaxHealth = 100.f;
+
 // States
 	bool Jumping = false;
 	bool Shooting = false;
@@ -107,6 +178,8 @@ protected:
 	bool CanWallKick = false; // can only wall kick when we get close to a new wall
 	int JumpCount = 0;
 	bool Jumped = false; // If we actually jumped
+	float Health = MaxHealth;
+	float Ammo = 10.f;
 
 	// If we are overlapping objects to our left, right, top, bottom of character.
 	bool OverlapLeft = false;
@@ -116,48 +189,4 @@ protected:
 
 	// Represents the actively set vectors available to wall kick off.
 	FVector WallKickVectorsAvailable = FVector::ZeroVector;
-
-public:
-	AEDCharacter();
-
-	/** Returns SideViewCameraComponent subobject **/
-	FORCEINLINE class UCameraComponent* GetSideViewCameraComponent() const { return SideViewCameraComponent; }
-	/** Returns CameraBoom subobject **/
-	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
-
-	/** Called for side to side input */
-	void SetMoving(float Value);
-
-	void SetShooting(bool NewShooting);
-
-	void SetJumping(bool NewJumping);
-
-	// Wall Kick Overlap Events
-	// Top
-	UFUNCTION()
-	void OnWallKickTopComponentBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
-	
-	UFUNCTION()
-	void OnWallKickTopComponentEndOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
-
-	// Bottom
-	UFUNCTION()
-	void OnWallKickBottomComponentBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
-	
-	UFUNCTION()
-	void OnWallKickBottomComponentEndOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
-
-	// Left
-	UFUNCTION()
-	void OnWallKickLeftComponentBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
-	
-	UFUNCTION()
-	void OnWallKickLeftComponentEndOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
-
-	// Right
-	UFUNCTION()
-	void OnWallKickRightComponentBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
-	
-	UFUNCTION()
-	void OnWallKickRightComponentEndOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 };

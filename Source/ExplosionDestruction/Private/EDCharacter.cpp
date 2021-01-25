@@ -11,6 +11,10 @@
 #include "Camera/CameraComponent.h"
 #include "EDWeapon.h"
 #include "Logger.h"
+#include "Engine/Canvas.h"
+#include "Engine/Texture2D.h"
+#include "TextureResource.h"
+#include "Blueprint/UserWidget.h"
 
 DEFINE_LOG_CATEGORY_STATIC(SideScrollerCharacter, Log, All);
 
@@ -117,6 +121,17 @@ void AEDCharacter::BeginPlay()
 
 	// Facing right by default
 	Facing = 1.f;
+
+	if(HUDWidgetClass != nullptr)
+	{
+		CurrentWidget = CreateWidget<UEDHealthBar>(GetWorld(), HUDWidgetClass);
+
+		if(CurrentWidget)
+		{
+			CurrentWidget->SetCharacter(this);
+			CurrentWidget->AddToViewport();
+		}
+	}
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -331,6 +346,27 @@ void AEDCharacter::SetShooting(bool NewShooting)
 void AEDCharacter::SetJumping(bool NewJumping)
 {
 	Jumping = NewJumping;
+}
+
+
+float AEDCharacter::GetHealth()
+{
+	return Health;
+}
+
+float AEDCharacter::GetMaxHealth()
+{
+	return MaxHealth;
+}
+
+float AEDCharacter::GetAmmo()
+{
+	return Ammo;
+}
+
+float AEDCharacter::GetSpeed()
+{
+	return GetCharacterMovement()->Velocity.Size();
 }
 
 // Top
