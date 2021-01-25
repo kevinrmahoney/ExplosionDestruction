@@ -7,6 +7,7 @@
 #include "PaperSpriteComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Environment.h"
+#include "Logger.h"
 
 AEDRocket::AEDRocket()
 {
@@ -40,6 +41,8 @@ void AEDRocket::HandleHit(UPrimitiveComponent* HitComponent, AActor* OtherActor,
 void AEDRocket::Explode(AActor* DirectHitActor)
 {
 	RadialForceComp->FireImpulse();
+
+	Logger::Info(TEXT("%f"), BlastRadius);
 
 	if (Environment::DebugWeapons > 0)
 	{

@@ -144,6 +144,12 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Movement)
 	int JumpSpeed = 1000.f;
 
+	UPROPERTY(EditDefaultsOnly, Category = Movement)
+	float EditDefaultsOnlyVar = 10.f;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Movement)
+	float EditDefaultsOnlyBlueprintReadWriteVar = 10.f;
+
 	// The animation to play while running around
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Animations)
 	class UPaperFlipbook* RunningAnimation;
