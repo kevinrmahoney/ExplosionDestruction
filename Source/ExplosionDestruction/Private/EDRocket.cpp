@@ -7,6 +7,7 @@
 #include "PaperSpriteComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Environment.h"
+#include "Logger.h"
 #include "TimerManager.h"
 
 AEDRocket::AEDRocket()
@@ -43,6 +44,8 @@ void AEDRocket::Explode(AActor* DirectHitActor)
 {
 	RadialForceComp->FireImpulse();
 	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), BlastEffect, DirectHitActor->GetActorLocation(), DirectHitActor->GetActorRotation());
+
+	Logger::Info(TEXT("%f"), BlastRadius);
 
 	if (Environment::DebugWeapons > 0)
 	{

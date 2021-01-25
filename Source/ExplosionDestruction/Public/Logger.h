@@ -75,13 +75,13 @@ private:
 			TimeStamp = FString::Printf(TEXT("[%s]"), *GetTimeStamp());
 
 		if(ELogVerbosity::Fatal == LogVerbosity)
-			UE_LOG(LogTemp, Fatal, TEXT("%s%s%s"), *TimeStamp, *TickStamp, *Message);
+			UE_LOG(LogTemp, Fatal, TEXT("%s%s %s"), *TimeStamp, *TickStamp, *Message);
 		if(ELogVerbosity::Error == LogVerbosity)
-			UE_LOG(LogTemp, Error, TEXT("%s%s%s"), *TimeStamp, *TickStamp, *Message);
+			UE_LOG(LogTemp, Error, TEXT("%s%s %s"), *TimeStamp, *TickStamp, *Message);
 		if(ELogVerbosity::Warning == LogVerbosity)
-			UE_LOG(LogTemp, Warning, TEXT("%s%s%s"), *TimeStamp, *TickStamp, *Message);
+			UE_LOG(LogTemp, Warning, TEXT("%s%s %s"), *TimeStamp, *TickStamp, *Message);
 		if(ELogVerbosity::Display == LogVerbosity)
-			UE_LOG(LogTemp, Display, TEXT("%s%s%s"), *TimeStamp, *TickStamp, *Message);
+			UE_LOG(LogTemp, Display, TEXT("%s%s %s"), *TimeStamp, *TickStamp, *Message);
 
 		if(bShowOnScreen && GEngine)
 			GEngine->AddOnScreenDebugMessage(-1, 15.0f, Color, *Message);

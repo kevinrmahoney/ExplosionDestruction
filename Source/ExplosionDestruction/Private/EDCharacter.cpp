@@ -122,14 +122,36 @@ void AEDCharacter::BeginPlay()
 	// Facing right by default
 	Facing = 1.f;
 
-	if(HUDWidgetClass != nullptr)
+	if(HUDHealthWidgetClass != nullptr)
 	{
-		CurrentWidget = CreateWidget<UEDHealthBar>(GetWorld(), HUDWidgetClass);
+		HealthWidget = CreateWidget<UEDHealthBar>(GetWorld(), HUDHealthWidgetClass);
 
-		if(CurrentWidget)
+		if(HealthWidget)
 		{
-			CurrentWidget->SetCharacter(this);
-			CurrentWidget->AddToViewport();
+			HealthWidget->SetCharacter(this);
+			HealthWidget->AddToViewport();
+		}
+	}
+
+	if(HUDAmmoWidgetClass != nullptr)
+	{
+		AmmoWidget = CreateWidget<UEDAmmoCount>(GetWorld(), HUDAmmoWidgetClass);
+
+		if(AmmoWidget)
+		{
+			AmmoWidget->SetCharacter(this);
+			AmmoWidget->AddToViewport();
+		}
+	}
+
+	if(HUDSpedometerWidgetClass != nullptr)
+	{
+		SpedometerWidget = CreateWidget<UEDSpedometer>(GetWorld(), HUDSpedometerWidgetClass);
+
+		if(SpedometerWidget)
+		{
+			SpedometerWidget->SetCharacter(this);
+			SpedometerWidget->AddToViewport();
 		}
 	}
 }
