@@ -29,6 +29,8 @@ protected:
 	UFUNCTION()
 	void Explode(AActor* DirectHitActor);
 
+	void DestroySelf();
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	URadialForceComponent* RadialForceComp;
 
@@ -38,6 +40,12 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Projectile")
 	float BlastStrength;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Projectile")
+	float ExplosionDelay;
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Effects")
 	UParticleSystem* BlastEffect;
+
+	FTimerHandle TimerHandle_ExplosionDelay;
+
 };
