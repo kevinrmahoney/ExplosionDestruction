@@ -3,3 +3,17 @@
 
 #include "EDPlayHUD.h"
 
+AEDPlayHUD::AEDPlayHUD()
+{
+}
+
+
+void AEDPlayHUD::DrawHUD()
+{
+	Super::DrawHUD();
+}
+
+void AEDPlayHUD::BeginPlay()
+{
+	Super::BeginPlay();
+}

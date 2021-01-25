@@ -13,5 +13,12 @@ UCLASS()
 class EXPLOSIONDESTRUCTION_API AEDPlayHUD : public AHUD
 {
 	GENERATED_BODY()
+
+	AEDPlayHUD();
+
+	/** Primary draw call for the HUD */
+	virtual void DrawHUD() override;
+
+	virtual void BeginPlay() override;
 	
 };
