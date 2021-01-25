@@ -6,6 +6,8 @@
 #include "PaperCharacter.h"
 #include "Components/BoxComponent.h"
 #include "EDHealthBar.h"
+#include "EDAmmoCount.h"
+#include "EDSpedometer.h"
 #include "EDCharacter.generated.h"
 
 class UTextRenderComponent;
@@ -81,15 +83,31 @@ public:
 	void OnWallKickRightComponentEndOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
 private:
-	/** Crosshair asset pointer */
+
+	// HUD stuff TODO: Put this all in a base HUD class
 	UPROPERTY(EditAnywhere, Category = "Crosshair")
 	UTexture2D* CrosshairTexture;
 
-	UPROPERTY(EditAnywhere, Category = "Health")
-	TSubclassOf<class UEDHealthBar> HUDWidgetClass;
+	// Health
+	UPROPERTY(EditAnywhere, Category = "HUD")
+	TSubclassOf<class UEDHealthBar> HUDHealthWidgetClass;
 
-	UPROPERTY(EditAnywhere, Category = "Health")
-	class UEDHealthBar* CurrentWidget;
+	UPROPERTY(EditAnywhere, Category = "HUD")
+	class UEDHealthBar* HealthWidget;
+
+	// Ammo
+	UPROPERTY(EditAnywhere, Category = "HUD")
+	TSubclassOf<class UEDAmmoCount> HUDAmmoWidgetClass;
+
+	UPROPERTY(EditAnywhere, Category = "HUD")
+	class UEDAmmoCount* AmmoWidget;
+
+	// Speed
+	UPROPERTY(EditAnywhere, Category = "HUD")
+	TSubclassOf<class UEDSpedometer> HUDSpedometerWidgetClass;
+
+	UPROPERTY(EditAnywhere, Category = "HUD")
+	class UEDSpedometer* SpedometerWidget;
 
 protected:
 	virtual void Tick(float DeltaSeconds) override;
@@ -97,11 +115,11 @@ protected:
 
 	/** Side view camera */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-		class UCameraComponent* SideViewCameraComponent;
+	class UCameraComponent* SideViewCameraComponent;
 
 	/** Camera boom positioning the camera beside the character */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-		class USpringArmComponent* CameraBoom;
+	class USpringArmComponent* CameraBoom;
 
 	UTextRenderComponent* TextComponent;
 

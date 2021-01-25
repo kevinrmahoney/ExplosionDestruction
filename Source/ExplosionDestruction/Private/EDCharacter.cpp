@@ -11,10 +11,6 @@
 #include "Camera/CameraComponent.h"
 #include "EDWeapon.h"
 #include "Logger.h"
-#include "Engine/Canvas.h"
-#include "Engine/Texture2D.h"
-#include "TextureResource.h"
-#include "Blueprint/UserWidget.h"
 
 DEFINE_LOG_CATEGORY_STATIC(SideScrollerCharacter, Log, All);
 
@@ -122,14 +118,36 @@ void AEDCharacter::BeginPlay()
 	// Facing right by default
 	Facing = 1.f;
 
-	if(HUDWidgetClass != nullptr)
+	if(HUDHealthWidgetClass != nullptr)
 	{
-		CurrentWidget = CreateWidget<UEDHealthBar>(GetWorld(), HUDWidgetClass);
+		HealthWidget = CreateWidget<UEDHealthBar>(GetWorld(), HUDHealthWidgetClass);
 
-		if(CurrentWidget)
+		if(HealthWidget)
 		{
-			CurrentWidget->SetCharacter(this);
-			CurrentWidget->AddToViewport();
+			HealthWidget->SetCharacter(this);
+			HealthWidget->AddToViewport();
+		}
+	}
+
+	if(HUDAmmoWidgetClass != nullptr)
+	{
+		AmmoWidget = CreateWidget<UEDAmmoCount>(GetWorld(), HUDAmmoWidgetClass);
+
+		if(AmmoWidget)
+		{
+			AmmoWidget->SetCharacter(this);
+			AmmoWidget->AddToViewport();
+		}
+	}
+
+	if(HUDSpedometerWidgetClass != nullptr)
+	{
+		SpedometerWidget = CreateWidget<UEDSpedometer>(GetWorld(), HUDSpedometerWidgetClass);
+
+		if(SpedometerWidget)
+		{
+			SpedometerWidget->SetCharacter(this);
+			SpedometerWidget->AddToViewport();
 		}
 	}
 }
