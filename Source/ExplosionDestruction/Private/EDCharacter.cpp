@@ -218,7 +218,7 @@ void AEDCharacter::Tick(float DeltaSeconds)
 		GetCharacterMovement()->Velocity.Z = JumpSpeed;
 		GetCharacterMovement()->SetMovementMode(MOVE_Falling); // If we don't do this, the movement isn't applied.
 		Jumped = true;
-		PlayJumpSound();
+		//PlayJumpSound();
 	}
 
 	// Apply the input to the character motion from left/right input

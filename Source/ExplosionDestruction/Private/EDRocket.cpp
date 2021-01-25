@@ -13,7 +13,7 @@ AEDRocket::AEDRocket()
 {
 	BlastRadius = 150.f;
 	BlastStrength = 2000.f;
-	ExplosionDelay = 1.f;
+	ExplosionDelay = 0.f;
 	RadialForceComp = CreateDefaultSubobject<URadialForceComponent>(TEXT("RadialForceComp"));
 	RadialForceComp->Radius = BlastRadius;
 	RadialForceComp->ForceStrength = 0.f; // we aren't using the force
