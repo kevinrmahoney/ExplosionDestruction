@@ -7,8 +7,8 @@
 #include "PaperSpriteComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Environment.h"
-#include "Logger.h"
 #include "TimerManager.h"
+#include "Logger.h"
 
 AEDRocket::AEDRocket()
 {
@@ -17,9 +17,9 @@ AEDRocket::AEDRocket()
 	ExplosionDelay = 0.f;
 	RadialForceComp = CreateDefaultSubobject<URadialForceComponent>(TEXT("RadialForceComp"));
 	RadialForceComp->Radius = BlastRadius;
-	RadialForceComp->ForceStrength = 0.f; // we aren't using the force
-	RadialForceComp->Falloff = ERadialImpulseFalloff::RIF_Constant;
 	RadialForceComp->ImpulseStrength = BlastStrength;
+	RadialForceComp->ForceStrength = 0.f; // we aren't using the force
+	RadialForceComp->Falloff = ERadialImpulseFalloff::RIF_Linear;
 	RadialForceComp->bImpulseVelChange = true;
 	RadialForceComp->SetupAttachment(SpriteComp);
 }
@@ -27,6 +27,9 @@ AEDRocket::AEDRocket()
 void AEDRocket::BeginPlay()
 {
 	Super::BeginPlay();
+
+	RadialForceComp->Radius = BlastRadius;
+	RadialForceComp->ImpulseStrength = BlastStrength;
 	
 	GetWorldTimerManager().SetTimer(TimerHandle_ExplosionDelay, this, &AEDRocket::DestroySelf, ExplosionDelay, true);
 
@@ -44,8 +47,6 @@ void AEDRocket::Explode(AActor* DirectHitActor)
 {
 	RadialForceComp->FireImpulse();
 	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), BlastEffect, DirectHitActor->GetActorLocation(), DirectHitActor->GetActorRotation());
-
-	Logger::Info(TEXT("%f"), BlastRadius);
 
 	if (Environment::DebugWeapons > 0)
 	{
