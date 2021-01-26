@@ -29,6 +29,9 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
 	float Ammo = 1.f;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
+	float BaseDamage = 20.f;
+
 	float CooldownProgress = Cooldown; // Set progress to Cooldown so we can shoot right away after spawning.
 
 public:	
