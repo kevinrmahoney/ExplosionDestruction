@@ -5,12 +5,9 @@
 #include "CoreMinimal.h"
 #include "PaperCharacter.h"
 #include "Components/BoxComponent.h"
-#include "EDHealthBar.h"
-#include "EDAmmoCount.h"
-#include "EDSpedometer.h"
+#include "EDBaseHUD.h"
 #include "EDCharacter.generated.h"
 
-class UTextRenderComponent;
 class AEDWeapon;
 
 /**
@@ -82,47 +79,32 @@ public:
 	UFUNCTION()
 	void OnWallKickRightComponentEndOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
-private:
-
-	// HUD stuff TODO: Put this all in a base HUD class
-	UPROPERTY(EditAnywhere, Category = "Crosshair")
-	UTexture2D* CrosshairTexture;
-
-	// Health
-	UPROPERTY(EditAnywhere, Category = "HUD")
-	TSubclassOf<class UEDHealthBar> HUDHealthWidgetClass;
-
-	UPROPERTY(EditAnywhere, Category = "HUD")
-	class UEDHealthBar* HealthWidget;
-
-	// Ammo
-	UPROPERTY(EditAnywhere, Category = "HUD")
-	TSubclassOf<class UEDAmmoCount> HUDAmmoWidgetClass;
-
-	UPROPERTY(EditAnywhere, Category = "HUD")
-	class UEDAmmoCount* AmmoWidget;
-
-	// Speed
-	UPROPERTY(EditAnywhere, Category = "HUD")
-	TSubclassOf<class UEDSpedometer> HUDSpedometerWidgetClass;
-
-	UPROPERTY(EditAnywhere, Category = "HUD")
-	class UEDSpedometer* SpedometerWidget;
-
 protected:
+
 	virtual void Tick(float DeltaSeconds) override;
 	virtual void BeginPlay() override;
+	virtual void BeginDestroy() override;
+
+	/* HUD */
+	UPROPERTY(EditAnywhere, Category = "HUD")
+	TSubclassOf<class UEDBaseHUD> BaseHUDClass;
+	class UEDBaseHUD* BaseHUD;
+
+	// Updates the HUD (if needed)
+	void UpdateHUD();
+
 
 	/** Side view camera */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class UCameraComponent* SideViewCameraComponent;
 
+
 	/** Camera boom positioning the camera beside the character */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-		class USpringArmComponent* CameraBoom;
+	class USpringArmComponent* CameraBoom;
 
-	UTextRenderComponent* TextComponent;
 
+	/* Wall Kick Collision Boxes */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Movement)
 	UBoxComponent* WallKickTopComponent;
 
@@ -135,6 +117,8 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Movement)
 	UBoxComponent* WallKickRightComponent;
 
+
+	/* Movement parameters */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Movement)
 	float WallKickSpeed = 800;
 
@@ -144,11 +128,8 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Movement)
 	int JumpSpeed = 1000.f;
 
-	UPROPERTY(EditDefaultsOnly, Category = Movement)
-	float EditDefaultsOnlyVar = 10.f;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Movement)
-	float EditDefaultsOnlyBlueprintReadWriteVar = 10.f;
+	/* Animations */
 
 	// The animation to play while running around
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Animations)
@@ -178,8 +159,10 @@ protected:
 
 	float AnimationDuration = 0.f;
 
+	// Updates Character variables
 	void UpdateCharacter();
 
+	/* Weapons */
 	AEDWeapon* CurrentWeapon;
 
 	UPROPERTY(EditDefaultsOnly, Category = Weapons)
@@ -190,6 +173,25 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = Character)
 	float MaxHealth = 100.f;
+
+	/* Blueprint Implementable Events (for sounds, graphics, etc) */
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+	bool EventJump();
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+	bool EventWallKick();
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+	bool EventLanded();
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+	bool EventDamageTaken();
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+	bool EventSlideBegin();
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+	bool EventSlideEnd();
 
 // States
 	bool Jumping = false;
@@ -204,6 +206,8 @@ protected:
 	bool Jumped = false; // If we actually jumped
 	float Health = MaxHealth;
 	float Ammo = 10.f;
+	bool bUpdateHUD = false;
+	FVector OldVelocity = FVector::ZeroVector;
 
 	// If we are overlapping objects to our left, right, top, bottom of character.
 	bool OverlapLeft = false;

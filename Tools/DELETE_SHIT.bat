@@ -1,3 +1,4 @@
+cd ..
 del ExplosionDestruction.sln
 rmdir Binaries /s /q
 rmdir DerivedDataCache /s /q

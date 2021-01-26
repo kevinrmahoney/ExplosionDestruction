@@ -11,9 +11,6 @@
 #include "Camera/CameraComponent.h"
 #include "EDWeapon.h"
 #include "Logger.h"
-#include "Engine/Canvas.h"
-#include "Engine/Texture2D.h"
-#include "TextureResource.h"
 #include "Blueprint/UserWidget.h"
 
 DEFINE_LOG_CATEGORY_STATIC(SideScrollerCharacter, Log, All);
@@ -122,38 +119,26 @@ void AEDCharacter::BeginPlay()
 	// Facing right by default
 	Facing = 1.f;
 
-	if(HUDHealthWidgetClass != nullptr)
+	if(BaseHUDClass != nullptr)
 	{
-		HealthWidget = CreateWidget<UEDHealthBar>(GetWorld(), HUDHealthWidgetClass);
+		BaseHUD = CreateWidget<UEDBaseHUD>(GetWorld(), BaseHUDClass);
 
-		if(HealthWidget)
+		if(BaseHUD)
 		{
-			HealthWidget->SetCharacter(this);
-			HealthWidget->AddToViewport();
+			BaseHUD->SetCharacter(this);
+			BaseHUD->AddToViewport();
+			BaseHUD->Update();
 		}
 	}
+}
 
-	if(HUDAmmoWidgetClass != nullptr)
-	{
-		AmmoWidget = CreateWidget<UEDAmmoCount>(GetWorld(), HUDAmmoWidgetClass);
+void AEDCharacter::BeginDestroy()
+{
+	if(BaseHUD)
+		BaseHUD->RemoveFromViewport();
 
-		if(AmmoWidget)
-		{
-			AmmoWidget->SetCharacter(this);
-			AmmoWidget->AddToViewport();
-		}
-	}
-
-	if(HUDSpedometerWidgetClass != nullptr)
-	{
-		SpedometerWidget = CreateWidget<UEDSpedometer>(GetWorld(), HUDSpedometerWidgetClass);
-
-		if(SpedometerWidget)
-		{
-			SpedometerWidget->SetCharacter(this);
-			SpedometerWidget->AddToViewport();
-		}
-	}
+	if(this)
+		Super::BeginDestroy();
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -223,6 +208,7 @@ void AEDCharacter::Tick(float DeltaSeconds)
 	if(Shooting && CurrentWeapon)
 	{
 		CurrentWeapon->Shoot();
+		bUpdateHUD;
 	}
 
 	// Construct what wallkick vectors we have (if any) based on
@@ -246,7 +232,7 @@ void AEDCharacter::Tick(float DeltaSeconds)
 			WallKickVectorsAvailable.Z += -1.f;
 		}
 	}
-	
+
 	// We can jump if we are on the ground and trying to jump,
 	// or if we are in the air and trying to jump so long as we have a
 	if(Grounded && (JumpCount < MaxJumpCount) && Jumping)
@@ -255,7 +241,7 @@ void AEDCharacter::Tick(float DeltaSeconds)
 		GetCharacterMovement()->Velocity.Z = JumpSpeed;
 		GetCharacterMovement()->SetMovementMode(MOVE_Falling); // If we don't do this, the movement isn't applied.
 		Jumped = true;
-		//PlayJumpSound();
+		bUpdateHUD = true;
 	}
 
 	// Apply the input to the character motion from left/right input
@@ -306,10 +292,20 @@ void AEDCharacter::Tick(float DeltaSeconds)
 	// Update animation to match the motion
 	UpdateAnimation(DeltaSeconds);
 	UpdateCharacter();
+
+	// Update the HUD and reset bool
+	if(bUpdateHUD)
+	{
+		BaseHUD->Update();
+		bUpdateHUD = false;
+	}
 }
 
 void AEDCharacter::UpdateCharacter()
 {
+	if(OldVelocity != GetVelocity())
+		bUpdateHUD = true;
+
 	// One time where we force the character to face a different direction
 	// is when the character is near a wall. This is due to the wall
 	// hanging animation. So change direction depending on which side of the
@@ -345,6 +341,13 @@ void AEDCharacter::UpdateCharacter()
 	Jumped = false;
 	WallKicking = false;
 	WallKickVectorsAvailable = FVector::ZeroVector;
+	OldVelocity = GetVelocity();
+}
+
+void AEDCharacter::UpdateHUD()
+{
+	if(BaseHUD)
+		BaseHUD->Update();
 }
 
 // Called by Controller

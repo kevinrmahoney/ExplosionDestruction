@@ -4,8 +4,8 @@
 #include "EDPlayerController.h"
 #include "ExplosionDestruction.h"
 #include "EDCharacter.h"
-
-class AEDCharacter;
+#include "EDGameMode.h"
+#include "Logger.h"
 
 void AEDPlayerController::SetupInputComponent()
 {
@@ -23,44 +23,88 @@ void AEDPlayerController::SetupInputComponent()
 
     // When Move buttons are pressed or released (TODO: refactor these to be actions)
     InputComponent->BindAxis("MoveRight", this, &AEDPlayerController::Move);
+
+    // Kill the current character (if it is a character) if it exists, and respawn
+    InputComponent->BindAction("Respawn", IE_Pressed, this, &AEDPlayerController::RespawnPressed);
+}
+
+void AEDPlayerController::BeginPlay()
+{
+    Super::BeginPlay();
+}
+
+void AEDPlayerController::Tick(float DeltaSeconds)
+{
+    Super::Tick(DeltaSeconds);
+}
+
+void AEDPlayerController::OnPossess(APawn* NewPawn)
+{
+    Super::OnPossess(NewPawn);
+    AEDCharacter* NewCharacter = Cast<AEDCharacter>(NewPawn);
+
+    if(NewCharacter)
+    {
+        EDCharacter = NewCharacter;
+        PossessedIsEDCharacter = true;
+    }
+    else
+    {
+        PossessedIsEDCharacter = false;
+    }
+}
+
+void AEDPlayerController::OnUnPossess()
+{
+    PossessedIsEDCharacter = false;
+    EDCharacter = nullptr;
+
+    Super::OnUnPossess();
 }
 
 void AEDPlayerController::Move(float Movement)
 {
-    if(AEDCharacter* Char = Cast<AEDCharacter>(GetPawn()))
-    {
-        Char->SetMoving(Movement);
-    }
+    if(PossessedIsEDCharacter && EDCharacter)
+        EDCharacter->SetMoving(Movement);
 }
 
 void AEDPlayerController::ShootPressed()
 {
-    if(AEDCharacter * Char = Cast<AEDCharacter>(GetPawn()))
-    {
-        Char->SetShooting(true);
-    }
+    if(PossessedIsEDCharacter && EDCharacter)
+        EDCharacter->SetShooting(true);
 }
 
 void AEDPlayerController::ShootReleased()
 {
-    if(AEDCharacter* Char = Cast<AEDCharacter>(GetPawn()))
-    {
-        Char->SetShooting(false);
-    }
+    if(PossessedIsEDCharacter && EDCharacter)
+        EDCharacter->SetShooting(false);
 }
 
 void AEDPlayerController::JumpPressed()
 {
-    if(AEDCharacter* Char = Cast<AEDCharacter>(GetPawn()))
-    {
-        Char->SetJumping(true);
-    }
+    if(PossessedIsEDCharacter && EDCharacter)
+        EDCharacter->SetJumping(true);
 }
 
 void AEDPlayerController::JumpReleased()
 {
-    if(AEDCharacter* Char = Cast<AEDCharacter>(GetPawn()))
+    if(PossessedIsEDCharacter && EDCharacter)
+        EDCharacter->SetJumping(false);
+}
+
+// If we pressed the respawn button
+void AEDPlayerController::RespawnPressed()
+{
+    // If currently possessing EDCharacter, kill it first.
+    if(PossessedIsEDCharacter)
     {
-        Char->SetJumping(false);
+        EDGameMode->KillPlayerCharacter(this);
+    }
+
+    // Spawn a new character.
+    EDGameMode = Cast<AEDGameMode>(GetWorld()->GetAuthGameMode());
+    if(EDGameMode)
+    {
+        EDGameMode->SpawnCharacter(this);
     }
 }
