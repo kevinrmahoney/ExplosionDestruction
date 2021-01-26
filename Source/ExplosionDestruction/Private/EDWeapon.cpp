@@ -4,6 +4,7 @@
 #include "EDWeapon.h"
 #include "DrawDebugHelpers.h"
 #include "PaperSpriteComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 AEDWeapon::AEDWeapon()
@@ -46,9 +47,12 @@ void AEDWeapon::Shoot()
 		if (GetWorld()->LineTraceSingleByChannel(Hit, ActorLocation, TraceEnd, ECC_Visibility, QueryParams))
 		{
 			// calculate damage
+			AActor* HitActor = Hit.GetActor();
+
+			UGameplayStatics::ApplyPointDamage(HitActor, BaseDamage, MyOwner->GetActorRotation().Vector(), Hit, MyOwner->GetInstigatorController(), this, nullptr);
 		}
 
-		DrawDebugLine(GetWorld(), ActorLocation, TraceEnd, FColor::Red, false, 1.f, 0, 5.f);
+		DrawDebugLine(GetWorld(), ActorLocation, TraceEnd, FColor::Red, false, 0.5f, 0, 5.f);
 	}
 
 	CooldownProgress = 0.f;
