@@ -2,10 +2,4 @@
 
 
 #include "EDSpedometer.h"
-#include "EDCharacter.h"
-
-void UEDSpedometer::SetCharacter(AEDCharacter* NewCharacter)
-{
-	Character = NewCharacter;
-}
 

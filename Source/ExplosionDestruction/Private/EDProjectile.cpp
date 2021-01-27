@@ -33,9 +33,11 @@ AEDProjectile::AEDProjectile()
 void AEDProjectile::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
 	SpriteComp->OnComponentHit.AddDynamic(this, &AEDProjectile::HandleHit);
 	SpriteComp->OnComponentBeginOverlap.AddDynamic(this, &AEDProjectile::HandleOverlap);
+
+	EventShot();
 }
 
 void AEDProjectile::HandleHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
@@ -50,6 +52,7 @@ void AEDProjectile::HandleHit(UPrimitiveComponent* HitComponent, AActor* OtherAc
 		if (bShouldDestroyOnHit)
 		{
 			Destroy();
+			EventExplode();
 		}
 	}
 }
