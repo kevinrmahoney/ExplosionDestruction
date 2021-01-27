@@ -4,14 +4,15 @@
 #include "PaperFlipbookComponent.h"
 #include "Components/TextRenderComponent.h"
 #include "Components/CapsuleComponent.h"
-#include "Components/InputComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
-#include "GameFramework/Controller.h"
 #include "Camera/CameraComponent.h"
 #include "EDWeapon.h"
 #include "Logger.h"
+#include "Components/BoxComponent.h"
+#include "EDBaseHUD.h"
 #include "Blueprint/UserWidget.h"
+#include "EDHealthComponent.h"
 
 DEFINE_LOG_CATEGORY_STATIC(SideScrollerCharacter, Log, All);
 
@@ -57,6 +58,9 @@ AEDCharacter::AEDCharacter()
 	SideViewCameraComponent->ProjectionMode = ECameraProjectionMode::Orthographic;
 	SideViewCameraComponent->OrthoWidth = 2048.0f;
 	SideViewCameraComponent->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
+
+	// Create component to manage health
+	HealthComp = CreateDefaultSubobject<UEDHealthComponent>(TEXT("HealthComp"));
 
 	// Prevent all automatic rotation behavior on the camera, character, and camera component
 	CameraBoom->SetUsingAbsoluteRotation(true);
@@ -127,9 +131,14 @@ void AEDCharacter::BeginPlay()
 		{
 			BaseHUD->SetCharacter(this);
 			BaseHUD->AddToViewport();
-			BaseHUD->Update();
+			UpdateHUD();
 		}
 	}
+
+	// Subscribe to health changed event
+	HealthComp->OnHealthChanged.AddDynamic(this, &AEDCharacter::OnHealthChanged);
+
+	OnEndPlay.AddDynamic(this, &AEDCharacter::HandleEndPlay);
 }
 
 void AEDCharacter::EndPlay(EEndPlayReason::Type EndPlayReason)
@@ -193,6 +202,22 @@ void AEDCharacter::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
 
+	FVector CurrentVelocity = GetVelocity();
+
+	// Check if character has begun walking or ended walking
+	if(OldVelocity.IsNearlyZero() && !CurrentVelocity.IsNearlyZero())
+		EventBeginWalk();
+	else if(!OldVelocity.IsNearlyZero() && CurrentVelocity.IsNearlyZero())
+		EventEndWalk();
+
+	// If the character is currently walking
+	if(!CurrentVelocity.IsNearlyZero())
+		EventWalk();
+
+	// If the character has landed after being in air.
+	if(!Grounded && !GetCharacterMovement()->IsFalling())
+		EventLanded();
+
 	// Set if the character is on the grounded
 	Grounded = !GetCharacterMovement()->IsFalling();
 	Falling = !Grounded;
@@ -242,6 +267,7 @@ void AEDCharacter::Tick(float DeltaSeconds)
 		GetCharacterMovement()->SetMovementMode(MOVE_Falling); // If we don't do this, the movement isn't applied.
 		Jumped = true;
 		bUpdateHUD = true;
+		EventJump();
 	}
 
 	// Apply the input to the character motion from left/right input
@@ -287,18 +313,14 @@ void AEDCharacter::Tick(float DeltaSeconds)
 
 		// We can only wall kick once per wall. Reset when we get close to another wall
 		CanWallKick = false;
+
+		EventWallKick();
 	}
 
 	// Update animation to match the motion
 	UpdateAnimation(DeltaSeconds);
 	UpdateCharacter();
-
-	// Update the HUD and reset bool
-	if(bUpdateHUD)
-	{
-		BaseHUD->Update();
-		bUpdateHUD = false;
-	}
+	UpdateHUD();
 }
 
 void AEDCharacter::UpdateCharacter()
@@ -344,10 +366,34 @@ void AEDCharacter::UpdateCharacter()
 	OldVelocity = GetVelocity();
 }
 
+void AEDCharacter::OnHealthChanged(UEDHealthComponent* OwnedHealthComp, float Health, float HealthDelta, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser)
+{
+	if (Health <= 0.f && !bDied)
+	{
+		// die
+		bDied = true;
+
+		GetMovementComponent()->StopMovementImmediately();
+		GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+		DetachFromControllerPendingDestroy();
+
+		SetLifeSpan(3.f);
+	}
+}
+
+void AEDCharacter::HandleEndPlay(AActor* Actor, EEndPlayReason::Type EndPlayReason)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Play ended for actor: %s"), *Actor->GetName());
+}
+
 void AEDCharacter::UpdateHUD()
 {
 	if(BaseHUD)
+	{
 		BaseHUD->Update();
+		bUpdateHUD = false;
+	}
 }
 
 // Called by Controller
@@ -372,17 +418,6 @@ void AEDCharacter::SetShooting(bool NewShooting)
 void AEDCharacter::SetJumping(bool NewJumping)
 {
 	Jumping = NewJumping;
-}
-
-
-float AEDCharacter::GetHealth()
-{
-	return Health;
-}
-
-float AEDCharacter::GetMaxHealth()
-{
-	return MaxHealth;
 }
 
 float AEDCharacter::GetAmmo()

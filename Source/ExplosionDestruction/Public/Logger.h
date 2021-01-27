@@ -36,25 +36,41 @@ public:
 	template <typename FmtType, typename... Types>
 	static void Info(const FmtType& Fmt, Types... Args)
 	{
+<<<<<<< HEAD
 		LogMessage(InfoLevel, FColor::White, Fmt, Args...);
+=======
+		LogMessage(ELogVerbosity::Display, FColor::White, Fmt, Args...);
+>>>>>>> 1be979184939aa1ccdd9f0524698828935bb6d90
 	}
 
 	template <typename FmtType, typename... Types>
 	static void Warning(const FmtType& Fmt, Types... Args)
 	{
+<<<<<<< HEAD
 		LogMessage(WarningLevel, FColor::Yellow, Fmt, Args...);
+=======
+		LogMessage(ELogVerbosity::Warning, FColor::Yellow, Fmt, Args...);
+>>>>>>> 1be979184939aa1ccdd9f0524698828935bb6d90
 	}
 
 	template <typename FmtType, typename... Types>
 	static void Error(const FmtType& Fmt, Types... Args)
 	{
+<<<<<<< HEAD
 		LogMessage(ErrorLevel, FColor::Orange, Fmt, Args...);
+=======
+		LogMessage(ELogVerbosity::Error, FColor::Orange, Fmt, Args...);
+>>>>>>> 1be979184939aa1ccdd9f0524698828935bb6d90
 	}
 
 	template <typename FmtType, typename... Types>
 	static void Fatal(const FmtType& Fmt, Types... Args)
 	{
+<<<<<<< HEAD
 		LogMessage(FatalLevel, FColor::Red, Fmt, Args...);
+=======
+		LogMessage(ELogVerbosity::Fatal, FColor::Red, Fmt, Args...);
+>>>>>>> 1be979184939aa1ccdd9f0524698828935bb6d90
 	}
 
 private:
@@ -77,6 +93,7 @@ private:
 		if(bShowTimeStamp)
 			TimeStamp = FString::Printf(TEXT("[%s]"), *GetTimeStamp());
 
+<<<<<<< HEAD
 		// We convert our internal Verbosity enum to UE's verbosity level and use UE_LOG.
 		if(Verbosity::FatalLevel <= LogVerbosity)
 			UE_LOG(LogTemp, Fatal, TEXT("  %s%s %s"), *TimeStamp, *TickStamp, *Message)
@@ -87,6 +104,16 @@ private:
 		 else if(Verbosity::InfoLevel == LogVerbosity)
 			UE_LOG(LogTemp, Display, TEXT("%s%s %s"), *TimeStamp, *TickStamp, *Message)
 
+=======
+		if(ELogVerbosity::Fatal == LogVerbosity)
+			UE_LOG(LogTemp, ELogVerbosity::Fatal, TEXT("%s%s %s"), *TimeStamp, *TickStamp, *Message);
+		if(ELogVerbosity::Error == LogVerbosity)
+			UE_LOG(LogTemp, ELogVerbosity::Error, TEXT("%s%s %s"), *TimeStamp, *TickStamp, *Message);
+		if(ELogVerbosity::Warning == LogVerbosity)
+			UE_LOG(LogTemp, ELogVerbosity::Warning, TEXT("%s%s %s"), *TimeStamp, *TickStamp, *Message);
+		if(ELogVerbosity::Display == LogVerbosity)
+			UE_LOG(LogTemp, ELogVerbosity::Display, TEXT("%s%s %s"), *TimeStamp, *TickStamp, *Message);
+>>>>>>> 1be979184939aa1ccdd9f0524698828935bb6d90
 
 		if(bShowOnScreen && GEngine)
 			GEngine->AddOnScreenDebugMessage(-1, 15.0f, Color, *Message);
