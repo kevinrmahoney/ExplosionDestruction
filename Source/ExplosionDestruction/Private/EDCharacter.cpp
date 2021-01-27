@@ -4,16 +4,15 @@
 #include "PaperFlipbookComponent.h"
 #include "Components/TextRenderComponent.h"
 #include "Components/CapsuleComponent.h"
-#include "Components/InputComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
-#include "GameFramework/Controller.h"
 #include "Camera/CameraComponent.h"
 #include "EDWeapon.h"
 #include "Logger.h"
 #include "Components/BoxComponent.h"
 #include "EDBaseHUD.h"
 #include "Blueprint/UserWidget.h"
+#include "EDHealthComponent.h"
 
 DEFINE_LOG_CATEGORY_STATIC(SideScrollerCharacter, Log, All);
 
@@ -59,6 +58,9 @@ AEDCharacter::AEDCharacter()
 	SideViewCameraComponent->ProjectionMode = ECameraProjectionMode::Orthographic;
 	SideViewCameraComponent->OrthoWidth = 2048.0f;
 	SideViewCameraComponent->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
+
+	// Create component to manage health
+	HealthComp = CreateDefaultSubobject<UEDHealthComponent>(TEXT("HealthComp"));
 
 	// Prevent all automatic rotation behavior on the camera, character, and camera component
 	CameraBoom->SetUsingAbsoluteRotation(true);
@@ -132,6 +134,11 @@ void AEDCharacter::BeginPlay()
 			UpdateHUD();
 		}
 	}
+
+	// Subscribe to health changed event
+	HealthComp->OnHealthChanged.AddDynamic(this, &AEDCharacter::OnHealthChanged);
+
+	OnEndPlay.AddDynamic(this, &AEDCharacter::HandleEndPlay);
 }
 
 void AEDCharacter::EndPlay(const EEndPlayReason::Type EndPlayReason)
@@ -365,6 +372,27 @@ void AEDCharacter::UpdateCharacter()
 	OldVelocity = GetVelocity();
 }
 
+void AEDCharacter::OnHealthChanged(UEDHealthComponent* OwnedHealthComp, float Health, float HealthDelta, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser)
+{
+	if (Health <= 0.f && !bDied)
+	{
+		// die
+		bDied = true;
+
+		GetMovementComponent()->StopMovementImmediately();
+		GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+		DetachFromControllerPendingDestroy();
+
+		SetLifeSpan(3.f);
+	}
+}
+
+void AEDCharacter::HandleEndPlay(AActor* Actor, EEndPlayReason::Type EndPlayReason)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Play ended for actor: %s"), *Actor->GetName());
+}
+
 void AEDCharacter::UpdateHUD()
 {
 	if(BaseHUD)
@@ -396,17 +424,6 @@ void AEDCharacter::SetShooting(bool NewShooting)
 void AEDCharacter::SetJumping(bool NewJumping)
 {
 	Jumping = NewJumping;
-}
-
-
-float AEDCharacter::GetHealth()
-{
-	return Health;
-}
-
-float AEDCharacter::GetMaxHealth()
-{
-	return MaxHealth;
 }
 
 float AEDCharacter::GetAmmo()

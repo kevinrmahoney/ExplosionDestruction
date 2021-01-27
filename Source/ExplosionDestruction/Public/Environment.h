@@ -18,4 +18,6 @@ public:
 static Type Name; \
 
 	DECLARE_CVAR(int32, DebugWeapons)
+
+	DECLARE_CVAR(int32, DebugLogs)
 };

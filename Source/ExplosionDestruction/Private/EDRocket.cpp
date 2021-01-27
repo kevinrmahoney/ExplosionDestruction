@@ -8,7 +8,6 @@
 #include "Kismet/GameplayStatics.h"
 #include "Environment.h"
 #include "TimerManager.h"
-#include "Logger.h"
 
 AEDRocket::AEDRocket()
 {
