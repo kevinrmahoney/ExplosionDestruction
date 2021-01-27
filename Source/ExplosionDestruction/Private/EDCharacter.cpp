@@ -11,6 +11,8 @@
 #include "Camera/CameraComponent.h"
 #include "EDWeapon.h"
 #include "Logger.h"
+#include "Components/BoxComponent.h"
+#include "EDBaseHUD.h"
 #include "Blueprint/UserWidget.h"
 
 DEFINE_LOG_CATEGORY_STATIC(SideScrollerCharacter, Log, All);
@@ -50,7 +52,7 @@ AEDCharacter::AEDCharacter()
 	CameraBoom->SetUsingAbsoluteRotation(true);
 	CameraBoom->bDoCollisionTest = false;
 	CameraBoom->SetRelativeRotation(FRotator(0.0f, -90.0f, 0.0f));
-	
+
 
 	// Create an orthographic camera (no perspective) and attach it to the boom
 	SideViewCameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("SideViewCamera"));
@@ -127,18 +129,24 @@ void AEDCharacter::BeginPlay()
 		{
 			BaseHUD->SetCharacter(this);
 			BaseHUD->AddToViewport();
-			BaseHUD->Update();
+			UpdateHUD();
 		}
 	}
 }
 
-void AEDCharacter::BeginDestroy()
+void AEDCharacter::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
-	if(BaseHUD)
-		BaseHUD->RemoveFromViewport();
+	// Destroy the weapon
+	if(CurrentWeapon)
+	{
+		CurrentWeapon->Destroy();
+	}
 
-	if(this)
-		Super::BeginDestroy();
+	BaseHUD->Remove();
+	// TODO: This statement causes infinite loops at compile time.
+	//Logger::Info(TEXT("ENDPLAY)"));
+
+	Super::EndPlay(EndPlayReason);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -193,6 +201,22 @@ void AEDCharacter::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
 
+	FVector CurrentVelocity = GetVelocity();
+
+	// Check if character has begun walking or ended walking
+	if(OldVelocity.IsNearlyZero() && !CurrentVelocity.IsNearlyZero())
+		EventBeginWalk();
+	else if(!OldVelocity.IsNearlyZero() && CurrentVelocity.IsNearlyZero())
+		EventEndWalk();
+
+	// If the character is currently walking
+	if(!CurrentVelocity.IsNearlyZero())
+		EventWalk();
+
+	// If the character has landed after being in air.
+	if(!Grounded && !GetCharacterMovement()->IsFalling())
+		EventLanded();
+
 	// Set if the character is on the grounded
 	Grounded = !GetCharacterMovement()->IsFalling();
 	Falling = !Grounded;
@@ -242,6 +266,7 @@ void AEDCharacter::Tick(float DeltaSeconds)
 		GetCharacterMovement()->SetMovementMode(MOVE_Falling); // If we don't do this, the movement isn't applied.
 		Jumped = true;
 		bUpdateHUD = true;
+		EventJump();
 	}
 
 	// Apply the input to the character motion from left/right input
@@ -251,9 +276,9 @@ void AEDCharacter::Tick(float DeltaSeconds)
 	// Wall kicks are impulses added to the character depending on the walls
 	// they are in close contact with. This is determined by the
 	// WallKickBoxComponent hitboxes above, below, to the left and right of
-	// the character. Wall kicks should always add an impulse upwards (unless 
-	// touching a ceiling, where instead the impulse goes downwards) and add 
-	// an additional impulse in the direction opposite of the wall they're 
+	// the character. Wall kicks should always add an impulse upwards (unless
+	// touching a ceiling, where instead the impulse goes downwards) and add
+	// an additional impulse in the direction opposite of the wall they're
 	// touching.
 	if(CanWallKick && !Grounded && WallKickVectorsAvailable.Size() > 0 && Jumping)
 	{
@@ -287,18 +312,14 @@ void AEDCharacter::Tick(float DeltaSeconds)
 
 		// We can only wall kick once per wall. Reset when we get close to another wall
 		CanWallKick = false;
+
+		EventWallKick();
 	}
 
 	// Update animation to match the motion
 	UpdateAnimation(DeltaSeconds);
 	UpdateCharacter();
-
-	// Update the HUD and reset bool
-	if(bUpdateHUD)
-	{
-		BaseHUD->Update();
-		bUpdateHUD = false;
-	}
+	UpdateHUD();
 }
 
 void AEDCharacter::UpdateCharacter()
@@ -347,7 +368,10 @@ void AEDCharacter::UpdateCharacter()
 void AEDCharacter::UpdateHUD()
 {
 	if(BaseHUD)
+	{
 		BaseHUD->Update();
+		bUpdateHUD = false;
+	}
 }
 
 // Called by Controller

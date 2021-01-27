@@ -30,25 +30,25 @@ public:
 	template <typename FmtType, typename... Types>
 	static void Info(const FmtType& Fmt, Types... Args)
 	{
-		LogMessage(Display, FColor::White, Fmt, Args...);
+		LogMessage(ELogVerbosity::Display, FColor::White, Fmt, Args...);
 	}
 
 	template <typename FmtType, typename... Types>
 	static void Warning(const FmtType& Fmt, Types... Args)
 	{
-		LogMessage(Warning, FColor::Yellow, Fmt, Args...);
+		LogMessage(ELogVerbosity::Warning, FColor::Yellow, Fmt, Args...);
 	}
 
 	template <typename FmtType, typename... Types>
 	static void Error(const FmtType& Fmt, Types... Args)
 	{
-		LogMessage(Error, FColor::Orange, Fmt, Args...);
+		LogMessage(ELogVerbosity::Error, FColor::Orange, Fmt, Args...);
 	}
 
 	template <typename FmtType, typename... Types>
 	static void Fatal(const FmtType& Fmt, Types... Args)
 	{
-		LogMessage(Fatal, FColor::Red, Fmt, Args...);
+		LogMessage(ELogVerbosity::Fatal, FColor::Red, Fmt, Args...);
 	}
 
 private:
@@ -75,13 +75,13 @@ private:
 			TimeStamp = FString::Printf(TEXT("[%s]"), *GetTimeStamp());
 
 		if(ELogVerbosity::Fatal == LogVerbosity)
-			UE_LOG(LogTemp, Fatal, TEXT("%s%s %s"), *TimeStamp, *TickStamp, *Message);
+			UE_LOG(LogTemp, ELogVerbosity::Fatal, TEXT("%s%s %s"), *TimeStamp, *TickStamp, *Message);
 		if(ELogVerbosity::Error == LogVerbosity)
-			UE_LOG(LogTemp, Error, TEXT("%s%s %s"), *TimeStamp, *TickStamp, *Message);
+			UE_LOG(LogTemp, ELogVerbosity::Error, TEXT("%s%s %s"), *TimeStamp, *TickStamp, *Message);
 		if(ELogVerbosity::Warning == LogVerbosity)
-			UE_LOG(LogTemp, Warning, TEXT("%s%s %s"), *TimeStamp, *TickStamp, *Message);
+			UE_LOG(LogTemp, ELogVerbosity::Warning, TEXT("%s%s %s"), *TimeStamp, *TickStamp, *Message);
 		if(ELogVerbosity::Display == LogVerbosity)
-			UE_LOG(LogTemp, Display, TEXT("%s%s %s"), *TimeStamp, *TickStamp, *Message);
+			UE_LOG(LogTemp, ELogVerbosity::Display, TEXT("%s%s %s"), *TimeStamp, *TickStamp, *Message);
 
 		if(bShowOnScreen && GEngine)
 			GEngine->AddOnScreenDebugMessage(-1, 15.0f, Color, *Message);

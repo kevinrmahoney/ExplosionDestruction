@@ -12,8 +12,8 @@ UCLASS()
 class EXPLOSIONDESTRUCTION_API AEDWeapon : public AActor
 {
 	GENERATED_BODY()
-	
-public:	
+
+public:
 	// Sets default values for this actor's properties
 	AEDWeapon();
 
@@ -34,7 +34,13 @@ protected:
 
 	float CooldownProgress = Cooldown; // Set progress to Cooldown so we can shoot right away after spawning.
 
-public:	
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+	bool EventShootBegin();
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+	bool EventShootEnd();
+
+public:
 
 	virtual void Shoot();
 };

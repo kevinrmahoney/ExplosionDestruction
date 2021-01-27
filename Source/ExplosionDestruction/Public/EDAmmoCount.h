@@ -5,24 +5,13 @@
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 #include "EDAmmoCount.generated.h"
-
-class EDCharacter;
-
 /**
- * 
+ *
  */
 UCLASS()
 class EXPLOSIONDESTRUCTION_API UEDAmmoCount : public UUserWidget
 {
 	GENERATED_BODY()
 
-public:
-	UFUNCTION(BlueprintCallable)
-	void SetCharacter(AEDCharacter* NewCharacter);
-
-protected:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	AEDCharacter* Character;
-	
 
 };

@@ -2,9 +2,3 @@
 
 
 #include "EDAmmoCount.h"
-#include "EDCharacter.h"
-
-void UEDAmmoCount::SetCharacter(AEDCharacter* NewCharacter)
-{
-	Character = NewCharacter;
-}
