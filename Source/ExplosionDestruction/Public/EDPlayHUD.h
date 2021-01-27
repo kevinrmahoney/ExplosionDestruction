@@ -7,7 +7,7 @@
 #include "EDPlayHUD.generated.h"
 
 /**
- * 
+ *
  */
 UCLASS()
 class EXPLOSIONDESTRUCTION_API AEDPlayHUD : public AHUD
@@ -20,5 +20,5 @@ class EXPLOSIONDESTRUCTION_API AEDPlayHUD : public AHUD
 	virtual void DrawHUD() override;
 
 	virtual void BeginPlay() override;
-	
+
 };

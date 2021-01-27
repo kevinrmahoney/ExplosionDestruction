@@ -30,13 +30,20 @@ public:
     bool KillPlayerCharacter(AEDPlayerController* Controller);
 
     UFUNCTION(BlueprintCallable)
-    float GetTimer();
+    bool CheckTime(float Time);
+
+    UFUNCTION(BlueprintCallable)
+    float GetCurrentTime();
+
+    UFUNCTION(BlueprintCallable)
+    float GetBestTime();
 
 protected:
     virtual void Tick(float DeltaSeconds) override;
     virtual void BeginPlay() override;
 
-    float Timer;
+    float Timer = 0.f;
+    float BestTime = 0.f;
 
     // This is the class we should spawn for characters
     UPROPERTY(EditAnywhere, Category = "Spawnable Characters")

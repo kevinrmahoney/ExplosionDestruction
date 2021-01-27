@@ -4,6 +4,7 @@
 #include "EDCharacter.h"
 #include "EDPlayerController.h"
 #include "Kismet/GameplayStatics.h"
+#include "Logger.h"
 #include "EDPlayerStart.h"
 
 AEDGameMode::AEDGameMode()
@@ -77,7 +78,23 @@ bool AEDGameMode::SpawnCharacter(AEDPlayerController* Controller)
 	return false;
 }
 
-float AEDGameMode::GetTimer()
+float AEDGameMode::GetCurrentTime()
 {
 	return Timer;
+}
+
+float AEDGameMode::GetBestTime()
+{
+	return BestTime;
+}
+
+bool AEDGameMode::CheckTime(float Time)
+{
+	if(BestTime == 0.f || Time < BestTime)
+	{
+		BestTime = Time;
+		return true;
+	}
+
+	return false;
 }

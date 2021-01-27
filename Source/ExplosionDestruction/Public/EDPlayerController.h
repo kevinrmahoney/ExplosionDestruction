@@ -10,7 +10,7 @@ class AEDCharacter;
 class AEDGameMode;
 
 /**
- * 
+ *
  */
 UCLASS()
 class EXPLOSIONDESTRUCTION_API AEDPlayerController : public APlayerController
@@ -44,5 +44,5 @@ protected:
 	void SetupInputComponent() override;
 
 	AEDGameMode* EDGameMode;
-	
+
 };

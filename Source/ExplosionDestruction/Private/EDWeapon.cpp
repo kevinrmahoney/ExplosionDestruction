@@ -25,7 +25,7 @@ void AEDWeapon::Tick(float DeltaSeconds)
 void AEDWeapon::Shoot()
 {
 	AActor* MyOwner = GetOwner();
-	if (MyOwner)
+	if (MyOwner && GetWorld())
 	{
 		FVector ActorLocation = MyOwner->GetActorLocation();
 		FVector MouseWorldLocation;

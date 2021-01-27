@@ -8,6 +8,9 @@
 void AEDProjectileWeapon::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
+
+	if(CooldownProgress >= Cooldown)
+		EDOnCooldownEnd();
 }
 
 void AEDProjectileWeapon::Shoot()
@@ -17,7 +20,7 @@ void AEDProjectileWeapon::Shoot()
 		return;
 
 	AActor* MyOwner = GetOwner();
-	if (MyOwner && ProjectileClass)
+	if (MyOwner && ProjectileClass && GetWorld())
 	{
 		FVector MouseWorldLocation;
 		FVector MouseWorldDirection;
@@ -35,7 +38,8 @@ void AEDProjectileWeapon::Shoot()
 
 		GetWorld()->SpawnActor<AEDProjectile>(ProjectileClass, MuzzleLocation, MouseRotation, SpawnParams);
 
-		EventShootBegin();
+		EDOnShootBegin();
+		EDOnCooldownBegin();
 	}
 
 	CooldownProgress = 0.f;

@@ -4,12 +4,15 @@
 #include "EDPlayerController.h"
 #include "ExplosionDestruction.h"
 #include "EDCharacter.h"
-#include "EDGameMode.h"
 #include "Logger.h"
+#include "EDGameMode.h"
 
 void AEDPlayerController::SetupInputComponent()
 {
     Super::SetupInputComponent();
+
+    if(!InputComponent)
+        return;
 
     bShowMouseCursor = true;
 
@@ -31,6 +34,8 @@ void AEDPlayerController::SetupInputComponent()
 void AEDPlayerController::BeginPlay()
 {
     Super::BeginPlay();
+
+    EDGameMode = Cast<AEDGameMode>(GetWorld()->GetAuthGameMode());
 }
 
 void AEDPlayerController::Tick(float DeltaSeconds)
@@ -56,10 +61,10 @@ void AEDPlayerController::OnPossess(APawn* NewPawn)
 
 void AEDPlayerController::OnUnPossess()
 {
+    Super::OnUnPossess();
+
     PossessedIsEDCharacter = false;
     EDCharacter = nullptr;
-
-    Super::OnUnPossess();
 }
 
 void AEDPlayerController::Move(float Movement)
@@ -96,14 +101,13 @@ void AEDPlayerController::JumpReleased()
 void AEDPlayerController::RespawnPressed()
 {
     // If currently possessing EDCharacter, kill it first.
-    if(PossessedIsEDCharacter)
+    if(PossessedIsEDCharacter && EDGameMode)
     {
         EDGameMode->KillPlayerCharacter(this);
     }
 
     // Spawn a new character.
-    EDGameMode = Cast<AEDGameMode>(GetWorld()->GetAuthGameMode());
-    if(EDGameMode)
+    if(GetWorld() && EDGameMode)
     {
         EDGameMode->SpawnCharacter(this);
     }

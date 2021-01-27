@@ -7,11 +7,11 @@
 #include "EDGameStateBase.generated.h"
 
 /**
- * 
+ *
  */
 UCLASS()
 class EXPLOSIONDESTRUCTION_API AEDGameStateBase : public AGameStateBase
 {
 	GENERATED_BODY()
-	
+
 };
