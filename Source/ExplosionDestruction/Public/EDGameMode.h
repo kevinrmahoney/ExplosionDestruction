@@ -4,11 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
-#include "EDPlayerStart.h"
 #include "EDGameMode.generated.h"
 
 class AEDPlayerController;
 class AEDCharacter;
+class AEDPlayerStart;
 
 /**
  * The GameMode defines the game being played. It governs the game rules, scoring, what actors

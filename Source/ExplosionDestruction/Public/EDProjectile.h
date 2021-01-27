@@ -14,8 +14,8 @@ UCLASS()
 class EXPLOSIONDESTRUCTION_API AEDProjectile : public AActor
 {
 	GENERATED_BODY()
-	
-public:	
+
+public:
 	// Sets default values for this actor's properties
 	AEDProjectile();
 
@@ -53,7 +53,7 @@ protected:
 	virtual void ApplyDamage(AActor* DamagedActor, const FHitResult& Hit);
 
 
-public:	
+public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 

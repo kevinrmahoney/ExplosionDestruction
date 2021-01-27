@@ -9,19 +9,10 @@
 class AEDCharacter;
 
 /**
- * 
+ *
  */
 UCLASS()
 class EXPLOSIONDESTRUCTION_API UEDHealthBar : public UUserWidget
 {
 	GENERATED_BODY()
-
-public:
-	UFUNCTION(BlueprintCallable)
-	void SetCharacter(AEDCharacter* NewCharacter);
-
-protected:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	AEDCharacter* Character;
-	
 };

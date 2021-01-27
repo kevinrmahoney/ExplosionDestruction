@@ -11,6 +11,8 @@
 #include "Camera/CameraComponent.h"
 #include "EDWeapon.h"
 #include "Logger.h"
+#include "Components/BoxComponent.h"
+#include "EDBaseHUD.h"
 #include "Blueprint/UserWidget.h"
 
 DEFINE_LOG_CATEGORY_STATIC(SideScrollerCharacter, Log, All);
@@ -50,7 +52,7 @@ AEDCharacter::AEDCharacter()
 	CameraBoom->SetUsingAbsoluteRotation(true);
 	CameraBoom->bDoCollisionTest = false;
 	CameraBoom->SetRelativeRotation(FRotator(0.0f, -90.0f, 0.0f));
-	
+
 
 	// Create an orthographic camera (no perspective) and attach it to the boom
 	SideViewCameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("SideViewCamera"));
@@ -125,20 +127,37 @@ void AEDCharacter::BeginPlay()
 
 		if(BaseHUD)
 		{
-			BaseHUD->SetCharacter(this);
+			//BaseHUD->SetCharacter(this);
 			BaseHUD->AddToViewport();
-			BaseHUD->Update();
+			//BaseHUD->Update();
 		}
 	}
 }
 
 void AEDCharacter::BeginDestroy()
 {
+	// First remove the HUD.
 	if(BaseHUD)
-		BaseHUD->RemoveFromViewport();
+	{
+		//BaseHUD->Remove();
+		//BaseHUD->Destruct();
+	}
 
+	// Destroy the weapon
+	if(CurrentWeapon)
+	{
+		CurrentWeapon->Destroy();
+	}
+
+	// Call parent method
 	if(this)
 		Super::BeginDestroy();
+}
+
+void AEDCharacter::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	Super::EndPlay(EndPlayReason);
+	Logger::Info(TEXT("ENDPLAY)"));
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -251,9 +270,9 @@ void AEDCharacter::Tick(float DeltaSeconds)
 	// Wall kicks are impulses added to the character depending on the walls
 	// they are in close contact with. This is determined by the
 	// WallKickBoxComponent hitboxes above, below, to the left and right of
-	// the character. Wall kicks should always add an impulse upwards (unless 
-	// touching a ceiling, where instead the impulse goes downwards) and add 
-	// an additional impulse in the direction opposite of the wall they're 
+	// the character. Wall kicks should always add an impulse upwards (unless
+	// touching a ceiling, where instead the impulse goes downwards) and add
+	// an additional impulse in the direction opposite of the wall they're
 	// touching.
 	if(CanWallKick && !Grounded && WallKickVectorsAvailable.Size() > 0 && Jumping)
 	{
@@ -296,7 +315,7 @@ void AEDCharacter::Tick(float DeltaSeconds)
 	// Update the HUD and reset bool
 	if(bUpdateHUD)
 	{
-		BaseHUD->Update();
+		//BaseHUD->Update();
 		bUpdateHUD = false;
 	}
 }
@@ -346,8 +365,8 @@ void AEDCharacter::UpdateCharacter()
 
 void AEDCharacter::UpdateHUD()
 {
-	if(BaseHUD)
-		BaseHUD->Update();
+	//if(BaseHUD)
+		//BaseHUD->Update();
 }
 
 // Called by Controller

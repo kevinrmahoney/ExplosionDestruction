@@ -10,7 +10,7 @@ class URadialForceComponent;
 class UParticleSystem;
 
 /**
- * 
+ *
  */
 UCLASS()
 class EXPLOSIONDESTRUCTION_API AEDRocket : public AEDProjectile
@@ -19,7 +19,7 @@ class EXPLOSIONDESTRUCTION_API AEDRocket : public AEDProjectile
 
 public:
 	AEDRocket();
-	
+
 protected:
 
 	void BeginPlay() override;

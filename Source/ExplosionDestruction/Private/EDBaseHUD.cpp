@@ -2,9 +2,10 @@
 
 
 #include "EDBaseHUD.h"
-#include "EDCharacter.h"
 
+/*
 void UEDBaseHUD::SetCharacter(AEDCharacter* NewCharacter)
 {
 	Character = NewCharacter;
 }
+*/

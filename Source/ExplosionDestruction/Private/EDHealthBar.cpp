@@ -2,9 +2,3 @@
 
 
 #include "EDHealthBar.h"
-#include "EDCharacter.h"
-
-void UEDHealthBar::SetCharacter(AEDCharacter* NewCharacter)
-{
-	Character = NewCharacter;
-}

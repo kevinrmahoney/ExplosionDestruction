@@ -6,22 +6,12 @@
 #include "Blueprint/UserWidget.h"
 #include "EDSpedometer.generated.h"
 
-class EDCharacter;
-
 /**
- * 
+ *
  */
 UCLASS()
 class EXPLOSIONDESTRUCTION_API UEDSpedometer : public UUserWidget
 {
 	GENERATED_BODY()
 
-public:
-	UFUNCTION(BlueprintCallable)
-	void SetCharacter(AEDCharacter* NewCharacter);
-
-protected:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	AEDCharacter* Character;
-	
 };

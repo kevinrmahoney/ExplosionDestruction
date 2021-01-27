@@ -4,11 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "PaperCharacter.h"
-#include "Components/BoxComponent.h"
-#include "EDBaseHUD.h"
 #include "EDCharacter.generated.h"
 
+class UBoxComponent;
 class AEDWeapon;
+class UEDBaseHUD;
 
 /**
  * This class is the default character for ExplosionDestruction, and it is responsible for all
@@ -84,6 +84,7 @@ protected:
 	virtual void Tick(float DeltaSeconds) override;
 	virtual void BeginPlay() override;
 	virtual void BeginDestroy() override;
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
 	/* HUD */
 	UPROPERTY(EditAnywhere, Category = "HUD")

@@ -4,7 +4,7 @@
 #include "EDCharacter.h"
 #include "EDPlayerController.h"
 #include "Kismet/GameplayStatics.h"
-#include "Logger.h"
+#include "EDPlayerStart.h"
 
 AEDGameMode::AEDGameMode()
 {
