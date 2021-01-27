@@ -4,6 +4,7 @@
 #include "EDCharacter.h"
 #include "EDPlayerController.h"
 #include "Kismet/GameplayStatics.h"
+#include "Logger.h"
 #include "EDPlayerStart.h"
 
 AEDGameMode::AEDGameMode()
@@ -89,7 +90,6 @@ float AEDGameMode::GetBestTime()
 
 bool AEDGameMode::CheckTime(float Time)
 {
-	UE_LOG(LogTemp, Display, TEXT("CheckTime"))
 	if(BestTime == 0.f || Time < BestTime)
 	{
 		BestTime = Time;

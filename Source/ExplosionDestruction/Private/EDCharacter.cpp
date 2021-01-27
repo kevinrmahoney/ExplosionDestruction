@@ -216,7 +216,7 @@ void AEDCharacter::Tick(float DeltaSeconds)
 
 	// If the character has landed after being in air.
 	if(!Grounded && !GetCharacterMovement()->IsFalling())
-		EventLanded();
+		EDOnLanded();
 
 	// Set if the character is on the grounded
 	Grounded = !GetCharacterMovement()->IsFalling();
@@ -267,7 +267,7 @@ void AEDCharacter::Tick(float DeltaSeconds)
 		GetCharacterMovement()->SetMovementMode(MOVE_Falling); // If we don't do this, the movement isn't applied.
 		Jumped = true;
 		bUpdateHUD = true;
-		EventJump();
+		EDOnJump();
 	}
 
 	// Apply the input to the character motion from left/right input
@@ -314,7 +314,7 @@ void AEDCharacter::Tick(float DeltaSeconds)
 		// We can only wall kick once per wall. Reset when we get close to another wall
 		CanWallKick = false;
 
-		EventWallKick();
+		EDOnWallKick();
 	}
 
 	// Update animation to match the motion
@@ -376,9 +376,9 @@ void AEDCharacter::OnHealthChanged(UEDHealthComponent* OwnedHealthComp, float He
 		GetMovementComponent()->StopMovementImmediately();
 		GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
-		DetachFromControllerPendingDestroy();
+		//DetachFromControllerPendingDestroy();
 
-		SetLifeSpan(3.f);
+		//SetLifeSpan(3.f);
 	}
 }
 

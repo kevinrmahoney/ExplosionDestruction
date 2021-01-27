@@ -78,7 +78,7 @@ protected:
 
 	virtual void Tick(float DeltaSeconds) override;
 	virtual void BeginPlay() override;
-	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+	virtual void EndPlay(EEndPlayReason::Type EndPlayReason) override;
 
 	/* HUD */
 	UPROPERTY(EditAnywhere, Category = "HUD")
