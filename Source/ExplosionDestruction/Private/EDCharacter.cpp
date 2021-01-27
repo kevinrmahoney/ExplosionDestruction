@@ -127,37 +127,26 @@ void AEDCharacter::BeginPlay()
 
 		if(BaseHUD)
 		{
-			//BaseHUD->SetCharacter(this);
+			BaseHUD->SetCharacter(this);
 			BaseHUD->AddToViewport();
-			//BaseHUD->Update();
+			UpdateHUD();
 		}
 	}
 }
 
-void AEDCharacter::BeginDestroy()
+void AEDCharacter::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
-	// First remove the HUD.
-	if(BaseHUD)
-	{
-		//BaseHUD->Remove();
-		//BaseHUD->Destruct();
-	}
-
 	// Destroy the weapon
 	if(CurrentWeapon)
 	{
 		CurrentWeapon->Destroy();
 	}
 
-	// Call parent method
-	if(this)
-		Super::BeginDestroy();
-}
-
-void AEDCharacter::EndPlay(const EEndPlayReason::Type EndPlayReason)
-{
-	Super::EndPlay(EndPlayReason);
+	BaseHUD->Remove();
+	// TODO: This statement causes infinite loops at compile time.
 	//Logger::Info(TEXT("ENDPLAY)"));
+
+	Super::EndPlay(EndPlayReason);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -212,6 +201,22 @@ void AEDCharacter::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
 
+	FVector CurrentVelocity = GetVelocity();
+
+	// Check if character has begun walking or ended walking
+	if(OldVelocity.IsNearlyZero() && !CurrentVelocity.IsNearlyZero())
+		EventBeginWalk();
+	else if(!OldVelocity.IsNearlyZero() && CurrentVelocity.IsNearlyZero())
+		EventEndWalk();
+
+	// If the character is currently walking
+	if(!CurrentVelocity.IsNearlyZero())
+		EventWalk();
+
+	// If the character has landed after being in air.
+	if(!Grounded && !GetCharacterMovement()->IsFalling())
+		EventLanded();
+
 	// Set if the character is on the grounded
 	Grounded = !GetCharacterMovement()->IsFalling();
 	Falling = !Grounded;
@@ -261,6 +266,7 @@ void AEDCharacter::Tick(float DeltaSeconds)
 		GetCharacterMovement()->SetMovementMode(MOVE_Falling); // If we don't do this, the movement isn't applied.
 		Jumped = true;
 		bUpdateHUD = true;
+		EventJump();
 	}
 
 	// Apply the input to the character motion from left/right input
@@ -306,18 +312,14 @@ void AEDCharacter::Tick(float DeltaSeconds)
 
 		// We can only wall kick once per wall. Reset when we get close to another wall
 		CanWallKick = false;
+
+		EventWallKick();
 	}
 
 	// Update animation to match the motion
 	UpdateAnimation(DeltaSeconds);
 	UpdateCharacter();
-
-	// Update the HUD and reset bool
-	if(bUpdateHUD)
-	{
-		//BaseHUD->Update();
-		bUpdateHUD = false;
-	}
+	UpdateHUD();
 }
 
 void AEDCharacter::UpdateCharacter()
@@ -365,8 +367,11 @@ void AEDCharacter::UpdateCharacter()
 
 void AEDCharacter::UpdateHUD()
 {
-	//if(BaseHUD)
-		//BaseHUD->Update();
+	if(BaseHUD)
+	{
+		BaseHUD->Update();
+		bUpdateHUD = false;
+	}
 }
 
 // Called by Controller

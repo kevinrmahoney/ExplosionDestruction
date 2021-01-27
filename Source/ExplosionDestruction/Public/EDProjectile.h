@@ -52,6 +52,11 @@ protected:
 
 	virtual void ApplyDamage(AActor* DamagedActor, const FHitResult& Hit);
 
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+	bool EventShot();
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+	bool EventExplode();
 
 public:
 	// Called every frame

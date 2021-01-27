@@ -6,6 +6,8 @@
 #include "Blueprint/UserWidget.h"
 #include "EDBaseHUD.generated.h"
 
+class AEDCharacter;
+
 /**
  *
  */
@@ -13,7 +15,7 @@ UCLASS()
 class EXPLOSIONDESTRUCTION_API UEDBaseHUD : public UUserWidget
 {
 	GENERATED_BODY()
-		/*
+
 public:
 	void SetCharacter(AEDCharacter* Character);
 
@@ -21,12 +23,11 @@ public:
 	bool Update();
 
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 	bool Remove();
 
 protected:
 
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	AEDCharacter* Character;
-	*/
 };

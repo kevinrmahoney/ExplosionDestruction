@@ -83,7 +83,6 @@ protected:
 
 	virtual void Tick(float DeltaSeconds) override;
 	virtual void BeginPlay() override;
-	virtual void BeginDestroy() override;
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
 	/* HUD */
@@ -193,6 +192,15 @@ protected:
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 	bool EventSlideEnd();
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+	bool EventBeginWalk();
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+	bool EventEndWalk();
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+	bool EventWalk();
 
 // States
 	bool Jumping = false;

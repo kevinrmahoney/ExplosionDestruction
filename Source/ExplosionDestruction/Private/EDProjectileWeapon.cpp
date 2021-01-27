@@ -34,6 +34,8 @@ void AEDProjectileWeapon::Shoot()
 		FRotator MouseRotation = (MouseWorldLocation - MuzzleLocation).Rotation();
 
 		GetWorld()->SpawnActor<AEDProjectile>(ProjectileClass, MuzzleLocation, MouseRotation, SpawnParams);
+
+		EventShootBegin();
 	}
 
 	CooldownProgress = 0.f;
