@@ -175,23 +175,23 @@ protected:
 	float MaxHealth = 100.f;
 
 	/* Blueprint Implementable Events (for sounds, graphics, etc) */
-	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
-	bool EventJump();
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	void EDJump();
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
-	bool EventWallKick();
+	bool EDWallKick();
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
-	bool EventLanded();
+	bool EDLanded();
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
-	bool EventDamageTaken();
+	bool EDDamageTaken();
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
-	bool EventSlideBegin();
+	bool EDSlideBegin();
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
-	bool EventSlideEnd();
+	bool EDSlideEnd();
 
 // States
 	bool Jumping = false;

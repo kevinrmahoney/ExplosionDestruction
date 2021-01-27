@@ -50,7 +50,7 @@ AEDCharacter::AEDCharacter()
 	CameraBoom->SetUsingAbsoluteRotation(true);
 	CameraBoom->bDoCollisionTest = false;
 	CameraBoom->SetRelativeRotation(FRotator(0.0f, -90.0f, 0.0f));
-	
+
 
 	// Create an orthographic camera (no perspective) and attach it to the boom
 	SideViewCameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("SideViewCamera"));
@@ -251,9 +251,9 @@ void AEDCharacter::Tick(float DeltaSeconds)
 	// Wall kicks are impulses added to the character depending on the walls
 	// they are in close contact with. This is determined by the
 	// WallKickBoxComponent hitboxes above, below, to the left and right of
-	// the character. Wall kicks should always add an impulse upwards (unless 
-	// touching a ceiling, where instead the impulse goes downwards) and add 
-	// an additional impulse in the direction opposite of the wall they're 
+	// the character. Wall kicks should always add an impulse upwards (unless
+	// touching a ceiling, where instead the impulse goes downwards) and add
+	// an additional impulse in the direction opposite of the wall they're
 	// touching.
 	if(CanWallKick && !Grounded && WallKickVectorsAvailable.Size() > 0 && Jumping)
 	{
@@ -468,3 +468,12 @@ void AEDCharacter::OnWallKickRightComponentEndOverlap(UPrimitiveComponent* Overl
 
 	OverlapRight = false;
 }
+
+// Events
+void AEDCharacter::EDJump_Implementation() {}
+void AEDCharacter::EDWallKick_Implementation() {}
+void AEDCharacter::EDLanded_Implementation() {}
+void AEDCharacter::EDDamageTaken_Implementation() {}
+void AEDCharacter::EDSlideBegin_Implementation() {}
+void AEDCharacter::EDSlideEnd_Implementation() {}
+
