@@ -5,11 +5,13 @@
 #include "ExplosionDestruction.h"
 #include "EDCharacter.h"
 #include "EDGameMode.h"
-#include "Logger.h"
 
 void AEDPlayerController::SetupInputComponent()
 {
     Super::SetupInputComponent();
+
+    if(!InputComponent)
+        return;
 
     bShowMouseCursor = true;
 
@@ -96,15 +98,18 @@ void AEDPlayerController::JumpReleased()
 void AEDPlayerController::RespawnPressed()
 {
     // If currently possessing EDCharacter, kill it first.
-    if(PossessedIsEDCharacter)
+    if(PossessedIsEDCharacter && EDGameMode)
     {
         EDGameMode->KillPlayerCharacter(this);
     }
 
     // Spawn a new character.
-    EDGameMode = Cast<AEDGameMode>(GetWorld()->GetAuthGameMode());
-    if(EDGameMode)
+    if(GetWorld())
     {
-        EDGameMode->SpawnCharacter(this);
+        EDGameMode = Cast<AEDGameMode>(GetWorld()->GetAuthGameMode());
+        if(EDGameMode)
+        {
+            EDGameMode->SpawnCharacter(this);
+        }
     }
 }

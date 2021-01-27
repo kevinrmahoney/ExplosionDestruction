@@ -9,13 +9,13 @@
 class AEDProjectile;
 
 /**
- * 
+ *
  */
 UCLASS()
 class EXPLOSIONDESTRUCTION_API AEDProjectileWeapon : public AEDWeapon
 {
 	GENERATED_BODY()
-	
+
 protected:
 	virtual void Tick(float DeltaSeconds) override;
 

@@ -16,7 +16,6 @@ AEDObserver::AEDObserver()
 void AEDObserver::BeginPlay()
 {
 	Super::BeginPlay();
-	
 }
 
 // Called every frame

@@ -7,11 +7,11 @@
 #include "EDGameInstance.generated.h"
 
 /**
- * 
+ *
  */
 UCLASS()
 class EXPLOSIONDESTRUCTION_API UEDGameInstance : public UGameInstance
 {
 	GENERATED_BODY()
-	
+
 };

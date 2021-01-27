@@ -7,11 +7,11 @@
 #include "EDPlayerStart.generated.h"
 
 /**
- * 
+ *
  */
 UCLASS()
 class EXPLOSIONDESTRUCTION_API AEDPlayerStart : public APlayerStart
 {
 	GENERATED_BODY()
-	
+
 };

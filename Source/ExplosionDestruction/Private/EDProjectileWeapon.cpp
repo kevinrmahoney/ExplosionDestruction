@@ -20,7 +20,7 @@ void AEDProjectileWeapon::Shoot()
 		return;
 
 	AActor* MyOwner = GetOwner();
-	if (MyOwner && ProjectileClass)
+	if (MyOwner && ProjectileClass && GetWorld())
 	{
 		FVector MouseWorldLocation;
 		FVector MouseWorldDirection;

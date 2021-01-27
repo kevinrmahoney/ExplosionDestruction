@@ -5,12 +5,10 @@
 #include "CoreMinimal.h"
 #include "Core\Public\Logging\LogVerbosity.h"
 
-using namespace ELogVerbosity;
-
 /** Logger
  *
  * Use this to log messages to screen or to console/file
- * 
+ *
  * Usage examples:
  *  Logger::Info("Hello!");
  *  Logger::Warning("Hello %s! You are going %d units per second!", MyChar->GetName(), MyChar->GetSpeed());
@@ -27,28 +25,36 @@ public:
 
 	static void AddTick();
 
+	enum Verbosity
+	{
+		InfoLevel = 0,
+		WarningLevel = 1,
+		ErrorLevel = 2,
+		FatalLevel = 3
+	};
+
 	template <typename FmtType, typename... Types>
 	static void Info(const FmtType& Fmt, Types... Args)
 	{
-		LogMessage(ELogVerbosity::Display, FColor::White, Fmt, Args...);
+		LogMessage(InfoLevel, FColor::White, Fmt, Args...);
 	}
 
 	template <typename FmtType, typename... Types>
 	static void Warning(const FmtType& Fmt, Types... Args)
 	{
-		LogMessage(ELogVerbosity::Warning, FColor::Yellow, Fmt, Args...);
+		LogMessage(WarningLevel, FColor::Yellow, Fmt, Args...);
 	}
 
 	template <typename FmtType, typename... Types>
 	static void Error(const FmtType& Fmt, Types... Args)
 	{
-		LogMessage(ELogVerbosity::Error, FColor::Orange, Fmt, Args...);
+		LogMessage(ErrorLevel, FColor::Orange, Fmt, Args...);
 	}
 
 	template <typename FmtType, typename... Types>
 	static void Fatal(const FmtType& Fmt, Types... Args)
 	{
-		LogMessage(ELogVerbosity::Fatal, FColor::Red, Fmt, Args...);
+		LogMessage(FatalLevel, FColor::Red, Fmt, Args...);
 	}
 
 private:
@@ -56,17 +62,14 @@ private:
 	static bool bShowTimeStamp;
 	static bool bShowTicks;
 	static bool bShowOnScreen;
-	static enum ELogVerbosity::Type MinVerbosity;
+	static enum Verbosity MinVerbosity;
 
 	template <typename FmtType, typename... Types>
-	static void LogMessage(ELogVerbosity::Type LogVerbosity, FColor Color, const FmtType& Fmt, Types... Args)
+	static void LogMessage(enum Verbosity LogVerbosity, FColor Color, const FmtType& Fmt, Types... Args)
 	{
-		if(LogVerbosity < Logger::MinVerbosity)
-			return;
-
 		FString Message = FString::Printf(Fmt, Args...);
-		FString TickStamp;
-		FString TimeStamp;
+		FString TickStamp = FString("");
+		FString TimeStamp = FString("");
 
 		if(bShowTicks)
 			TickStamp = FString::Printf(TEXT("[%s]"), *FString::FromInt(TickCount));
@@ -74,14 +77,16 @@ private:
 		if(bShowTimeStamp)
 			TimeStamp = FString::Printf(TEXT("[%s]"), *GetTimeStamp());
 
-		if(ELogVerbosity::Fatal == LogVerbosity)
-			UE_LOG(LogTemp, ELogVerbosity::Fatal, TEXT("%s%s %s"), *TimeStamp, *TickStamp, *Message);
-		if(ELogVerbosity::Error == LogVerbosity)
-			UE_LOG(LogTemp, ELogVerbosity::Error, TEXT("%s%s %s"), *TimeStamp, *TickStamp, *Message);
-		if(ELogVerbosity::Warning == LogVerbosity)
-			UE_LOG(LogTemp, ELogVerbosity::Warning, TEXT("%s%s %s"), *TimeStamp, *TickStamp, *Message);
-		if(ELogVerbosity::Display == LogVerbosity)
-			UE_LOG(LogTemp, ELogVerbosity::Display, TEXT("%s%s %s"), *TimeStamp, *TickStamp, *Message);
+		// We convert our internal Verbosity enum to UE's verbosity level and use UE_LOG.
+		if(Verbosity::FatalLevel <= LogVerbosity)
+			UE_LOG(LogTemp, Fatal, TEXT("  %s%s %s"), *TimeStamp, *TickStamp, *Message)
+		else if(Verbosity::ErrorLevel == LogVerbosity)
+			UE_LOG(LogTemp, Error, TEXT("  %s%s %s"), *TimeStamp, *TickStamp, *Message)
+		 else if(Verbosity::WarningLevel == LogVerbosity)
+			UE_LOG(LogTemp, Warning, TEXT("%s%s %s"), *TimeStamp, *TickStamp, *Message)
+		 else if(Verbosity::InfoLevel == LogVerbosity)
+			UE_LOG(LogTemp, Display, TEXT("%s%s %s"), *TimeStamp, *TickStamp, *Message)
+
 
 		if(bShowOnScreen && GEngine)
 			GEngine->AddOnScreenDebugMessage(-1, 15.0f, Color, *Message);
