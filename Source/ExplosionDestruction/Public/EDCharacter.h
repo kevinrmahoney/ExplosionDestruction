@@ -83,7 +83,7 @@ protected:
 
 	virtual void Tick(float DeltaSeconds) override;
 	virtual void BeginPlay() override;
-	virtual void BeginDestroy() override;
+	virtual void EndPlay(EEndPlayReason::Type EndPlayReason) override;
 
 	/* HUD */
 	UPROPERTY(EditAnywhere, Category = "HUD")
@@ -175,23 +175,23 @@ protected:
 	float MaxHealth = 100.f;
 
 	/* Blueprint Implementable Events (for sounds, graphics, etc) */
-	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
-	void EDJump();
+	UFUNCTION(BlueprintImplementableEvent, meta = (DisplayName = "On Jump"))
+	void EDOnJump();
 
-	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
-	bool EDWallKick();
+	UFUNCTION(BlueprintImplementableEvent, meta = (DisplayName = "On Wall Kick"))
+	void EDOnWallKick();
 
-	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
-	bool EDLanded();
+	UFUNCTION(BlueprintImplementableEvent, meta = (DisplayName = "On Landed"))
+	void EDOnLanded();
 
-	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
-	bool EDDamageTaken();
+	UFUNCTION(BlueprintImplementableEvent, meta = (DisplayName = "On Damage Taken"))
+	void EDOnDamageTaken();
 
-	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
-	bool EDSlideBegin();
+	UFUNCTION(BlueprintImplementableEvent, meta = (DisplayName = "On Slide Begin"))
+	void EDOnSlideBegin();
 
-	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
-	bool EDSlideEnd();
+	UFUNCTION(BlueprintImplementableEvent, meta = (DisplayName = "On Slide End"))
+	void EDOnSlideEnd();
 
 // States
 	bool Jumping = false;

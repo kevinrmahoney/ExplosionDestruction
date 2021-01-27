@@ -132,13 +132,13 @@ void AEDCharacter::BeginPlay()
 	}
 }
 
-void AEDCharacter::BeginDestroy()
+void AEDCharacter::EndPlay(EEndPlayReason::Type EndPlayReason)
 {
 	if(BaseHUD)
-		BaseHUD->RemoveFromViewport();
+		BaseHUD->Remove();
 
-	if(this)
-		Super::BeginDestroy();
+	if(CurrentWeapon)
+		CurrentWeapon->Destroy();
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -468,12 +468,3 @@ void AEDCharacter::OnWallKickRightComponentEndOverlap(UPrimitiveComponent* Overl
 
 	OverlapRight = false;
 }
-
-// Events
-void AEDCharacter::EDJump_Implementation() {}
-void AEDCharacter::EDWallKick_Implementation() {}
-void AEDCharacter::EDLanded_Implementation() {}
-void AEDCharacter::EDDamageTaken_Implementation() {}
-void AEDCharacter::EDSlideBegin_Implementation() {}
-void AEDCharacter::EDSlideEnd_Implementation() {}
-

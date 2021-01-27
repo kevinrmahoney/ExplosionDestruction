@@ -30,7 +30,7 @@ void AEDRocket::BeginPlay()
 
 	RadialForceComp->Radius = BlastRadius;
 	RadialForceComp->ImpulseStrength = BlastStrength;
-	
+
 	GetWorldTimerManager().SetTimer(TimerHandle_ExplosionDelay, this, &AEDRocket::DestroySelf, ExplosionDelay, true);
 
 	OnDestroyed.AddDynamic(this, &AEDRocket::Explode);
@@ -58,4 +58,3 @@ void AEDRocket::DestroySelf()
 {
 	Destroy();
 }
-

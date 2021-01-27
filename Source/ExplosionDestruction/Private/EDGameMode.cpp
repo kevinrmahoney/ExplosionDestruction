@@ -77,7 +77,24 @@ bool AEDGameMode::SpawnCharacter(AEDPlayerController* Controller)
 	return false;
 }
 
-float AEDGameMode::GetTimer()
+float AEDGameMode::GetCurrentTime()
 {
 	return Timer;
+}
+
+float AEDGameMode::GetBestTime()
+{
+	return BestTime;
+}
+
+bool AEDGameMode::CheckTime(float Time)
+{
+	UE_LOG(LogTemp, Display, TEXT("CheckTime"))
+	if(BestTime == 0.f || Time < BestTime)
+	{
+		BestTime = Time;
+		return true;
+	}
+
+	return false;
 }
