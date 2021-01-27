@@ -9,6 +9,7 @@
 class UBoxComponent;
 class AEDWeapon;
 class UEDBaseHUD;
+class UEDHealthComponent;
 
 /**
  * This class is the default character for ExplosionDestruction, and it is responsible for all
@@ -37,12 +38,6 @@ public:
 	void SetShooting(bool NewShooting);
 
 	void SetJumping(bool NewJumping);
-
-	UFUNCTION(BlueprintCallable)
-	float GetHealth();
-
-	UFUNCTION(BlueprintCallable)
-	float GetMaxHealth();
 
 	UFUNCTION(BlueprintCallable)
 	float GetAmmo();
@@ -171,10 +166,16 @@ protected:
 	UPROPERTY(VisibleDefaultsOnly, Category = Weapons)
 	FName WeaponSocketName;
 
-	UPROPERTY(EditDefaultsOnly, Category = Character)
-	float MaxHealth = 100.f;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	UEDHealthComponent* HealthComp;
 
 	/* Blueprint Implementable Events (for sounds, graphics, etc) */
+	UFUNCTION()
+	void OnHealthChanged(UEDHealthComponent* OwnedHealthComp, float Health, float HealthDelta, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
+
+	UFUNCTION()
+	void HandleEndPlay(AActor* Actor, EEndPlayReason::Type EndPlayReason);
+
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 	bool EventJump();
 
@@ -213,10 +214,11 @@ protected:
 	bool CanWallKick = false; // can only wall kick when we get close to a new wall
 	int JumpCount = 0;
 	bool Jumped = false; // If we actually jumped
-	float Health = MaxHealth;
 	float Ammo = 10.f;
 	bool bUpdateHUD = false;
 	FVector OldVelocity = FVector::ZeroVector;
+	UPROPERTY(BlueprintReadOnly, Category = "Player")
+	bool bDied;
 
 	// If we are overlapping objects to our left, right, top, bottom of character.
 	bool OverlapLeft = false;
