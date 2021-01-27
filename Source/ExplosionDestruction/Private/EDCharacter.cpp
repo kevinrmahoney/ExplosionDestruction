@@ -157,7 +157,7 @@ void AEDCharacter::BeginDestroy()
 void AEDCharacter::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
 	Super::EndPlay(EndPlayReason);
-	Logger::Info(TEXT("ENDPLAY)"));
+	//Logger::Info(TEXT("ENDPLAY)"));
 }
 
 //////////////////////////////////////////////////////////////////////////
