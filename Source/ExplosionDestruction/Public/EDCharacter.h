@@ -27,6 +27,31 @@ class AEDCharacter : public APaperCharacter
 {
 	GENERATED_BODY()
 
+private:
+	struct CharacterState
+	{
+		bool IsJumping;
+		bool IsMoving;
+		bool IsFalling;
+		bool IsWallKicking;
+		bool IsGrounded;
+		bool IsDead;
+		bool IsShooting;
+		bool CanWallKick;
+		float Rotation;
+		int JumpCount;
+		FVector Velocity;
+	};
+
+	struct PlayerInput
+	{
+		bool TryJump;
+		bool TryMoveLeft;
+		bool TryMoveRight;
+		bool TryShoot;
+		bool TryWallKick;
+	};
+
 public:
 	AEDCharacter();
 
@@ -41,15 +66,13 @@ public:
 	void MoveLeftPressed();
 	void MoveLeftReleased();
 
-	void SetShooting(bool NewShooting);
+	// Shooting binds
+	void SetShootingPressed();
+	void SetShootingReleased();
 
-	void SetJumping(bool NewJumping);
-
-	UFUNCTION(BlueprintCallable)
-	float GetAmmo();
-
-	UFUNCTION(BlueprintCallable)
-	float GetSpeed();
+	// Jumping binds
+	void SetJumpingPressed();
+	void SetJumpingReleased();
 
 	// Wall Kick Overlap Events
 	// Top
@@ -80,14 +103,14 @@ public:
 	UFUNCTION()
 	void OnWallKickRightComponentEndOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
-protected:
+	// Getters
+	UFUNCTION(BlueprintCallable)
+	float GetAmmo();
 
-	virtual void Tick(float DeltaSeconds) override;
-	virtual void BeginPlay() override;
+	UFUNCTION(BlueprintCallable)
+	float GetSpeed();
 
-	void InitializeHUD();
-	void InitializeDynamicEvents();
-
+private:
 	// Movement
 	bool DoMove(float DeltaSeconds);
 
@@ -99,6 +122,13 @@ protected:
 
 	// Wall kick
 	bool DoWallKick(float DeltaSeconds);
+
+protected:
+	virtual void Tick(float DeltaSeconds) override;
+	virtual void BeginPlay() override;
+
+	void InitializeHUD();
+	void InitializeDynamicEvents();
 
 	/* HUD */
 	UPROPERTY(EditAnywhere, Category = "HUD")
@@ -140,7 +170,7 @@ protected:
 	float WallKickSpeed = 800;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Movement)
-	int MaxJumpCount = 2;
+	int MaxJumpCount = 1;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Movement)
 	int JumpSpeed = 1000.f;
@@ -222,38 +252,17 @@ protected:
 	UFUNCTION(BlueprintImplementableEvent, meta = (DisplayName = "On Walk End"))
 	bool EDWalkEnd();
 
+	// Character states
+	CharacterState PreviousState;
+	CharacterState CurrentState;
 
-	struct CharState
-	{
-		bool IsJumping;
-		bool IsMoving;
-		bool IsFalling;
-		bool IsWallKicking;
-		bool IsGrounded;
-		bool IsDead;
-		bool IsShooting;
-		bool CanWallKick;
-		float Rotation;
-		int JumpCount;
-		FVector Velocity;
-	};
-
-	struct PlayerInput
-	{
-		bool TryJump;
-		bool TryMoveLeft;
-		bool TryMoveRight;
-		bool TryShoot;
-		bool TryWallKick;
-	};
-
-	CharState PreviousState;
-	CharState CurrentState;
-
+	// Player Input states
 	PlayerInput CurrentInput;
 
-	// States
+	// Counters
 	float Ammo = 10.f;
+
+	// If we should update the HUD on next tick
 	bool ShouldUpdateHUD = false;
 
 	// If we are overlapping objects to our left, right, top, bottom of character.

@@ -166,13 +166,11 @@ void AEDCharacter::Tick(float DeltaSeconds)
 
 	// Apply the input to the character motion from left/right input
 	if(CurrentInput.TryMoveLeft || CurrentInput.TryMoveRight)
-		DoMove(DeltaSeconds);
+		CurrentState.IsMoving = DoMove(DeltaSeconds);
 
 	// Fire weapon if we are firing
 	if(CurrentInput.TryShoot && CurrentWeapon)
 		CurrentState.IsShooting = DoShootWeapon(DeltaSeconds);
-	else
-		CurrentState.IsShooting = false;
 
 	// Apply an impulse to the character from wall kicks, if applicable.
 	// Wall kicks are impulses added to the character depending on the walls
@@ -182,13 +180,35 @@ void AEDCharacter::Tick(float DeltaSeconds)
 	// touching a ceiling, where instead the impulse goes downwards) and add
 	// an additional impulse in the direction opposite of the wall they're
 	// touching.
-	if((CurrentState.IsGrounded && CurrentInput.TryJump) || (CurrentState.IsFalling && CurrentState.JumpCount < MaxJumpCount))
+	if(CurrentInput.TryJump)
 	{
-		DoJump(DeltaSeconds);
-	}
-	else if(CurrentState.IsFalling && CurrentInput.TryJump && CurrentState.CanWallKick && WallKickVectorsAvailable.SizeSquared() != 0.f)
-	{
-		DoWallKick(DeltaSeconds);
+		bool DidJump = false;
+
+		// We can jump from the ground
+		if(CurrentState.IsGrounded)
+		{
+			CurrentState.IsJumping = DoJump(DeltaSeconds);
+		}
+		// If we're in midair, we have two options
+		else
+		{
+			// Do a wall kick before a double jump, if we can.
+			if(CurrentState.CanWallKick && WallKickVectorsAvailable.SizeSquared())
+			{
+				CurrentState.IsWallKicking = DoWallKick(DeltaSeconds);
+
+				if(CurrentState.IsWallKicking)
+					CurrentInput.TryWallKick = false;
+			}
+			// Do a double jump as a last resort, if we can
+			else if(CurrentState.JumpCount < MaxJumpCount)
+			{
+				CurrentState.IsJumping = DoJump(DeltaSeconds);
+			}
+		}
+
+		if(CurrentState.IsJumping)
+			CurrentInput.TryJump = false;
 	}
 
 	// Update animation to match the motion
@@ -226,13 +246,14 @@ bool AEDCharacter::DoMove(float DeltaSeconds)
 
 bool AEDCharacter::DoShootWeapon(float DeltaSeconds)
 {
-	if(CurrentWeapon->Shoot())
-	{
+	// Shoot the currently held weapon
+	bool IsShooting = CurrentWeapon->Shoot();
+
+	// We should udpate the HUD if we shot (ammo count)
+	if(IsShooting)
 		ShouldUpdateHUD = true;
-		return true;
-	}
-	else
-		return false;
+
+	return IsShooting;
 }
 
 bool AEDCharacter::DoJump(float DeltaSeconds)
@@ -241,7 +262,6 @@ bool AEDCharacter::DoJump(float DeltaSeconds)
 	CurrentState.JumpCount++;
 	GetCharacterMovement()->Velocity.Z = JumpSpeed;
 	GetCharacterMovement()->SetMovementMode(MOVE_Falling); // If we don't do this, the movement isn't applied.
-	CurrentState.IsJumping = true;
 	ShouldUpdateHUD = true; // Our speed changes
 	EDOnJump(); // Trigger jump event
 
@@ -293,6 +313,18 @@ bool AEDCharacter::DoWallKick(float DeltaSeconds)
 
 void AEDCharacter::UpdateCharacter()
 {
+	// One time where we force the character to face a different direction
+	// is when the character is near a wall. This is due to the wall
+	// hanging animation. So change direction depending on which side of the
+	// character is near a wall.
+	if(CurrentState.IsFalling && WallKickVectorsAvailable.X != 0.f)
+	{
+		if(WallKickVectorsAvailable.X < 0.f) // Wall to left, face right
+			CurrentState.Rotation = FACING_RIGHT;
+		else if(WallKickVectorsAvailable.X > 0.f) // Wall to right, face left
+			CurrentState.Rotation = FACING_LEFT;
+	}
+
 	// Set the rotation so that the character faces the direction they wish
 	// to move
 	if(Controller != nullptr)
@@ -317,10 +349,12 @@ void AEDCharacter::UpdateState()
 	CurrentState.IsWallKicking = false;
 	CurrentState.IsGrounded = false;
 	CurrentState.IsShooting = false;
+	WallKickVectorsAvailable = FVector::ZeroVector;
 
 	// Get current states
 	CurrentState.Velocity = GetVelocity();
 
+	// Set if we're moving
 	CurrentState.IsMoving = CurrentState.Velocity.IsNearlyZero();
 
 	// Check if character has begun walking or ended walking
@@ -359,16 +393,11 @@ void AEDCharacter::UpdateState()
 	if(OverlapBottom)
 		WallKickVectorsAvailable.Z += -1.f;
 
-	// One time where we force the character to face a different direction
-	// is when the character is near a wall. This is due to the wall
-	// hanging animation. So change direction depending on which side of the
-	// character is near a wall.
-	if(CurrentState.IsFalling && WallKickVectorsAvailable.X != 0.f)
+	// If we can still wall kick because we *were* near a wall but are no longer
+	// near one, then we can't wall kick. Need to get near a wall again.
+	if(CurrentState.CanWallKick && WallKickVectorsAvailable.IsNearlyZero())
 	{
-		if(WallKickVectorsAvailable.X < 0.f) // Wall to left, face right
-			CurrentState.Rotation = FACING_RIGHT;
-		else if(WallKickVectorsAvailable.X > 0.f) // Wall to right, face left
-			CurrentState.Rotation = FACING_LEFT;
+		CurrentState.CanWallKick = false;
 	}
 }
 
@@ -429,6 +458,7 @@ void AEDCharacter::UpdateHUD()
 // Events
 //
 
+// Called on damage recieved or healing received
 void AEDCharacter::EDOnHealthChanged(UEDHealthComponent* OwnedHealthComp, float Health, float HealthDelta, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser)
 {
 	if(Health <= 0.f && !CurrentState.IsDead)
@@ -445,6 +475,7 @@ void AEDCharacter::EDOnHealthChanged(UEDHealthComponent* OwnedHealthComp, float 
 	}
 }
 
+// Called on death of character
 void AEDCharacter::EDOnDeath(AActor* Actor, EEndPlayReason::Type EndPlayReason)
 {
 	// Remove the HUD related to this character from the player's screen.
@@ -528,16 +559,6 @@ void AEDCharacter::OnWallKickRightComponentEndOverlap(UPrimitiveComponent* Overl
 // Getters / Setters
 //
 
-void AEDCharacter::SetShooting(bool NewShooting)
-{
-	CurrentInput.TryShoot = NewShooting;
-}
-
-void AEDCharacter::SetJumping(bool NewJumping)
-{
-	CurrentInput.TryJump = NewJumping;
-}
-
 float AEDCharacter::GetAmmo()
 {
 	return Ammo;
@@ -546,6 +567,30 @@ float AEDCharacter::GetAmmo()
 float AEDCharacter::GetSpeed()
 {
 	return GetCharacterMovement()->Velocity.Size();
+}
+
+//
+// Input Handling
+//
+
+void AEDCharacter::SetShootingPressed()
+{
+	CurrentInput.TryShoot = true;
+}
+
+void AEDCharacter::SetShootingReleased()
+{
+	CurrentInput.TryShoot = false;
+}
+
+void AEDCharacter::SetJumpingPressed()
+{
+	CurrentInput.TryJump = true;
+}
+
+void AEDCharacter::SetJumpingReleased()
+{
+	CurrentInput.TryJump = false;
 }
 
 void AEDCharacter::MoveRightPressed()

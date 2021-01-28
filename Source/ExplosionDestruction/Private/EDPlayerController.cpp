@@ -102,25 +102,25 @@ void AEDPlayerController::MoveLeftReleased()
 void AEDPlayerController::ShootPressed()
 {
     if(PossessedIsEDCharacter && EDCharacter)
-        EDCharacter->SetShooting(true);
+        EDCharacter->SetShootingPressed();
 }
 
 void AEDPlayerController::ShootReleased()
 {
     if(PossessedIsEDCharacter && EDCharacter)
-        EDCharacter->SetShooting(false);
+        EDCharacter->SetShootingReleased();
 }
 
 void AEDPlayerController::JumpPressed()
 {
     if(PossessedIsEDCharacter && EDCharacter)
-        EDCharacter->SetJumping(true);
+        EDCharacter->SetJumpingPressed();
 }
 
 void AEDPlayerController::JumpReleased()
 {
     if(PossessedIsEDCharacter && EDCharacter)
-        EDCharacter->SetJumping(false);
+        EDCharacter->SetJumpingReleased();
 }
 
 // If we pressed the respawn button
