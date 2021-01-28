@@ -13,6 +13,8 @@ public:
 	Environment();
 	~Environment();
 
+#define COLLISION_WEAPON	ECC_GameTraceChannel1
+
 // This is used to declare CVARs
 #define DECLARE_CVAR(Type, Name) \
 static Type Name; \
