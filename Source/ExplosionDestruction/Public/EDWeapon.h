@@ -34,16 +34,16 @@ protected:
 
 	float CooldownProgress = Cooldown; // Set progress to Cooldown so we can shoot right away after spawning.
 
-	UFUNCTION(BlueprintImplementableEvent, meta = (DisplayName = "ED On Shoot Begin"))
+	UFUNCTION(BlueprintImplementableEvent, meta = (DisplayName = "On Shoot Begin"))
 	void EDOnShootBegin();
 
-	UFUNCTION(BlueprintImplementableEvent, meta = (DisplayName = "ED On Shoot End"))
+	UFUNCTION(BlueprintImplementableEvent, meta = (DisplayName = "On Shoot End"))
 	void EDOnShootEnd();
 
-	UFUNCTION(BlueprintImplementableEvent, meta = (DisplayName = "ED On Cooldown Begin"))
+	UFUNCTION(BlueprintImplementableEvent, meta = (DisplayName = "On Cooldown Begin"))
 	void EDOnCooldownBegin();
 
-	UFUNCTION(BlueprintImplementableEvent, meta = (DisplayName = "ED On Cooldown End"))
+	UFUNCTION(BlueprintImplementableEvent, meta = (DisplayName = "On Cooldown End"))
 	void EDOnCooldownEnd();
 
 public:

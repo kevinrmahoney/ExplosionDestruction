@@ -77,50 +77,50 @@ void AEDPlayerController::OnUnPossess()
 void AEDPlayerController::MoveRightPressed()
 {
     if(PossessedIsEDCharacter && EDCharacter)
-        EDCharacter->MoveRightPressed();
+        EDCharacter->MoveRightBegin();
 }
 
 void AEDPlayerController::MoveRightReleased()
 {
     if(PossessedIsEDCharacter && EDCharacter)
-        EDCharacter->MoveRightReleased();
+        EDCharacter->MoveRightEnd();
 }
 
 void AEDPlayerController::MoveLeftPressed()
 {
     if(PossessedIsEDCharacter && EDCharacter)
-        EDCharacter->MoveLeftPressed();
+        EDCharacter->MoveLeftBegin();
 }
 
 void AEDPlayerController::MoveLeftReleased()
 {
     if(PossessedIsEDCharacter && EDCharacter)
-        EDCharacter->MoveLeftReleased();
+        EDCharacter->MoveLeftEnd();
 }
 
 
 void AEDPlayerController::ShootPressed()
 {
     if(PossessedIsEDCharacter && EDCharacter)
-        EDCharacter->SetShootingPressed();
+        EDCharacter->SetShootBegin();
 }
 
 void AEDPlayerController::ShootReleased()
 {
     if(PossessedIsEDCharacter && EDCharacter)
-        EDCharacter->SetShootingReleased();
+        EDCharacter->SetShootEnd();
 }
 
 void AEDPlayerController::JumpPressed()
 {
     if(PossessedIsEDCharacter && EDCharacter)
-        EDCharacter->SetJumpingPressed();
+        EDCharacter->SetJumpBegin();
 }
 
 void AEDPlayerController::JumpReleased()
 {
     if(PossessedIsEDCharacter && EDCharacter)
-        EDCharacter->SetJumpingReleased();
+        EDCharacter->SetJumpEnd();
 }
 
 // If we pressed the respawn button

@@ -52,13 +52,13 @@ protected:
 
 	virtual void ApplyDamage(AActor* DamagedActor, const FHitResult& Hit);
 
-	UFUNCTION(BlueprintImplementableEvent, meta = (DisplayName = "ED On Weapon Shot"))
+	UFUNCTION(BlueprintImplementableEvent, meta = (DisplayName = "On Weapon Shot"))
 	void EDOnShot();
 
-	UFUNCTION(BlueprintImplementableEvent, meta = (DisplayName = "ED On Explode"))
+	UFUNCTION(BlueprintImplementableEvent, meta = (DisplayName = "On Explode"))
 	void EDOnExplode();
 
-	UFUNCTION(BlueprintImplementableEvent, meta = (DisplayName = "ED On Collide"))
+	UFUNCTION(BlueprintImplementableEvent, meta = (DisplayName = "On Collide"))
 	void EDOnCollide();
 
 public:

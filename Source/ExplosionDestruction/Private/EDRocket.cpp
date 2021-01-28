@@ -32,6 +32,8 @@ void AEDRocket::BeginPlay()
 
 	GetWorldTimerManager().SetTimer(TimerHandle_ExplosionDelay, this, &AEDRocket::DestroySelf, ExplosionDelay, true);
 
+	EDOnShot();
+
 	OnDestroyed.AddDynamic(this, &AEDRocket::Explode);
 }
 
@@ -40,6 +42,8 @@ void AEDRocket::HandleHit(UPrimitiveComponent* HitComponent, AActor* OtherActor,
 {
 	// later, add custom handling for damage since it will deal radial damage
 	Super::HandleHit(HitComponent, OtherActor, OtherComp, NormalImpulse, Hit);
+
+	EDOnCollide();
 }
 
 void AEDRocket::Explode(AActor* DirectHitActor)
@@ -51,6 +55,8 @@ void AEDRocket::Explode(AActor* DirectHitActor)
 	{
 		DrawDebugSphere(GetWorld(), RadialForceComp->GetComponentLocation(), BlastRadius, 12, FColor::White, false, 1.f, 0, 3.f);
 	}
+
+	EDOnExplode();
 }
 
 void AEDRocket::DestroySelf()

@@ -172,18 +172,9 @@ void AEDCharacter::Tick(float DeltaSeconds)
 	if(CurrentInput.TryShoot && CurrentWeapon)
 		CurrentState.IsShooting = DoShootWeapon(DeltaSeconds);
 
-	// Apply an impulse to the character from wall kicks, if applicable.
-	// Wall kicks are impulses added to the character depending on the walls
-	// they are in close contact with. This is determined by the
-	// WallKickBoxComponent hitboxes above, below, to the left and right of
-	// the character. Wall kicks should always add an impulse upwards (unless
-	// touching a ceiling, where instead the impulse goes downwards) and add
-	// an additional impulse in the direction opposite of the wall they're
-	// touching.
+	// Try to perform a jump
 	if(CurrentInput.TryJump)
 	{
-		bool DidJump = false;
-
 		// We can jump from the ground
 		if(CurrentState.IsGrounded)
 		{
@@ -207,15 +198,22 @@ void AEDCharacter::Tick(float DeltaSeconds)
 			}
 		}
 
+		// If we've jumped, we can't try again until we click the jump button again
 		if(CurrentState.IsJumping)
 			CurrentInput.TryJump = false;
 	}
 
 	// Update animation to match the motion
 	UpdateAnimation(DeltaSeconds);
-	UpdateCharacter();
-	UpdateHUD();
 
+	// Update some character stuff
+	UpdateCharacter();
+
+	// Update the HUD
+	if(ShouldUpdateHUD)
+		UpdateHUD();
+
+	// Save the previous state
 	PreviousState = CurrentState;
 }
 
@@ -263,7 +261,7 @@ bool AEDCharacter::DoJump(float DeltaSeconds)
 	GetCharacterMovement()->Velocity.Z = JumpSpeed;
 	GetCharacterMovement()->SetMovementMode(MOVE_Falling); // If we don't do this, the movement isn't applied.
 	ShouldUpdateHUD = true; // Our speed changes
-	EDOnJump(); // Trigger jump event
+	EDOnJumpBP(); // Trigger jump event
 
 	return true;
 }
@@ -302,7 +300,7 @@ bool AEDCharacter::DoWallKick(float DeltaSeconds)
 	CurrentState.CanWallKick = false;
 	CurrentState.IsWallKicking = true;
 
-	EDOnWallKick();
+	EDOnWallKickBP();
 
 	return true;
 }
@@ -359,13 +357,13 @@ void AEDCharacter::UpdateState()
 
 	// Check if character has begun walking or ended walking
 	if(PreviousState.Velocity.IsNearlyZero() && !CurrentState.Velocity.IsNearlyZero())
-		EDWalkBegin();
+		EDOnWalkBeginBP();
 	else if(!PreviousState.Velocity.IsNearlyZero() && CurrentState.Velocity.IsNearlyZero())
-		EDWalkEnd();
+		EDOnWalkEndBP();
 
 	// If the character has landed after being in air.
 	if(CurrentState.IsGrounded && PreviousState.IsFalling)
-		EDOnLanded();
+		EDOnLandedBP();
 
 	// Set if the character is on the grounded
 	CurrentState.IsFalling = GetCharacterMovement()->IsFalling();
@@ -473,6 +471,8 @@ void AEDCharacter::EDOnHealthChanged(UEDHealthComponent* OwnedHealthComp, float 
 
 		SetLifeSpan(3.f);
 	}
+
+	EDOnHealthChangedBP();
 }
 
 // Called on death of character
@@ -485,6 +485,8 @@ void AEDCharacter::EDOnDeath(AActor* Actor, EEndPlayReason::Type EndPlayReason)
 	// Destroy the weapons they're holding.
 	if(CurrentWeapon)
 		CurrentWeapon->Destroy();
+
+	EDOnDeathBP();
 }
 
 // Top
@@ -573,45 +575,45 @@ float AEDCharacter::GetSpeed()
 // Input Handling
 //
 
-void AEDCharacter::SetShootingPressed()
+void AEDCharacter::SetShootBegin()
 {
 	CurrentInput.TryShoot = true;
 }
 
-void AEDCharacter::SetShootingReleased()
+void AEDCharacter::SetShootEnd()
 {
 	CurrentInput.TryShoot = false;
 }
 
-void AEDCharacter::SetJumpingPressed()
+void AEDCharacter::SetJumpBegin()
 {
 	CurrentInput.TryJump = true;
 }
 
-void AEDCharacter::SetJumpingReleased()
+void AEDCharacter::SetJumpEnd()
 {
 	CurrentInput.TryJump = false;
 }
 
-void AEDCharacter::MoveRightPressed()
+void AEDCharacter::MoveRightBegin()
 {
 	// Try to move right
 	CurrentInput.TryMoveRight = true;
 }
 
-void AEDCharacter::MoveRightReleased()
+void AEDCharacter::MoveRightEnd()
 {
 	// Stop trying to move right
 	CurrentInput.TryMoveRight = false;
 }
 
-void AEDCharacter::MoveLeftPressed()
+void AEDCharacter::MoveLeftBegin()
 {
 	// Try to move left
 	CurrentInput.TryMoveLeft = true;
 }
 
-void AEDCharacter::MoveLeftReleased()
+void AEDCharacter::MoveLeftEnd()
 {
 	// Stop trying to move left
 	CurrentInput.TryMoveLeft = false;

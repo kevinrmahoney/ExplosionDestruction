@@ -61,18 +61,18 @@ public:
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 
 	/** Called for side to side input */
-	void MoveRightPressed();
-	void MoveRightReleased();
-	void MoveLeftPressed();
-	void MoveLeftReleased();
+	void MoveRightBegin();
+	void MoveRightEnd();
+	void MoveLeftBegin();
+	void MoveLeftEnd();
 
 	// Shooting binds
-	void SetShootingPressed();
-	void SetShootingReleased();
+	void SetShootBegin();
+	void SetShootEnd();
 
 	// Jumping binds
-	void SetJumpingPressed();
-	void SetJumpingReleased();
+	void SetJumpBegin();
+	void SetJumpEnd();
 
 	// Wall Kick Overlap Events
 	// Top
@@ -220,43 +220,48 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	UEDHealthComponent* HealthComp;
-
-	/* Blueprint Implementable Events (for sounds, graphics, etc) */
 	UFUNCTION()
 	void EDOnHealthChanged(UEDHealthComponent* OwnedHealthComp, float Health, float HealthDelta, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
 
 	UFUNCTION()
 	void EDOnDeath(AActor* Actor, EEndPlayReason::Type EndPlayReason);
 
+	/* Blueprint Implementable Events (for sounds, graphics, etc) */
+	UFUNCTION(BlueprintImplementableEvent, meta = (DisplayName = "On Death"))
+	void EDOnDeathBP();
+
+	UFUNCTION(BlueprintImplementableEvent, meta = (DisplayName = "On Health Changed"))
+	void EDOnHealthChangedBP();
+
 	UFUNCTION(BlueprintImplementableEvent, meta = (DisplayName = "On Jump"))
-	void EDOnJump();
+	void EDOnJumpBP();
 
 	UFUNCTION(BlueprintImplementableEvent, meta = (DisplayName = "On Wall Kick"))
-	void EDOnWallKick();
+	void EDOnWallKickBP();
 
 	UFUNCTION(BlueprintImplementableEvent, meta = (DisplayName = "On Landed"))
-	void EDOnLanded();
+	void EDOnLandedBP();
 
 	UFUNCTION(BlueprintImplementableEvent, meta = (DisplayName = "On Damage Taken"))
-	void EDOnDamageTaken();
+	void EDOnDamageTakenBP();
 
 	UFUNCTION(BlueprintImplementableEvent, meta = (DisplayName = "On Slide Begin"))
-	void EDOnSlideBegin();
+	void EDOnSlideBeginBP();
 
 	UFUNCTION(BlueprintImplementableEvent, meta = (DisplayName = "On Slide End"))
-	void EDOnSlideEnd();
+	void EDOnSlideEndBP();
 
 	UFUNCTION(BlueprintImplementableEvent, meta = (DisplayName = "On Walk Begin"))
-	bool EDWalkBegin();
+	void EDOnWalkBeginBP();
 
 	UFUNCTION(BlueprintImplementableEvent, meta = (DisplayName = "On Walk End"))
-	bool EDWalkEnd();
+	void EDOnWalkEndBP();
 
-	// Character states
+	// Character states. The current state, and the state from the previous tick
 	CharacterState PreviousState;
 	CharacterState CurrentState;
 
-	// Player Input states
+	// Player Input current state
 	PlayerInput CurrentInput;
 
 	// Counters
