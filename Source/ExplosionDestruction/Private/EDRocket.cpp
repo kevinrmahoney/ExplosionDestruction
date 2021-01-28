@@ -35,6 +35,8 @@ void AEDRocket::BeginPlay()
 
 	GetWorldTimerManager().SetTimer(TimerHandle_ExplosionDelay, this, &AEDRocket::DestroySelf, ExplosionDelay, true);
 
+	EDOnShot();
+
 	OnDestroyed.AddDynamic(this, &AEDRocket::Explode);
 }
 
@@ -70,17 +72,17 @@ void AEDRocket::ApplyDamage(AActor* DamagedActor, const FHitResult& Hit)
 	TArray<AActor*> IgnoredActors;
 	IgnoredActors.Add(GetOwner());
 	UGameplayStatics::ApplyRadialDamageWithFalloff(
-		GetWorld(), 
-		ActualDamage, 
-		ActualDamage / 2, 
+		GetWorld(),
+		ActualDamage,
+		ActualDamage / 2,
 		GetActorLocation(),
-		DamageRadius / 2, 
-		DamageRadius, 
-		1.f, 
-		nullptr, 
-		IgnoredActors, 
-		this, 
-		this->GetInstigatorController(), 
+		DamageRadius / 2,
+		DamageRadius,
+		1.f,
+		nullptr,
+		IgnoredActors,
+		this,
+		this->GetInstigatorController(),
 		COLLISION_WEAPON);
 
 	// check if Owner is in the blast radius, deal reduced damage if so
@@ -124,6 +126,8 @@ void AEDRocket::Explode(AActor* DirectHitActor)
 	{
 		DrawDebugSphere(GetWorld(), RadialForceComp->GetComponentLocation(), BlastRadius, 12, FColor::White, false, 1.f, 0, 3.f);
 	}
+
+	EDOnExplode();
 }
 
 void AEDRocket::DestroySelf()

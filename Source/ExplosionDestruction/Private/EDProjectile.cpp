@@ -9,7 +9,7 @@
 // Sets default values
 AEDProjectile::AEDProjectile()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 	SpriteComp = CreateDefaultSubobject<UPaperSpriteComponent>(TEXT("SpriteComp"));
@@ -84,5 +84,4 @@ void AEDProjectile::ApplyDamage(AActor* DamagedActor, const FHitResult& Hit)
 void AEDProjectile::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }

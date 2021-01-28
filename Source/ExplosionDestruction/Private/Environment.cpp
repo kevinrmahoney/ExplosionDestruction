@@ -27,3 +27,5 @@ FAutoConsoleVariableRef CVAR ## Name ( \
 DEFINE_CVAR(DebugWeapons, "Draw debug lines for weapons and explosion radius", ECVF_Cheat)
 
 DEFINE_CVAR(DebugLogs, "Show console logs", ECVF_Cheat)
+
+DEFINE_CVAR(DebugVerbosity, "Verbosity of logging. 4 = Verbose, 3 = Informational, 2 = Warnings, 1 = Errors, 0 = Fatal", ECVF_Cheat)

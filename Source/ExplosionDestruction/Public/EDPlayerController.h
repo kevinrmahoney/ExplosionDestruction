@@ -27,7 +27,10 @@ private:
 	// Input Binds
 	void ShootPressed();
 	void ShootReleased();
-	void Move(float Movement);
+	void MoveRightPressed();
+	void MoveRightReleased();
+	void MoveLeftPressed();
+	void MoveLeftReleased();
 	void JumpPressed();
 	void JumpReleased();
 	void RespawnPressed();

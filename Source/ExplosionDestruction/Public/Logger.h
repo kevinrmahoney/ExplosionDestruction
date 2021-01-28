@@ -4,6 +4,15 @@
 
 #include "CoreMinimal.h"
 #include "Core\Public\Logging\LogVerbosity.h"
+#include "Environment.h"
+
+#define PRINTFUNCENABLED
+
+#ifdef PRINTFUNCENABLED
+#define PRINTFUNC Logger::Verbose(TEXT("Function = %s"), *FString(__FUNCSIG__));
+#else
+#define PRINTFUNC
+#endif
 
 /** Logger
  *
@@ -27,11 +36,18 @@ public:
 
 	enum Verbosity
 	{
-		InfoLevel = 0,
-		WarningLevel = 1,
-		ErrorLevel = 2,
-		FatalLevel = 3
+		VerboseLevel = 4,
+		InfoLevel = 3,
+		WarningLevel = 2,
+		ErrorLevel = 1,
+		FatalLevel = 0
 	};
+
+	template <typename FmtType, typename... Types>
+	static void Verbose(const FmtType& Fmt, Types... Args)
+	{
+		LogMessage(VerboseLevel, FColor::Cyan, Fmt, Args...);
+	}
 
 	template <typename FmtType, typename... Types>
 	static void Info(const FmtType& Fmt, Types... Args)
@@ -67,6 +83,9 @@ private:
 	template <typename FmtType, typename... Types>
 	static void LogMessage(enum Verbosity LogVerbosity, FColor Color, const FmtType& Fmt, Types... Args)
 	{
+		if(LogVerbosity < Environment::DebugVerbosity)
+			return;
+
 		FString Message = FString::Printf(Fmt, Args...);
 		FString TickStamp = FString("");
 		FString TimeStamp = FString("");
@@ -78,13 +97,15 @@ private:
 			TimeStamp = FString::Printf(TEXT("[%s]"), *GetTimeStamp());
 
 		// We convert our internal Verbosity enum to UE's verbosity level and use UE_LOG.
-		if(Verbosity::FatalLevel <= LogVerbosity)
+		if(Verbosity::FatalLevel == LogVerbosity)
 			UE_LOG(LogTemp, Fatal, TEXT("  %s%s %s"), *TimeStamp, *TickStamp, *Message)
 		else if(Verbosity::ErrorLevel == LogVerbosity)
 			UE_LOG(LogTemp, Error, TEXT("  %s%s %s"), *TimeStamp, *TickStamp, *Message)
-		 else if(Verbosity::WarningLevel == LogVerbosity)
+		else if(Verbosity::WarningLevel == LogVerbosity)
 			UE_LOG(LogTemp, Warning, TEXT("%s%s %s"), *TimeStamp, *TickStamp, *Message)
-		 else if(Verbosity::InfoLevel == LogVerbosity)
+		else if(Verbosity::InfoLevel == LogVerbosity)
+			UE_LOG(LogTemp, Display, TEXT("%s%s %s"), *TimeStamp, *TickStamp, *Message)
+		else if(Verbosity::VerboseLevel == LogVerbosity)
 			UE_LOG(LogTemp, Display, TEXT("%s%s %s"), *TimeStamp, *TickStamp, *Message)
 
 		if(bShowOnScreen && GEngine)
