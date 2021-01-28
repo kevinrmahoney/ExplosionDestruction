@@ -4,6 +4,7 @@
 #include "EDCharacter.h"
 #include "EDPlayerController.h"
 #include "Kismet/GameplayStatics.h"
+#include "Logger.h"
 #include "EDPlayerStart.h"
 
 AEDGameMode::AEDGameMode()
@@ -19,6 +20,15 @@ void AEDGameMode::BeginPlay()
 	Super::BeginPlay();
 	// Find all spawn points and put in array.
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), SpawnPointClass.Get(), SpawnPoints);
+
+	// Verify it has necessary fields set before starting, else cause a fatal error.
+	if(!SpawnPointClass)
+		Logger::Fatal(TEXT("Game mode has no spawn point class!"));
+
+	if(!CharacterClass)
+		Logger::Fatal(TEXT("Game mode has no character class!"));
+
+	Logger::Info(TEXT("There are %d spawn points on this map."), SpawnPoints.Num());
 }
 
 void AEDGameMode::Tick(float DeltaSeconds)
@@ -53,6 +63,8 @@ bool AEDGameMode::SpawnCharacter(AEDPlayerController* Controller)
 	FActorSpawnParameters SpawnParams;
 	SpawnParams.Owner = Controller;
 	AActor** SpawnPoint;
+	int32 NumArrayElements = SpawnPoints.Num();
+	int RandomNumber = FMath::RandRange(0, NumArrayElements-1);
 
 	// Get spawn points and reset the timer
 	SpawnPoint = SpawnPoints.GetData();
@@ -61,7 +73,7 @@ bool AEDGameMode::SpawnCharacter(AEDPlayerController* Controller)
 	// Make sure there are no nulls, then spawn the actor
 	if(GetWorld() && SpawnPoint && *SpawnPoint)
 	{
-		SpawnedCharacter = GetWorld()->SpawnActor<AEDCharacter>(CharacterClass, (*SpawnPoint)->GetActorLocation(), FRotator::ZeroRotator, SpawnParams);
+		SpawnedCharacter = GetWorld()->SpawnActor<AEDCharacter>(CharacterClass, (*(SpawnPoint+RandomNumber))->GetActorLocation(), FRotator::ZeroRotator, SpawnParams);
 
 		// If we successfully spawned the actor, the controller should possess the newly spawned character
 		if(SpawnedCharacter)

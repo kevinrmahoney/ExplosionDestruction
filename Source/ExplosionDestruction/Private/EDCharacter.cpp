@@ -10,6 +10,7 @@
 #include "EDWeapon.h"
 #include "Components/BoxComponent.h"
 #include "EDBaseHUD.h"
+#include "Logger.h"
 #include "Blueprint/UserWidget.h"
 #include "EDHealthComponent.h"
 
@@ -198,9 +199,8 @@ void AEDCharacter::Tick(float DeltaSeconds)
 			}
 		}
 
-		// If we've jumped, we can't try again until we click the jump button again
-		if(CurrentState.IsJumping)
-			CurrentInput.TryJump = false;
+		// Whether or not we succeeded in jumping, we cant try again until the jump button is clicked.
+		CurrentInput.TryJump = false;
 	}
 
 	// Update animation to match the motion

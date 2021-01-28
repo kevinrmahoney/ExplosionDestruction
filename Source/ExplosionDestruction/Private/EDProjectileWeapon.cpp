@@ -3,6 +3,7 @@
 
 #include "EDProjectileWeapon.h"
 #include "PaperSpriteComponent.h"
+#include "Logger.h"
 #include "EDProjectile.h"
 
 void AEDProjectileWeapon::Tick(float DeltaSeconds)
@@ -12,6 +13,14 @@ void AEDProjectileWeapon::Tick(float DeltaSeconds)
 	// Play the end cooldown event when its ready to be fired.
 	if(CooldownProgress >= Cooldown)
 		EDOnCooldownEnd();
+}
+
+void AEDProjectileWeapon::BeginPlay()
+{
+	Super::BeginPlay();
+
+	if(!ProjectileClass)
+		Logger::Fatal(TEXT("Projectile weapon has no projectile!"));
 }
 
 bool AEDProjectileWeapon::Shoot()
