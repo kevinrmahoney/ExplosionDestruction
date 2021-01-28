@@ -48,7 +48,6 @@ void AEDProjectile::HandleHit(UPrimitiveComponent* HitComponent, AActor* OtherAc
 	{
 		ApplyDamage(OtherActor, Hit);
 
-		// in the future we should update this to check if hit target is another actor
 		if (bShouldDestroyOnHit)
 		{
 			Destroy();
@@ -69,7 +68,6 @@ void AEDProjectile::HandleOverlap(UPrimitiveComponent* OverlappedComponent, AAct
 	{
 		ApplyDamage(OtherActor, SweepResult);
 
-		// in the future we should update this to check if hit target is another actor
 		if (bShouldDestroyOnOverlap)
 		{
 			Destroy();
