@@ -36,7 +36,7 @@ protected:
 	float MaxSpeed = 2000.f;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Projectile")
-	float BaseDamage = 100.f;
+	float BaseDamage = 20.f;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Projectile")
 	bool bShouldDestroyOnHit;

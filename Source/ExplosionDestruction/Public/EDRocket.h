@@ -26,6 +26,8 @@ protected:
 
 	void HandleHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit) override;
 
+	void ApplyDamage(AActor* DamagedActor, const FHitResult& Hit) override;
+
 	UFUNCTION()
 	void Explode(AActor* DirectHitActor);
 
@@ -36,6 +38,9 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Projectile")
 	float BlastRadius;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Projectile")
+	float DamageRadius;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Projectile")
 	float BlastStrength;
