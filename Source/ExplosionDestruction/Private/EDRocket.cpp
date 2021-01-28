@@ -57,8 +57,11 @@ void AEDRocket::HandleHit(UPrimitiveComponent* HitComponent, AActor* OtherActor,
 void AEDRocket::ApplyDamage(AActor* DamagedActor, const FHitResult& Hit)
 {
 
-	DrawDebugSphere(GetWorld(), Hit.ImpactPoint, DamageRadius / 2, 12, FColor::Red, false, .5, 0, 3.f);
-	DrawDebugSphere(GetWorld(), Hit.ImpactPoint, DamageRadius, 12, FColor::Yellow, false, .5, 0, 3.f);
+	if (Environment::DebugWeapons > 0)
+	{
+		DrawDebugSphere(GetWorld(), Hit.ImpactPoint, DamageRadius / 2, 12, FColor::Red, false, .5, 0, 3.f);
+		DrawDebugSphere(GetWorld(), Hit.ImpactPoint, DamageRadius, 12, FColor::Yellow, false, .5, 0, 3.f);
+	}
 
 	float ActualDamage = BaseDamage;
 	FVector BlastLocation = GetActorLocation();
