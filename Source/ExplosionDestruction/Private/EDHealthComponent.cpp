@@ -17,7 +17,6 @@ void UEDHealthComponent::BeginPlay()
 	Super::BeginPlay();
 
 	// ...
-	
 	AActor* MyOwner = GetOwner();
 	if (MyOwner)
 	{

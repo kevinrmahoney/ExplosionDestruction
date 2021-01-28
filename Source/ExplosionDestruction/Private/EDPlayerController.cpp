@@ -2,6 +2,7 @@
 
 
 #include "EDPlayerController.h"
+#include "Logger.h"
 #include "ExplosionDestruction.h"
 #include "EDCharacter.h"
 #include "Logger.h"
@@ -24,8 +25,13 @@ void AEDPlayerController::SetupInputComponent()
     InputComponent->BindAction("Shoot", IE_Pressed, this, &AEDPlayerController::ShootPressed);
     InputComponent->BindAction("Shoot", IE_Released, this, &AEDPlayerController::ShootReleased);
 
-    // When Move buttons are pressed or released (TODO: refactor these to be actions)
-    InputComponent->BindAxis("MoveRight", this, &AEDPlayerController::Move);
+    // When move left is pressed
+    InputComponent->BindAction("MoveRight", IE_Pressed, this, &AEDPlayerController::MoveRightPressed);
+    InputComponent->BindAction("MoveRight", IE_Released, this, &AEDPlayerController::MoveRightReleased);
+
+    // When move right is pressed
+    InputComponent->BindAction("MoveLeft", IE_Pressed,  this, &AEDPlayerController::MoveLeftPressed);
+    InputComponent->BindAction("MoveLeft", IE_Released, this, &AEDPlayerController::MoveLeftReleased);
 
     // Kill the current character (if it is a character) if it exists, and respawn
     InputComponent->BindAction("Respawn", IE_Pressed, this, &AEDPlayerController::RespawnPressed);
@@ -67,11 +73,31 @@ void AEDPlayerController::OnUnPossess()
     EDCharacter = nullptr;
 }
 
-void AEDPlayerController::Move(float Movement)
+
+void AEDPlayerController::MoveRightPressed()
 {
     if(PossessedIsEDCharacter && EDCharacter)
-        EDCharacter->SetMoving(Movement);
+        EDCharacter->MoveRightPressed();
 }
+
+void AEDPlayerController::MoveRightReleased()
+{
+    if(PossessedIsEDCharacter && EDCharacter)
+        EDCharacter->MoveRightReleased();
+}
+
+void AEDPlayerController::MoveLeftPressed()
+{
+    if(PossessedIsEDCharacter && EDCharacter)
+        EDCharacter->MoveLeftPressed();
+}
+
+void AEDPlayerController::MoveLeftReleased()
+{
+    if(PossessedIsEDCharacter && EDCharacter)
+        EDCharacter->MoveLeftReleased();
+}
+
 
 void AEDPlayerController::ShootPressed()
 {

@@ -48,5 +48,5 @@ protected:
 
 public:
 
-	virtual void Shoot();
+	virtual bool Shoot();
 };

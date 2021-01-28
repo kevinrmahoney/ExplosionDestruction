@@ -10,7 +10,7 @@ long Logger::TickCount = 0;
 bool Logger::bShowTimeStamp = true;
 bool Logger::bShowTicks = true;
 bool Logger::bShowOnScreen = false;
-enum Logger::Verbosity MinVerbosity = Logger::Verbosity::InfoLevel;
+enum Logger::Verbosity MinVerbosity = Logger::Verbosity::WarningLevel;
 
 Logger::Logger()
 {

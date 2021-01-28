@@ -9,7 +9,7 @@
 // Sets default values
 AEDWeapon::AEDWeapon()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 	SpriteComp = CreateDefaultSubobject<UPaperSpriteComponent>(TEXT("SpriteComp"));
@@ -22,7 +22,7 @@ void AEDWeapon::Tick(float DeltaSeconds)
 	CooldownProgress += DeltaSeconds;
 }
 
-void AEDWeapon::Shoot()
+bool AEDWeapon::Shoot()
 {
 	AActor* MyOwner = GetOwner();
 	if (MyOwner && GetWorld())
@@ -56,4 +56,6 @@ void AEDWeapon::Shoot()
 	}
 
 	CooldownProgress = 0.f;
+
+	return true;
 }

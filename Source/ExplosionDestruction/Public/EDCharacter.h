@@ -11,6 +11,9 @@ class AEDWeapon;
 class UEDBaseHUD;
 class UEDHealthComponent;
 
+#define FACING_RIGHT 1.f
+#define FACING_LEFT -1.f
+
 /**
  * This class is the default character for ExplosionDestruction, and it is responsible for all
  * physical interaction between the player and the world.
@@ -33,7 +36,10 @@ public:
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 
 	/** Called for side to side input */
-	void SetMoving(float Value);
+	void MoveRightPressed();
+	void MoveRightReleased();
+	void MoveLeftPressed();
+	void MoveLeftReleased();
 
 	void SetShooting(bool NewShooting);
 
@@ -78,7 +84,21 @@ protected:
 
 	virtual void Tick(float DeltaSeconds) override;
 	virtual void BeginPlay() override;
-	virtual void EndPlay(EEndPlayReason::Type EndPlayReason) override;
+
+	void InitializeHUD();
+	void InitializeDynamicEvents();
+
+	// Movement
+	bool DoMove(float DeltaSeconds);
+
+	// Shoot currently held weapon
+	bool DoShootWeapon(float DeltaSeconds);
+
+	// Jump off ground
+	bool DoJump(float DeltaSeconds);
+
+	// Wall kick
+	bool DoWallKick(float DeltaSeconds);
 
 	/* HUD */
 	UPROPERTY(EditAnywhere, Category = "HUD")
@@ -86,8 +106,10 @@ protected:
 	class UEDBaseHUD* BaseHUD;
 
 	// Updates the HUD (if needed)
+	UFUNCTION(BlueprintCallable)
 	void UpdateHUD();
 
+	void UpdateState();
 
 	/** Side view camera */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
@@ -171,10 +193,10 @@ protected:
 
 	/* Blueprint Implementable Events (for sounds, graphics, etc) */
 	UFUNCTION()
-	void OnHealthChanged(UEDHealthComponent* OwnedHealthComp, float Health, float HealthDelta, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
+	void EDOnHealthChanged(UEDHealthComponent* OwnedHealthComp, float Health, float HealthDelta, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
 
 	UFUNCTION()
-	void HandleEndPlay(AActor* Actor, EEndPlayReason::Type EndPlayReason);
+	void EDOnDeath(AActor* Actor, EEndPlayReason::Type EndPlayReason);
 
 	UFUNCTION(BlueprintImplementableEvent, meta = (DisplayName = "On Jump"))
 	void EDOnJump();
@@ -194,31 +216,45 @@ protected:
 	UFUNCTION(BlueprintImplementableEvent, meta = (DisplayName = "On Slide End"))
 	void EDOnSlideEnd();
 
-	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
-	bool EventBeginWalk();
+	UFUNCTION(BlueprintImplementableEvent, meta = (DisplayName = "On Walk Begin"))
+	bool EDWalkBegin();
 
-	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
-	bool EventEndWalk();
+	UFUNCTION(BlueprintImplementableEvent, meta = (DisplayName = "On Walk End"))
+	bool EDWalkEnd();
 
-	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
-	bool EventWalk();
 
-// States
-	bool Jumping = false;
-	bool Shooting = false;
-	bool Falling = false;
-	bool WallKicking = false;
-	bool Grounded = true;
-	FVector MovementInput = FVector::ZeroVector;
-	float Facing = 1.f; // 1.f if facing right, -1.f if facing left.
-	bool CanWallKick = false; // can only wall kick when we get close to a new wall
-	int JumpCount = 0;
-	bool Jumped = false; // If we actually jumped
+	struct CharState
+	{
+		bool IsJumping;
+		bool IsMoving;
+		bool IsFalling;
+		bool IsWallKicking;
+		bool IsGrounded;
+		bool IsDead;
+		bool IsShooting;
+		bool CanWallKick;
+		float Rotation;
+		int JumpCount;
+		FVector Velocity;
+	};
+
+	struct PlayerInput
+	{
+		bool TryJump;
+		bool TryMoveLeft;
+		bool TryMoveRight;
+		bool TryShoot;
+		bool TryWallKick;
+	};
+
+	CharState PreviousState;
+	CharState CurrentState;
+
+	PlayerInput CurrentInput;
+
+	// States
 	float Ammo = 10.f;
-	bool bUpdateHUD = false;
-	FVector OldVelocity = FVector::ZeroVector;
-	UPROPERTY(BlueprintReadOnly, Category = "Player")
-	bool bDied;
+	bool ShouldUpdateHUD = false;
 
 	// If we are overlapping objects to our left, right, top, bottom of character.
 	bool OverlapLeft = false;

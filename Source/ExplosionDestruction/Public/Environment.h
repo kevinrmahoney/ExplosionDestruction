@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 
 /**
- * 
+ *
  */
 class EXPLOSIONDESTRUCTION_API Environment
 {
@@ -20,4 +20,6 @@ static Type Name; \
 	DECLARE_CVAR(int32, DebugWeapons)
 
 	DECLARE_CVAR(int32, DebugLogs)
+
+	DECLARE_CVAR(int32, DebugVerbosity)
 };

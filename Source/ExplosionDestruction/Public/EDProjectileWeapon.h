@@ -19,7 +19,7 @@ class EXPLOSIONDESTRUCTION_API AEDProjectileWeapon : public AEDWeapon
 protected:
 	virtual void Tick(float DeltaSeconds) override;
 
-	virtual void Shoot() override;
+	virtual bool Shoot() override;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
 	TSubclassOf<AEDProjectile> ProjectileClass;
