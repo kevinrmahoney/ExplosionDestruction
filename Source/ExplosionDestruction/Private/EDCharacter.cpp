@@ -101,7 +101,17 @@ void AEDCharacter::BeginPlay()
 	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 	SpawnParams.Owner = this;
 
+	if(!GetWorld())
+		Logger::Fatal(TEXT("Could not get the World!"));
+
+	if(!WallKickTopComponent || !WallKickBottomComponent || !WallKickLeftComponent || !WallKickRightComponent)
+		Logger::Fatal(TEXT("Could not create one or more of the Wall Kick Components!"));
+
+	if(!HealthComp)
+		Logger::Fatal(TEXT("Could not create Health Component!"));
+
 	CurrentWeapon = GetWorld()->SpawnActor<AEDWeapon>(StarterWeaponClass, FVector::ZeroVector, FRotator::ZeroRotator, SpawnParams);
+
 	if(CurrentWeapon)
 	{
 		CurrentWeapon->SetOwner(this);
@@ -116,6 +126,21 @@ void AEDCharacter::BeginPlay()
 
 	// Add any dynamic events.
 	InitializeDynamicEvents();
+}
+
+
+void AEDCharacter::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	EDOnDeath();
+
+	// Call Super AFTER our logic because otherwise our logic will be delayed
+	Super::EndPlay(EndPlayReason);
+}
+
+void AEDCharacter::BeginDestroy()
+{
+	// Call Super AFTER our logic because otherwise our logic will be delayed
+	Super::BeginDestroy();
 }
 
 // Call this to initialize the HUD
@@ -153,9 +178,6 @@ void AEDCharacter::InitializeDynamicEvents()
 
 	// Subscribe to health changed event
 	HealthComp->OnHealthChanged.AddDynamic(this, &AEDCharacter::EDOnHealthChanged);
-
-	// Add event to handle death
-	OnEndPlay.AddDynamic(this, &AEDCharacter::EDOnDeath);
 }
 
 
@@ -245,7 +267,10 @@ bool AEDCharacter::DoMove(float DeltaSeconds)
 bool AEDCharacter::DoShootWeapon(float DeltaSeconds)
 {
 	// Shoot the currently held weapon
-	bool IsShooting = CurrentWeapon->Shoot();
+	bool IsShooting = false;
+
+	if(CurrentWeapon)
+		IsShooting = CurrentWeapon->Shoot();
 
 	// We should udpate the HUD if we shot (ammo count)
 	if(IsShooting)
@@ -361,13 +386,13 @@ void AEDCharacter::UpdateState()
 	else if(!PreviousState.Velocity.IsNearlyZero() && CurrentState.Velocity.IsNearlyZero())
 		EDOnWalkEndBP();
 
-	// If the character has landed after being in air.
-	if(CurrentState.IsGrounded && PreviousState.IsFalling)
-		EDOnLandedBP();
-
 	// Set if the character is on the grounded
 	CurrentState.IsFalling = GetCharacterMovement()->IsFalling();
 	CurrentState.IsGrounded = !CurrentState.IsFalling;
+
+	// If the character has landed after being in air.
+	if(CurrentState.IsGrounded && PreviousState.IsFalling)
+		EDOnLandedBP();
 
 	// Reset JumpCount if we are on the ground
 	if(CurrentState.IsGrounded)
@@ -397,6 +422,10 @@ void AEDCharacter::UpdateState()
 	{
 		CurrentState.CanWallKick = false;
 	}
+
+	// If the character has landed after being in air.
+	if(CurrentState.IsGrounded && PreviousState.IsFalling)
+		EDOnLandedBP();
 }
 
 void AEDCharacter::UpdateAnimation(float DeltaSeconds)
@@ -459,6 +488,8 @@ void AEDCharacter::UpdateHUD()
 // Called on damage recieved or healing received
 void AEDCharacter::EDOnHealthChanged(UEDHealthComponent* OwnedHealthComp, float Health, float HealthDelta, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser)
 {
+	EDOnHealthChangedBP();
+
 	if(Health <= 0.f && !CurrentState.IsDead)
 	{
 		// die
@@ -470,14 +501,16 @@ void AEDCharacter::EDOnHealthChanged(UEDHealthComponent* OwnedHealthComp, float 
 		DetachFromControllerPendingDestroy();
 
 		SetLifeSpan(3.f);
-	}
 
-	EDOnHealthChangedBP();
+		Destroy();
+	}
 }
 
 // Called on death of character
-void AEDCharacter::EDOnDeath(AActor* Actor, EEndPlayReason::Type EndPlayReason)
+void AEDCharacter::EDOnDeath()
 {
+	Logger::Info(TEXT("EDOnDeath Override Called"));
+
 	// Remove the HUD related to this character from the player's screen.
 	if(BaseHUD)
 		BaseHUD->Remove();
@@ -485,6 +518,9 @@ void AEDCharacter::EDOnDeath(AActor* Actor, EEndPlayReason::Type EndPlayReason)
 	// Destroy the weapons they're holding.
 	if(CurrentWeapon)
 		CurrentWeapon->Destroy();
+
+	// If we die, we should reset the CurrentInput
+	CurrentInput = PlayerInput();
 
 	EDOnDeathBP();
 }
@@ -568,7 +604,8 @@ float AEDCharacter::GetAmmo()
 
 float AEDCharacter::GetSpeed()
 {
-	return GetCharacterMovement()->Velocity.Size();
+
+	return CurrentState.Velocity.Size();
 }
 
 //

@@ -10,8 +10,9 @@ void AEDProjectileWeapon::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
 
-	// Play the end cooldown event when its ready to be fired.
-	if(CooldownProgress >= Cooldown)
+	// Play the end cooldown event when its ready to be fired
+	// But only if its the tick after it wasn't ready to be fired.
+	if(CooldownProgress >= Cooldown && ((CooldownProgress - DeltaSeconds) < Cooldown))
 		EDOnCooldownEnd();
 }
 
