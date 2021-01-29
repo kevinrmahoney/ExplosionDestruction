@@ -19,8 +19,8 @@
  * Use this to log messages to screen or to console/file
  *
  * Usage examples:
- *  Logger::Info("Hello!");
- *  Logger::Warning("Hello %s! You are going %d units per second!", MyChar->GetName(), MyChar->GetSpeed());
+ *  Logger::Info(TEXT("Hello!"));
+ *  Logger::Warning(TEXT("Hello %s! You are going %d units per second!"), MyChar->GetName(), MyChar->GetSpeed());
  *
  * Can turn on showing to messages by turning on a boolean (see .cpp file). Default is off.
  * The output log shows tick count and timestamps as well by default.

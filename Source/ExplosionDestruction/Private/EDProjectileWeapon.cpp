@@ -26,8 +26,6 @@ void AEDProjectileWeapon::BeginPlay()
 
 void AEDProjectileWeapon::Shoot()
 {
-	PRINTFUNC
-
 	AActor* MyOwner = GetOwner();
 	if (MyOwner && ProjectileClass && GetWorld())
 	{

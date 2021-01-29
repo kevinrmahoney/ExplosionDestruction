@@ -266,13 +266,11 @@ bool AEDCharacter::DoMove(float DeltaSeconds)
 
 bool AEDCharacter::DoShootWeapon(float DeltaSeconds)
 {
-	PRINTFUNC
 	// Shoot the currently held weapon
 	bool IsShooting = false;
 
 	if(CurrentWeapon)
 	{
-		Logger::Info(TEXT("CurrentState: %d | PreviousState: %d"), CurrentState.IsShooting, PreviousState.IsShooting);
 		if(CurrentInput.TryShoot)
 			IsShooting = CurrentWeapon->PullTrigger();
 
@@ -520,10 +518,6 @@ void AEDCharacter::EDOnDeath()
 	// Remove the HUD related to this character from the player's screen.
 	if(BaseHUD)
 		BaseHUD->Remove();
-
-	// Destroy the weapons they're holding.
-	if(CurrentWeapon)
-		CurrentWeapon->Destroy();
 
 	// If we die, we should reset the CurrentInput
 	CurrentInput = PlayerInput();
