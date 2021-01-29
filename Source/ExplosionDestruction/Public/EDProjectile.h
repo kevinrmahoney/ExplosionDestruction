@@ -52,7 +52,7 @@ protected:
 
 	virtual void ApplyDamage(AActor* DamagedActor, const FHitResult& Hit);
 
-	UFUNCTION(BlueprintImplementableEvent, meta = (DisplayName = "On Weapon Shot"))
+	UFUNCTION(BlueprintImplementableEvent, meta = (DisplayName = "On Shot"))
 	void EDOnShot();
 
 	UFUNCTION(BlueprintImplementableEvent, meta = (DisplayName = "On Explode"))

@@ -35,8 +35,6 @@ void AEDRocket::BeginPlay()
 
 	GetWorldTimerManager().SetTimer(TimerHandle_ExplosionDelay, this, &AEDRocket::DestroySelf, ExplosionDelay, true);
 
-	EDOnShot();
-
 	OnDestroyed.AddDynamic(this, &AEDRocket::Explode);
 }
 
