@@ -42,3 +42,15 @@ void UEDHealthComponent::HandleTakeAnyDamage(AActor* DamagedActor, float Damage,
 
 	OnHealthChanged.Broadcast(this, Health, Damage, DamageType, InstigatedBy, DamageCauser);
 }
+
+void UEDHealthComponent::Heal(float HealAmount)
+{
+	if (HealAmount <= 0.f || Health <= 0.f)
+	{
+		return;
+	}
+
+	Health = FMath::Clamp(Health + HealAmount, 0.f, MaxHealth);
+
+	OnHealthChanged.Broadcast(this, Health, -HealAmount, nullptr, nullptr, nullptr);
+}
