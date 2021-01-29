@@ -30,26 +30,26 @@ class AEDCharacter : public APaperCharacter
 private:
 	struct CharacterState
 	{
-		bool IsJumping;
-		bool IsMoving;
-		bool IsFalling;
-		bool IsWallKicking;
-		bool IsGrounded;
-		bool IsDead;
-		bool IsShooting;
-		bool CanWallKick;
-		float Rotation;
-		int JumpCount;
-		FVector Velocity;
+		bool IsJumping = false;
+		bool IsMoving = false;
+		bool IsFalling = false;
+		bool IsWallKicking = false;
+		bool IsGrounded = false;
+		bool IsDead = false;
+		bool IsShooting = false;
+		bool CanWallKick = false;
+		float Rotation = 0.f;
+		int JumpCount = 0;
+		FVector Velocity = FVector::ZeroVector;
 	};
 
 	struct PlayerInput
 	{
-		bool TryJump;
-		bool TryMoveLeft;
-		bool TryMoveRight;
-		bool TryShoot;
-		bool TryWallKick;
+		bool TryJump = false;
+		bool TryMoveLeft = false;
+		bool TryMoveRight = false;
+		bool TryShoot = false;
+		bool TryWallKick = false;
 	};
 
 public:
@@ -126,6 +126,8 @@ private:
 protected:
 	virtual void Tick(float DeltaSeconds) override;
 	virtual void BeginPlay() override;
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+	virtual void BeginDestroy() override;
 
 	void InitializeHUD();
 	void InitializeDynamicEvents();
@@ -225,7 +227,7 @@ protected:
 	void EDOnHealthChanged(UEDHealthComponent* OwnedHealthComp, float Health, float HealthDelta, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
 
 	UFUNCTION()
-	void EDOnDeath(AActor* Actor, EEndPlayReason::Type EndPlayReason);
+	void EDOnDeath();
 
 	/* Blueprint Implementable Events (for sounds, graphics, etc) */
 	UFUNCTION(BlueprintImplementableEvent, meta = (DisplayName = "On Death"))
