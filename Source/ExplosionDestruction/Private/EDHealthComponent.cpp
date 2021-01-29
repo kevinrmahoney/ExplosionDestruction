@@ -35,7 +35,7 @@ void UEDHealthComponent::HandleTakeAnyDamage(AActor* DamagedActor, float Damage,
 
 	Health = FMath::Clamp(Health - Damage, 0.f, MaxHealth);
 
-	if (Environment::DebugLogs > 0)
+	if (Environment::LogsEnabled > 0)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Health Changed: %s"), *FString::SanitizeFloat(Health));
 	}

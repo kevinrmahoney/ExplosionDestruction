@@ -75,41 +75,41 @@ public:
 
 private:
 	static long TickCount;
-	static bool bShowTimeStamp;
-	static bool bShowTicks;
-	static bool bShowOnScreen;
-	static enum Verbosity MinVerbosity;
 
 	template <typename FmtType, typename... Types>
 	static void LogMessage(enum Verbosity LogVerbosity, FColor Color, const FmtType& Fmt, Types... Args)
 	{
-		if(LogVerbosity < Environment::DebugVerbosity)
-			return;
+		// Only log if we have enabled the logger, and if the verboisty of the message is less than the verbosity setting
+		if(Environment::LogsEnabled > 0 && LogVerbosity <= Environment::LogsVerbosity)
+		{	
+			// Create the formatted string
+			FString Message = FString::Printf(Fmt, Args...);
+			FString TickStamp = FString("");
+			FString TimeStamp = FString("");
 
-		FString Message = FString::Printf(Fmt, Args...);
-		FString TickStamp = FString("");
-		FString TimeStamp = FString("");
+			// If enabled, create the timestamp and tick stamp
+			if(Environment::LogsShowTick > 0)
+				TickStamp = FString::Printf(TEXT("[%s]"), *FString::FromInt(TickCount));
 
-		if(bShowTicks)
-			TickStamp = FString::Printf(TEXT("[%s]"), *FString::FromInt(TickCount));
+			if(Environment::LogsShowTimestamp > 0)
+				TimeStamp = FString::Printf(TEXT("[%s]"), *GetTimeStamp());
 
-		if(bShowTimeStamp)
-			TimeStamp = FString::Printf(TEXT("[%s]"), *GetTimeStamp());
+			// We convert our internal Verbosity enum to UE's verbosity level and use UE_LOG.
+			if(Verbosity::FatalLevel == LogVerbosity)
+				UE_LOG(LogTemp, Fatal, TEXT("  %s%s %s"), *TimeStamp, *TickStamp, *Message)
+			else if(Verbosity::ErrorLevel == LogVerbosity)
+				UE_LOG(LogTemp, Error, TEXT("  %s%s %s"), *TimeStamp, *TickStamp, *Message)
+			else if(Verbosity::WarningLevel == LogVerbosity)
+				UE_LOG(LogTemp, Warning, TEXT("%s%s %s"), *TimeStamp, *TickStamp, *Message)
+			else if(Verbosity::InfoLevel == LogVerbosity)
+				UE_LOG(LogTemp, Display, TEXT("%s%s %s"), *TimeStamp, *TickStamp, *Message)
+			else if(Verbosity::VerboseLevel == LogVerbosity)
+				UE_LOG(LogTemp, Display, TEXT("%s%s %s"), *TimeStamp, *TickStamp, *Message)
 
-		// We convert our internal Verbosity enum to UE's verbosity level and use UE_LOG.
-		if(Verbosity::FatalLevel == LogVerbosity)
-			UE_LOG(LogTemp, Fatal, TEXT("  %s%s %s"), *TimeStamp, *TickStamp, *Message)
-		else if(Verbosity::ErrorLevel == LogVerbosity)
-			UE_LOG(LogTemp, Error, TEXT("  %s%s %s"), *TimeStamp, *TickStamp, *Message)
-		else if(Verbosity::WarningLevel == LogVerbosity)
-			UE_LOG(LogTemp, Warning, TEXT("%s%s %s"), *TimeStamp, *TickStamp, *Message)
-		else if(Verbosity::InfoLevel == LogVerbosity)
-			UE_LOG(LogTemp, Display, TEXT("%s%s %s"), *TimeStamp, *TickStamp, *Message)
-		else if(Verbosity::VerboseLevel == LogVerbosity)
-			UE_LOG(LogTemp, Display, TEXT("%s%s %s"), *TimeStamp, *TickStamp, *Message)
-
-		if(bShowOnScreen && GEngine)
-			GEngine->AddOnScreenDebugMessage(-1, 15.0f, Color, *Message);
+			// If enabled, also log to screen
+			if(Environment::LogsToScreen && GEngine)
+				GEngine->AddOnScreenDebugMessage(-1, 15.0f, Color, *Message);
+		}
 	}
 
 	static FString GetTimeStamp();

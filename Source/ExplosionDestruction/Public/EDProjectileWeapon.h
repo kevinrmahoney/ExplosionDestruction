@@ -20,7 +20,7 @@ protected:
 	virtual void Tick(float DeltaSeconds) override;
 	virtual void BeginPlay() override;
 
-	virtual bool Shoot() override;
+	virtual void Shoot() override;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
 	TSubclassOf<AEDProjectile> ProjectileClass;

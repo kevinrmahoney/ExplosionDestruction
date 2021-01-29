@@ -266,11 +266,19 @@ bool AEDCharacter::DoMove(float DeltaSeconds)
 
 bool AEDCharacter::DoShootWeapon(float DeltaSeconds)
 {
+	PRINTFUNC
 	// Shoot the currently held weapon
 	bool IsShooting = false;
 
 	if(CurrentWeapon)
-		IsShooting = CurrentWeapon->Shoot();
+	{
+		Logger::Info(TEXT("CurrentState: %d | PreviousState: %d"), CurrentState.IsShooting, PreviousState.IsShooting);
+		if(CurrentInput.TryShoot)
+			IsShooting = CurrentWeapon->PullTrigger();
+
+		if(CurrentInput.TryShoot)
+			IsShooting = CurrentWeapon->ReleaseTrigger();
+	}
 
 	// We should udpate the HUD if we shot (ammo count)
 	if(IsShooting)
@@ -509,8 +517,6 @@ void AEDCharacter::EDOnHealthChanged(UEDHealthComponent* OwnedHealthComp, float 
 // Called on death of character
 void AEDCharacter::EDOnDeath()
 {
-	Logger::Info(TEXT("EDOnDeath Override Called"));
-
 	// Remove the HUD related to this character from the player's screen.
 	if(BaseHUD)
 		BaseHUD->Remove();
@@ -521,6 +527,9 @@ void AEDCharacter::EDOnDeath()
 
 	// If we die, we should reset the CurrentInput
 	CurrentInput = PlayerInput();
+
+	// Let go of the trigger
+	CurrentWeapon->ReleaseTrigger();
 
 	EDOnDeathBP();
 }

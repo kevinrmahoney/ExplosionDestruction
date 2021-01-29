@@ -20,8 +20,9 @@ public:
 static Type Name; \
 
 	DECLARE_CVAR(int32, DebugWeapons)
-
-	DECLARE_CVAR(int32, DebugLogs)
-
-	DECLARE_CVAR(int32, DebugVerbosity)
+	DECLARE_CVAR(int32, LogsEnabled)
+	DECLARE_CVAR(int32, LogsVerbosity)
+	DECLARE_CVAR(int32, LogsToScreen)
+	DECLARE_CVAR(int32, LogsShowTick)
+	DECLARE_CVAR(int32, LogsShowTimestamp)
 };

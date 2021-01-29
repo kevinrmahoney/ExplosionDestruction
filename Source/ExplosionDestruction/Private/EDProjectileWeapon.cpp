@@ -24,11 +24,9 @@ void AEDProjectileWeapon::BeginPlay()
 		Logger::Fatal(TEXT("Projectile weapon has no projectile!"));
 }
 
-bool AEDProjectileWeapon::Shoot()
+void AEDProjectileWeapon::Shoot()
 {
-	// Dont shoot if we're still cooling down
-	if(CooldownProgress < Cooldown)
-		return false;
+	PRINTFUNC
 
 	AActor* MyOwner = GetOwner();
 	if (MyOwner && ProjectileClass && GetWorld())
@@ -62,8 +60,5 @@ bool AEDProjectileWeapon::Shoot()
 		CooldownProgress = 0.f;
 
 		// Return true, because we successfully shot.
-		return true;
 	}
-
-	return false;
 }

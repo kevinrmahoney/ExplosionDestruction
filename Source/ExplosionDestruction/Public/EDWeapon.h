@@ -34,6 +34,16 @@ protected:
 
 	float CooldownProgress = Cooldown; // Set progress to Cooldown so we can shoot right away after spawning.
 
+	bool IsTriggerPulled = false;
+
+	// What happens when this gun is shot, and if it can shoot to begin with
+	virtual void Shoot();
+	virtual bool CanShoot();
+
+	//
+	// Events
+	//
+
 	UFUNCTION(BlueprintImplementableEvent, meta = (DisplayName = "On Shoot Begin"))
 	void EDOnShootBegin();
 
@@ -48,5 +58,10 @@ protected:
 
 public:
 
-	virtual bool Shoot();
+	// Control if trigger is pulled or not.
+	virtual bool PullTrigger();
+	virtual bool ReleaseTrigger();
+
+	// Get if the trigger is pulled
+	virtual bool GetIsTriggerPulled();
 };

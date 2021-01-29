@@ -3,18 +3,15 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "EDExplosive.h"
-#include "EDRocket.generated.h"
+#include "EDWeapon.h"
+#include "EDHitscanWeapon.generated.h"
 
 /**
- *
+ * 
  */
 UCLASS()
-class EXPLOSIONDESTRUCTION_API AEDRocket : public AEDExplosive
+class EXPLOSIONDESTRUCTION_API AEDHitscanWeapon : public AEDWeapon
 {
 	GENERATED_BODY()
-
-public:
-	AEDRocket();
-
+	
 };
