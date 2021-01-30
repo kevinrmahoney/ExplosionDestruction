@@ -35,10 +35,15 @@ void UEDHealthComponent::HandleTakeAnyDamage(AActor* DamagedActor, float Damage,
 
 	Health = FMath::Clamp(Health - Damage, 0.f, MaxHealth);
 
-	if (Environment::LogsEnabled > 0)
+	if (Environment::LogEnabled > 0)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Health Changed: %s"), *FString::SanitizeFloat(Health));
 	}
 
 	OnHealthChanged.Broadcast(this, Health, Damage, DamageType, InstigatedBy, DamageCauser);
+}
+
+void UEDHealthComponent::SetMaxHealth(float NewMaxHealth)
+{
+	MaxHealth = NewMaxHealth;
 }

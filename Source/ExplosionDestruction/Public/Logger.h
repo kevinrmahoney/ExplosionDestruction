@@ -80,7 +80,7 @@ private:
 	static void LogMessage(enum Verbosity LogVerbosity, FColor Color, const FmtType& Fmt, Types... Args)
 	{
 		// Only log if we have enabled the logger, and if the verboisty of the message is less than the verbosity setting
-		if(Environment::LogsEnabled > 0 && LogVerbosity <= Environment::LogsVerbosity)
+		if(Environment::LogEnabled > 0 && LogVerbosity <= Environment::LogVerbosity)
 		{	
 			// Create the formatted string
 			FString Message = FString::Printf(Fmt, Args...);
@@ -88,10 +88,10 @@ private:
 			FString TimeStamp = FString("");
 
 			// If enabled, create the timestamp and tick stamp
-			if(Environment::LogsShowTick > 0)
+			if(Environment::LogShowTick > 0)
 				TickStamp = FString::Printf(TEXT("[%s]"), *FString::FromInt(TickCount));
 
-			if(Environment::LogsShowTimestamp > 0)
+			if(Environment::LogShowTimestamp > 0)
 				TimeStamp = FString::Printf(TEXT("[%s]"), *GetTimeStamp());
 
 			// We convert our internal Verbosity enum to UE's verbosity level and use UE_LOG.
@@ -107,7 +107,7 @@ private:
 				UE_LOG(LogTemp, Display, TEXT("%s%s %s"), *TimeStamp, *TickStamp, *Message)
 
 			// If enabled, also log to screen
-			if(Environment::LogsToScreen && GEngine)
+			if(Environment::LogToScreen && GEngine)
 				GEngine->AddOnScreenDebugMessage(-1, 15.0f, Color, *Message);
 		}
 	}

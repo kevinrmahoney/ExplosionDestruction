@@ -5,6 +5,9 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "UObject/ObjectMacros.h"
+#include "Logger.h"
+#include "GameFramework/ProjectileMovementComponent.h"
+#include "PhysicsEngine/RadialForceComponent.h"
 #include "EDProjectile.generated.h"
 
 class UPaperSpriteComponent;
@@ -33,52 +36,38 @@ protected:
 	UProjectileMovementComponent* MovementComp;
 
 
-	// Movement properties
-	UPROPERTY(EditDefaultsOnly, Category = "Movement")
-	float InitialSpeed = 2000.f;
-	
-	UPROPERTY(EditDefaultsOnly, Category = "Movement")
-	float MaxSpeed = 2000.f;
-	
-	UPROPERTY(EditDefaultsOnly, Category = "Movement")
-	float Bounciness = 1.f;
-	
-	UPROPERTY(EditDefaultsOnly, Category = "Movement")
-	float GravityScale = 1.f;
-
-
 	// Behavioral properties
 	UPROPERTY(EditDefaultsOnly, Category = "Behavior")
-	bool ShouldDestroyOnHit = false;
+	bool DestroyOnHit;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Behavior")
-	bool ShouldDestroyOnOverlap = false;
+	bool DestroyOnOverlap;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Behavior")
-	bool IgnoresSpawnerOnHit = false;
+	bool HitShooter;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Behavior")
-	bool IgnoresSpawnerOnOverlap = false;
+	bool OverlapShooter;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Behavior")
-	bool IgnoresOthersOnHit = false;
+	bool HitOthers;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Behavior")
-	bool IgnoresOthersOnOverlap = false;
+	bool OverlapOthers;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Behavior")
-	float LifeSpan = 10.f;
+	float LifeSpan;
 
 
 	// Damage properties
 	UPROPERTY(EditDefaultsOnly, Category = "Damage")
-	float Damage = 20.f;
+	float Damage;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Damage")
-	bool NoSelfDamage = false;
+	bool SelfDamage;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Damage")
-	float SelfDamageScale = 1.f;
+	float SelfDamageScale;
 
 	// End
 	FTimerHandle DestroyDelay;
@@ -94,7 +83,17 @@ protected:
 	UFUNCTION()
 	virtual void ApplyDamage(AActor* DamagedActor, const FHitResult& Hit);
 
-	virtual void DestroySelf();
+	// Used to self destruct this projectile after an alloted time has passed (useful for things like grenades)
+	UFUNCTION()
+	virtual void SelfDestruct();
+
+	// Binding: OnDestroy
+	UFUNCTION()
+	virtual void Destruct(AActor* Actor);
+
+	// Internal function, used where we want the same functionality as Destruct(AActor* Actor)
+	// but we don't want to specify the actor (default to self)
+	virtual void Destruct();
 
 	// Play events
 	UFUNCTION(BlueprintImplementableEvent, meta = (DisplayName = "On Shot"))
@@ -105,9 +104,5 @@ protected:
 
 	UFUNCTION(BlueprintImplementableEvent, meta = (DisplayName = "On Collide"))
 	void EDOnCollide();
-
-public:
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
 
 };

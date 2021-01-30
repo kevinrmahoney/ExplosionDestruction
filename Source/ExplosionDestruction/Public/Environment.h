@@ -10,8 +10,6 @@
 class EXPLOSIONDESTRUCTION_API Environment
 {
 public:
-	Environment();
-	~Environment();
 
 #define COLLISION_WEAPON	ECC_GameTraceChannel1
 
@@ -20,9 +18,9 @@ public:
 static Type Name; \
 
 	DECLARE_CVAR(int32, DebugWeapons)
-	DECLARE_CVAR(int32, LogsEnabled)
-	DECLARE_CVAR(int32, LogsVerbosity)
-	DECLARE_CVAR(int32, LogsToScreen)
-	DECLARE_CVAR(int32, LogsShowTick)
-	DECLARE_CVAR(int32, LogsShowTimestamp)
+	DECLARE_CVAR(int32, LogEnabled)
+	DECLARE_CVAR(int32, LogVerbosity)
+	DECLARE_CVAR(int32, LogToScreen)
+	DECLARE_CVAR(int32, LogShowTick)
+	DECLARE_CVAR(int32, LogShowTimestamp)
 };

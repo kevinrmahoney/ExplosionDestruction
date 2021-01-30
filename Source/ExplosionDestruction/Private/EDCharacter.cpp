@@ -33,40 +33,57 @@ AEDCharacter::AEDCharacter()
 
 	// Hit boxes for the wallkicks. Attach to the capsule so we don't rotate with the sprite
 	WallKickTopComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("WallKickTopComponent"));
-	WallKickTopComponent->SetupAttachment(GetCapsuleComponent());
-
 	WallKickBottomComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("WallKickBottomComponent"));
-	WallKickBottomComponent->SetupAttachment(GetCapsuleComponent());
-
 	WallKickLeftComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("WallKickLeftComponent"));
-	WallKickLeftComponent->SetupAttachment(GetCapsuleComponent());
-
 	WallKickRightComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("WallKickRightComponent"));
-	WallKickRightComponent->SetupAttachment(GetCapsuleComponent());
+
+	if(WallKickTopComponent && WallKickBottomComponent && WallKickRightComponent && WallKickLeftComponent)
+	{
+		WallKickRightComponent->SetupAttachment(GetCapsuleComponent());
+		WallKickLeftComponent->SetupAttachment(GetCapsuleComponent());
+		WallKickBottomComponent->SetupAttachment(GetCapsuleComponent());
+		WallKickTopComponent->SetupAttachment(GetCapsuleComponent());
+	}
+	else
+		Logger::Fatal(TEXT("Failed to create wall kick components!"));
+
 
 	// Create a camera boom attached to the root (capsule)
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
-	CameraBoom->SetupAttachment(RootComponent);
-	CameraBoom->TargetArmLength = 500.0f;
-	CameraBoom->SocketOffset = FVector(0.0f, 0.0f, 75.0f);
-	CameraBoom->SetUsingAbsoluteRotation(true);
-	CameraBoom->bDoCollisionTest = false;
-	CameraBoom->SetRelativeRotation(FRotator(0.0f, -90.0f, 0.0f));
+
+	if(CameraBoom)
+	{
+		CameraBoom->SetupAttachment(RootComponent);
+		CameraBoom->TargetArmLength = 500.0f;
+		CameraBoom->SocketOffset = FVector(0.0f, 0.0f, 75.0f);
+		CameraBoom->SetUsingAbsoluteRotation(true);
+		CameraBoom->bDoCollisionTest = false;
+		CameraBoom->SetRelativeRotation(FRotator(0.0f, -90.0f, 0.0f));
+		CameraBoom->SetUsingAbsoluteRotation(true);
+	}
+	else
+		Logger::Fatal(TEXT("Failed to create camera boom!"));
+
 
 	// Create an orthographic camera (no perspective) and attach it to the boom
 	SideViewCameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("SideViewCamera"));
-	SideViewCameraComponent->ProjectionMode = ECameraProjectionMode::Orthographic;
-	SideViewCameraComponent->OrthoWidth = 2048.0f;
-	SideViewCameraComponent->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
+
+	if(SideViewCameraComponent)
+	{
+		SideViewCameraComponent->ProjectionMode = ECameraProjectionMode::Orthographic;
+		SideViewCameraComponent->OrthoWidth = 2048.0f;
+		SideViewCameraComponent->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
+		SideViewCameraComponent->bUsePawnControlRotation = false;
+		SideViewCameraComponent->bAutoActivate = true;
+	}
+	else
+		Logger::Fatal(TEXT("Failed to create side view camera!"));
 
 	// Create component to manage health
 	HealthComp = CreateDefaultSubobject<UEDHealthComponent>(TEXT("HealthComp"));
-
-	// Prevent all automatic rotation behavior on the camera, character, and camera component
-	CameraBoom->SetUsingAbsoluteRotation(true);
-	SideViewCameraComponent->bUsePawnControlRotation = false;
-	SideViewCameraComponent->bAutoActivate = true;
-	GetCharacterMovement()->bOrientRotationToMovement = false;
+	
+	if(HealthComp)
+		HealthComp->SetMaxHealth(100.f);
 
 	// Configure character movement
 	GetCharacterMovement()->GravityScale = 2.0f;
@@ -76,8 +93,7 @@ AEDCharacter::AEDCharacter()
 	GetCharacterMovement()->MaxWalkSpeed = 900.0f;
 	GetCharacterMovement()->MaxFlySpeed = 600.0f;
 	GetCharacterMovement()->SetWalkableFloorAngle(44.f);
-	JumpMaxCount = 1;
-	JumpMaxHoldTime = 0.25f;
+	GetCharacterMovement()->bOrientRotationToMovement = false;
 
 	// Lock character motion onto the XZ plane, so the character can't move in or out of the screen
 	GetCharacterMovement()->bConstrainToPlane = true;
@@ -91,6 +107,9 @@ AEDCharacter::AEDCharacter()
 	// Enable replication on the Sprite component so animations show up when networked
 	GetSprite()->SetIsReplicated(true);
 	bReplicates = true;
+
+	JumpMaxCount = 1;
+	JumpMaxHoldTime = 0.25f;
 }
 
 void AEDCharacter::BeginPlay()
@@ -147,7 +166,7 @@ void AEDCharacter::BeginDestroy()
 void AEDCharacter::InitializeHUD()
 {
 	// Create the HUD if it doesn't already exist.
-	if(BaseHUDClass != nullptr)
+	if(BaseHUDClass && !BaseHUD)
 	{
 		BaseHUD = CreateWidget<UEDBaseHUD>(GetWorld(), BaseHUDClass);
 	}
@@ -177,7 +196,10 @@ void AEDCharacter::InitializeDynamicEvents()
 	WallKickRightComponent->OnComponentEndOverlap.AddDynamic(this, &AEDCharacter::OnWallKickRightComponentEndOverlap);
 
 	// Subscribe to health changed event
-	HealthComp->OnHealthChanged.AddDynamic(this, &AEDCharacter::EDOnHealthChanged);
+	if(HealthComp)
+		HealthComp->OnHealthChanged.AddDynamic(this, &AEDCharacter::EDOnHealthChanged);
+	else
+		Logger::Fatal(TEXT("Could not add events to health component!"));
 }
 
 
