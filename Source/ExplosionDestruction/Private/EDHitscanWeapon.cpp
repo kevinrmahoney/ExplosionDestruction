@@ -4,7 +4,9 @@
 #include "EDHitscanWeapon.h"
 #include "Kismet/GameplayStatics.h"
 #include "Logger.h"
+#include "EDCharacter.h"
 #include "DrawDebugHelpers.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 void AEDHitscanWeapon::Shoot()
 {
@@ -45,10 +47,13 @@ void AEDHitscanWeapon::Shoot()
 	// Find the kickback vectors. its in the opposite direction of where we shot.
 	KickbackVector = -1.f * (MouseWorldLocation - ActorLocation).GetSafeNormal() * Kickback;
 
-	// Apply kickback
-	if(AActor* Actor = Cast<AActor>(Shooter))
+	// Get static mesh so we can apply an impulse to it
+	AEDCharacter* Actor = Cast<AEDCharacter>(Shooter);
+
+	// Apply kickback if we are falling
+	if(Actor && Actor->GetCharacterMovement() && Actor->GetCharacterMovement()->IsFalling())
 	{
-		Actor->AddActorLocalOffset(KickbackVector);
+		Actor->GetCharacterMovement()->AddImpulse(KickbackVector, false);
 	}
 
 	// Draw a debug line (TODO: Add some actual effects.

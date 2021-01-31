@@ -9,5 +9,5 @@ AEDAssaultRifle::AEDAssaultRifle()
 	Ammo = 1.f;
 	BaseDamage = 20.f;
 	HitImpulse = 10.f;
-	Kickback = 50.f;
+	Kickback = 5000.f;
 }
