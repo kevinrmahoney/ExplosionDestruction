@@ -6,15 +6,6 @@
 #include "Logger.h"
 #include "EDProjectile.h"
 
-void AEDProjectileWeapon::Tick(float DeltaSeconds)
-{
-	Super::Tick(DeltaSeconds);
-
-	// Play the end cooldown event when its ready to be fired
-	// But only if its the tick after it wasn't ready to be fired.
-	if(CooldownProgress >= Cooldown && ((CooldownProgress - DeltaSeconds) < Cooldown))
-		EDOnCooldownEnd();
-}
 
 void AEDProjectileWeapon::BeginPlay()
 {
@@ -24,11 +15,9 @@ void AEDProjectileWeapon::BeginPlay()
 		Logger::Fatal(TEXT("Projectile weapon has no projectile!"));
 }
 
-bool AEDProjectileWeapon::Shoot()
+void AEDProjectileWeapon::Shoot()
 {
-	// Dont shoot if we're still cooling down
-	if(CooldownProgress < Cooldown)
-		return false;
+	Super::Shoot();
 
 	AActor* MyOwner = GetOwner();
 	if (MyOwner && ProjectileClass && GetWorld())
@@ -57,13 +46,5 @@ bool AEDProjectileWeapon::Shoot()
 		// Play events
 		EDOnShootBegin();
 		EDOnCooldownBegin();
-
-		// Reset cooldown
-		CooldownProgress = 0.f;
-
-		// Return true, because we successfully shot.
-		return true;
 	}
-
-	return false;
 }

@@ -17,13 +17,14 @@ class EXPLOSIONDESTRUCTION_API AEDProjectileWeapon : public AEDWeapon
 	GENERATED_BODY()
 
 protected:
-	virtual void Tick(float DeltaSeconds) override;
 	virtual void BeginPlay() override;
 
-	virtual bool Shoot() override;
+	// Shoot the weapon
+	virtual void Shoot() override;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
 	TSubclassOf<AEDProjectile> ProjectileClass;
 
+	// Save the projectile it fired (TODO: make this into an array?)
 	AEDProjectile* FiredProjectile;
 };

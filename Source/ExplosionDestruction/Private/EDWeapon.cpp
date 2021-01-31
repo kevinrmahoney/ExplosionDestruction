@@ -2,60 +2,62 @@
 
 
 #include "EDWeapon.h"
-#include "DrawDebugHelpers.h"
+#include "Logger.h"
 #include "PaperSpriteComponent.h"
-#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 AEDWeapon::AEDWeapon()
 {
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	// PrimaryActorTick.bCanEverTick = true;
 
 	SpriteComp = CreateDefaultSubobject<UPaperSpriteComponent>(TEXT("SpriteComp"));
 	SpriteComp->BodyInstance.SetCollisionProfileName(TEXT("NoCollision"));
 	RootComponent = SpriteComp;
 }
 
-void AEDWeapon::Tick(float DeltaSeconds)
+void AEDWeapon::Shoot()
 {
-	CooldownProgress += DeltaSeconds;
+	// This makes the projectile destroy itself after a time
+	IsCoolingDown = true;
+	GetWorldTimerManager().SetTimer(CooldownTimer, this, &AEDWeapon::CooldownEnd, Cooldown, true);
 }
 
-bool AEDWeapon::Shoot()
+bool AEDWeapon::CanShoot()
 {
-	AActor* MyOwner = GetOwner();
-	if (MyOwner && GetWorld())
+	// We should only allow shooting if the gun isnt cooling down, if ammo is there
+	// if the gun actually has someone holding it, and if we can get the world.
+	return !IsCoolingDown && Ammo > 0.f && GetOwner() && GetWorld();
+}
+
+void AEDWeapon::CooldownEnd()
+{
+	IsCoolingDown = false;
+	EDOnCooldownEnd();
+}
+
+bool AEDWeapon::PullTrigger()
+{
+	IsTriggerPulled = true;
+
+	// Only shoot the gun if we can shoot!
+	if(CanShoot())
 	{
-		FVector ActorLocation = MyOwner->GetActorLocation();
-		FVector MouseWorldLocation;
-		FVector MouseWorldDirection;
-		FVector TraceEnd;
-		ActorLocation.Y = 0.f;
-		GetWorld()->GetFirstPlayerController()->DeprojectMousePositionToWorld(MouseWorldLocation, MouseWorldDirection);
-		MouseWorldLocation.Y = 0.f;
-		TraceEnd = (MouseWorldLocation - ActorLocation) * 10000 + ActorLocation;
-
-		FCollisionQueryParams QueryParams;
-		QueryParams.AddIgnoredActor(MyOwner);
-		QueryParams.AddIgnoredActor(this);
-		QueryParams.bTraceComplex = true;
-		QueryParams.bReturnPhysicalMaterial = true;
-
-		FVector TraceEndPoint = TraceEnd;
-		FHitResult Hit;
-		if (GetWorld()->LineTraceSingleByChannel(Hit, ActorLocation, TraceEnd, ECC_Visibility, QueryParams))
-		{
-			// calculate damage
-			AActor* HitActor = Hit.GetActor();
-
-			UGameplayStatics::ApplyPointDamage(HitActor, BaseDamage, MyOwner->GetActorRotation().Vector(), Hit, MyOwner->GetInstigatorController(), this, nullptr);
-		}
-
-		DrawDebugLine(GetWorld(), ActorLocation, TraceEnd, FColor::Red, false, 0.5f, 0, 5.f);
+		Shoot();
+		return true;
 	}
 
-	CooldownProgress = 0.f;
+	return false;
+}
+
+bool AEDWeapon::ReleaseTrigger()
+{
+	IsTriggerPulled = false;
 
 	return true;
+}
+
+bool AEDWeapon::GetIsTriggerPulled()
+{
+	return IsTriggerPulled;
 }

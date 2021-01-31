@@ -18,7 +18,6 @@ public:
 	AEDWeapon();
 
 protected:
-	virtual void Tick(float DeltaSeconds) override;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	UPaperSpriteComponent* SpriteComp;
@@ -32,7 +31,25 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
 	float BaseDamage = 20.f;
 
-	float CooldownProgress = Cooldown; // Set progress to Cooldown so we can shoot right away after spawning.
+	bool IsCoolingDown = false;
+
+	bool IsTriggerPulled = false;
+
+	// A timer for handling cooldowns of consecutive shots
+	FTimerHandle CooldownTimer;
+
+	// What happens when this gun is shot, and if it can shoot to begin with
+	virtual void Shoot();
+
+	// returns if we can actually shoot, given current state of gun
+	virtual bool CanShoot();
+
+	// Marks the end of the cooldown
+	virtual void CooldownEnd();
+
+	//
+	// Events
+	//
 
 	UFUNCTION(BlueprintImplementableEvent, meta = (DisplayName = "On Shoot Begin"))
 	void EDOnShootBegin();
@@ -48,5 +65,10 @@ protected:
 
 public:
 
-	virtual bool Shoot();
+	// Control if trigger is pulled or not.
+	virtual bool PullTrigger();
+	virtual bool ReleaseTrigger();
+
+	// Get if the trigger is pulled
+	virtual bool GetIsTriggerPulled();
 };

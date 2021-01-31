@@ -6,12 +6,6 @@
 
 long Logger::TickCount = 0;
 
-// TODO: Make settings for these, turned on via command. Right now, you must hardcode changes.
-bool Logger::bShowTimeStamp = true;
-bool Logger::bShowTicks = true;
-bool Logger::bShowOnScreen = false;
-enum Logger::Verbosity MinVerbosity = Logger::Verbosity::VerboseLevel;
-
 Logger::Logger()
 {
 }

@@ -1,29 +1,31 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "EDRocket.h"
+#include "EDGrenade.h"
 
-AEDRocket::AEDRocket()
+
+// Construct grenade with default values
+AEDGrenade::AEDGrenade()
 {
 	// Projectile properties
-	DestroyOnHit = true;
+	DestroyOnHit = false;
 	DestroyOnOverlap = false;
 	HitShooter = false;
 	OverlapShooter = false;
-	HitOthers = true;
+	HitOthers = false;
 	OverlapOthers = false;
-	LifeSpan = 100.f;
+	LifeSpan = 1.5;
 
-	Damage = 50.f;
+	Damage = 40.f;
 	SelfDamage = true;
 	SelfDamageScale = 0.5f;
 
-	MovementComp->InitialSpeed = 2000.f;
-	MovementComp->MaxSpeed = 2000.f;
+	MovementComp->InitialSpeed = 1200.f;
+	MovementComp->MaxSpeed = 1200.f;
 	MovementComp->bSimulationEnabled = true;
-	MovementComp->bShouldBounce = false;
-	MovementComp->Bounciness = 0.f;
-	MovementComp->ProjectileGravityScale = 0.f;
+	MovementComp->bShouldBounce = true;
+	MovementComp->Bounciness = 0.4f;
+	MovementComp->ProjectileGravityScale = 1.f;
 
 
 	// Explosive properties
@@ -32,7 +34,7 @@ AEDRocket::AEDRocket()
 
 	RadialForceComp->Radius = BlastRadius;
 	RadialForceComp->bImpulseVelChange = true;
-	RadialForceComp->ImpulseStrength = 1500.f;
+	RadialForceComp->ImpulseStrength = 2000.f;
 	RadialForceComp->ForceStrength = 0.f; // we aren't using the force
 	RadialForceComp->Falloff = ERadialImpulseFalloff::RIF_Linear;
 }

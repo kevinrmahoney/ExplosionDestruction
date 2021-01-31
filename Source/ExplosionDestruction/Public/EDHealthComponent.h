@@ -36,6 +36,8 @@ public:
 	UPROPERTY(BlueprintAssignable, Category = "Events")
 	FOnHealthChangedSignature OnHealthChanged;
 
+	void SetMaxHealth(float NewMaxHealth);
+
 	UFUNCTION(BlueprintCallable, Category = "HealthComponent")
 	void Heal(float HealAmount);
 };

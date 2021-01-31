@@ -4,17 +4,15 @@
 
 #include "CoreMinimal.h"
 #include "EDExplosive.h"
-#include "EDRocket.generated.h"
+#include "EDGrenade.generated.h"
 
 /**
- *
+ * 
  */
 UCLASS()
-class EXPLOSIONDESTRUCTION_API AEDRocket : public AEDExplosive
+class EXPLOSIONDESTRUCTION_API AEDGrenade : public AEDExplosive
 {
 	GENERATED_BODY()
 
-public:
-	AEDRocket();
-
+	AEDGrenade();
 };
