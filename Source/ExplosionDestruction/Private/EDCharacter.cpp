@@ -31,6 +31,15 @@ AEDCharacter::AEDCharacter()
 	GetCapsuleComponent()->SetCapsuleHalfHeight(96.0f);
 	GetCapsuleComponent()->SetCapsuleRadius(40.0f);
 
+	// Make sure weapon classes are specified
+	if(!RocketLauncherClass || !GrenadeLauncherClass || !AssaultRifleClass)
+	{
+		Logger::Error(TEXT("One or more weapon classes are unspecified for this character! Check the blueprint!"));
+		if(RocketLauncherClass) Logger::Error(TEXT("%s"), *RocketLauncherClass.Get()->GetName());
+		if(GrenadeLauncherClass) Logger::Error(TEXT("%s"), *GrenadeLauncherClass.Get()->GetName());
+		if(AssaultRifleClass) Logger::Error(TEXT("%s"), *AssaultRifleClass.Get()->GetName());
+	}
+
 	// Hit boxes for the wallkicks. Attach to the capsule so we don't rotate with the sprite
 	WallKickTopComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("WallKickTopComponent"));
 	WallKickBottomComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("WallKickBottomComponent"));
@@ -116,10 +125,6 @@ void AEDCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
-	FActorSpawnParameters SpawnParams;
-	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-	SpawnParams.Owner = this;
-
 	if(!GetWorld())
 		Logger::Fatal(TEXT("Could not get the World!"));
 
@@ -129,13 +134,7 @@ void AEDCharacter::BeginPlay()
 	if(!HealthComp)
 		Logger::Fatal(TEXT("Could not create Health Component!"));
 
-	CurrentWeapon = GetWorld()->SpawnActor<AEDWeapon>(StarterWeaponClass, FVector::ZeroVector, FRotator::ZeroRotator, SpawnParams);
-
-	if(CurrentWeapon)
-	{
-		CurrentWeapon->SetOwner(this);
-		CurrentWeapon->AttachToComponent(GetCapsuleComponent(), FAttachmentTransformRules::SnapToTargetNotIncludingScale);
-	}
+	EquipWeapon(RocketLauncher);
 
 	// Facing right by default
 	CurrentState.Rotation = FACING_RIGHT;
@@ -509,6 +508,46 @@ void AEDCharacter::UpdateHUD()
 	}
 }
 
+// Equip new weapon
+void AEDCharacter::EquipWeapon(enum Weapon NewWeapon)
+{
+	// Don't equip a new weapon if its the same as the old one
+	if(NewWeapon == EquippedWeapon)
+		return;
+
+	FActorSpawnParameters SpawnParams;
+	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	SpawnParams.Owner = this;
+
+	// Destroy the current weapon before making a new one.
+	if(CurrentWeapon)
+	{
+		CurrentWeapon->Destroy();
+		CurrentWeapon = nullptr;
+	}
+
+	// Create the requested weapon and save the pointer for later use.
+	if(NewWeapon == RocketLauncher)
+	{
+		CurrentWeapon = GetWorld()->SpawnActor<AEDWeapon>(RocketLauncherClass, FVector::ZeroVector, FRotator::ZeroRotator, SpawnParams);
+	}
+	else if(NewWeapon == GrenadeLauncher)
+	{
+		CurrentWeapon = GetWorld()->SpawnActor<AEDWeapon>(GrenadeLauncherClass, FVector::ZeroVector, FRotator::ZeroRotator, SpawnParams);
+	}
+	else if(NewWeapon == AssaultRifle)
+	{
+		CurrentWeapon = GetWorld()->SpawnActor<AEDWeapon>(AssaultRifleClass, FVector::ZeroVector, FRotator::ZeroRotator, SpawnParams);
+	}
+
+	// Make sure to set the owner.
+	if(CurrentWeapon)
+	{
+		CurrentWeapon->SetOwner(this);
+		CurrentWeapon->AttachToComponent(GetCapsuleComponent(), FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+	}
+}
+
 //
 // Events
 //
@@ -683,4 +722,20 @@ void AEDCharacter::MoveLeftEnd()
 {
 	// Stop trying to move left
 	CurrentInput.TryMoveLeft = false;
+}
+
+// These methods equip weapons.
+void AEDCharacter::EquipRocketLauncher()
+{
+	EquipWeapon(RocketLauncher);
+}
+
+void AEDCharacter::EquipGrenadeLauncher()
+{
+	EquipWeapon(GrenadeLauncher);
+}
+
+void AEDCharacter::EquipAssaultRifle()
+{
+	EquipWeapon(AssaultRifle);
 }

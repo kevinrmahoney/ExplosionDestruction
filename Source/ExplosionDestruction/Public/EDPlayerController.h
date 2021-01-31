@@ -33,6 +33,9 @@ private:
 	void MoveLeftReleased();
 	void JumpPressed();
 	void JumpReleased();
+	void RocketLauncherPressed();
+	void GrenadeLauncherPressed();
+	void AssaultRiflePressed();
 	void RespawnPressed();
 
 protected:

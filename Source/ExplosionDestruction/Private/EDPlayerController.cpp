@@ -15,6 +15,9 @@ void AEDPlayerController::SetupInputComponent()
     if(!InputComponent)
         return;
 
+    GetWorld()->GetGameViewport()->SetMouseLockMode(EMouseLockMode::LockAlways);
+    GetWorld()->GetGameViewport()->Viewport->LockMouseToViewport(true);
+
     bShowMouseCursor = true;
 
     // When Jump button is pressed or released
@@ -32,6 +35,15 @@ void AEDPlayerController::SetupInputComponent()
     // When move right is pressed
     InputComponent->BindAction("MoveLeft", IE_Pressed,  this, &AEDPlayerController::MoveLeftPressed);
     InputComponent->BindAction("MoveLeft", IE_Released, this, &AEDPlayerController::MoveLeftReleased);
+
+    // Kill the current character (if it is a character) if it exists, and respawn
+    InputComponent->BindAction("RocketLauncher", IE_Pressed, this, &AEDPlayerController::RocketLauncherPressed);
+
+    // Kill the current character (if it is a character) if it exists, and respawn
+    InputComponent->BindAction("GrenadeLauncher", IE_Pressed, this, &AEDPlayerController::GrenadeLauncherPressed);
+
+    // Kill the current character (if it is a character) if it exists, and respawn
+    InputComponent->BindAction("AssaultRifle", IE_Pressed, this, &AEDPlayerController::AssaultRiflePressed);
 
     // Kill the current character (if it is a character) if it exists, and respawn
     InputComponent->BindAction("Respawn", IE_Pressed, this, &AEDPlayerController::RespawnPressed);
@@ -121,6 +133,24 @@ void AEDPlayerController::JumpReleased()
 {
     if(PossessedIsEDCharacter && EDCharacter)
         EDCharacter->SetJumpEnd();
+}
+
+void AEDPlayerController::RocketLauncherPressed()
+{
+    if(PossessedIsEDCharacter && EDCharacter)
+        EDCharacter->EquipRocketLauncher();
+}
+
+void AEDPlayerController::GrenadeLauncherPressed()
+{
+    if(PossessedIsEDCharacter && EDCharacter)
+        EDCharacter->EquipGrenadeLauncher();
+}
+
+void AEDPlayerController::AssaultRiflePressed()
+{
+    if(PossessedIsEDCharacter && EDCharacter)
+        EDCharacter->EquipAssaultRifle();
 }
 
 // If we pressed the respawn button

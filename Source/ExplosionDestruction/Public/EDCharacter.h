@@ -27,6 +27,14 @@ class AEDCharacter : public APaperCharacter
 {
 	GENERATED_BODY()
 
+	enum Weapon
+	{
+		None,
+		RocketLauncher,
+		GrenadeLauncher,
+		AssaultRifle
+	};
+
 private:
 	struct CharacterState
 	{
@@ -73,6 +81,11 @@ public:
 	// Jumping binds
 	void SetJumpBegin();
 	void SetJumpEnd();
+
+	// Equip binds
+	void EquipRocketLauncher();
+	void EquipGrenadeLauncher();
+	void EquipAssaultRifle();
 
 	// Wall Kick Overlap Events
 	// Top
@@ -211,11 +224,20 @@ protected:
 	// Updates Character variables
 	void UpdateCharacter();
 
+	void EquipWeapon(enum Weapon NewWeapon);
+
 	/* Weapons */
+	enum Weapon EquippedWeapon = None;
 	AEDWeapon* CurrentWeapon;
 
 	UPROPERTY(EditDefaultsOnly, Category = Weapons)
-	TSubclassOf<AEDWeapon> StarterWeaponClass;
+	TSubclassOf<AEDWeapon> RocketLauncherClass;
+
+	UPROPERTY(EditDefaultsOnly, Category = Weapons)
+	TSubclassOf<AEDWeapon> GrenadeLauncherClass;
+
+	UPROPERTY(EditDefaultsOnly, Category = Weapons)
+	TSubclassOf<AEDWeapon> AssaultRifleClass;
 
 	UPROPERTY(VisibleDefaultsOnly, Category = Weapons)
 	FName WeaponSocketName;

@@ -9,6 +9,7 @@
 class AEDPlayerController;
 class AEDCharacter;
 class AEDPlayerStart;
+class AEDCheckpoint;
 
 /**
  * The GameMode defines the game being played. It governs the game rules, scoring, what actors
@@ -53,7 +54,14 @@ protected:
     UPROPERTY(EditAnywhere, Category = "Spawn Point")
     TSubclassOf<class AEDPlayerStart> SpawnPointClass;
 
+    // The specific spawn point type we should find in the map
+    UPROPERTY(EditAnywhere, Category = "Spawn Point")
+    TSubclassOf<class AEDCheckpoint> CheckpointClass;
+
     // An array of spawn points to reference
     TArray<AActor*> SpawnPoints;
+
+    // An array of spawn points to reference
+    TArray<AActor*> Checkpoints;
 
 };

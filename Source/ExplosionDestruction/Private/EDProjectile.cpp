@@ -10,9 +10,6 @@
 // Sets default values
 AEDProjectile::AEDProjectile()
 {
-	// All projectiles should tick (TODO: might want to reconsider this, use timers instead?)
-	SetActorTickEnabled(true);
-
 	// Create sprite component
 	SpriteComp = CreateDefaultSubobject<UPaperSpriteComponent>(TEXT("SpriteComp"));
 

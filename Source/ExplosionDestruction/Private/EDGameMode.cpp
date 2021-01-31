@@ -6,6 +6,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Logger.h"
 #include "EDPlayerStart.h"
+#include "EDCheckpoint.h"
 
 AEDGameMode::AEDGameMode()
 {
@@ -23,11 +24,17 @@ void AEDGameMode::BeginPlay()
 	if(!SpawnPointClass)
 		Logger::Fatal(TEXT("Game mode has no spawn point class!"));
 
+	if(!CheckpointClass)
+		Logger::Fatal(TEXT("Game mode has no check point class!"));
+
 	if(!CharacterClass)
 		Logger::Fatal(TEXT("Game mode has no character class!"));
 
-	// Find all spawn points and put in array.
+	// Find all spawn points and checkpoints and put in array.
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), SpawnPointClass.Get(), SpawnPoints);
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), CheckpointClass.Get(), Checkpoints);
+
+	Checkpoints.Sort();
 
 	Logger::Info(TEXT("There are %d spawn points on this map."), SpawnPoints.Num());
 }
