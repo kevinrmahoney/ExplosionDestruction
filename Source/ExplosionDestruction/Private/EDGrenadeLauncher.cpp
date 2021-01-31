@@ -5,7 +5,7 @@
 
 AEDGrenadeLauncher::AEDGrenadeLauncher()
 {
-	Cooldown = 1.f;
+	Cooldown = 0.5f;
 	Ammo = 1.f;
 	BaseDamage = 20.f;
 }

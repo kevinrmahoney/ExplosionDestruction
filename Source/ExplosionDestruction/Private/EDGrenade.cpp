@@ -14,18 +14,18 @@ AEDGrenade::AEDGrenade()
 	OverlapShooter = false;
 	HitOthers = false;
 	OverlapOthers = false;
-	LifeSpan = 2.5f;
+	LifeSpan = 1.5;
 
 	Damage = 40.f;
 	SelfDamage = true;
 	SelfDamageScale = 0.5f;
 
-	MovementComp->InitialSpeed = 1000.f;
-	MovementComp->MaxSpeed = 1000.f;
+	MovementComp->InitialSpeed = 1200.f;
+	MovementComp->MaxSpeed = 1200.f;
 	MovementComp->bSimulationEnabled = true;
 	MovementComp->bShouldBounce = true;
 	MovementComp->Bounciness = 0.4f;
-	MovementComp->ProjectileGravityScale = 1.2f;
+	MovementComp->ProjectileGravityScale = 1.f;
 
 
 	// Explosive properties

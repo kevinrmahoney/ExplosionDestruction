@@ -544,8 +544,12 @@ void AEDCharacter::EDOnDeath()
 	// If we die, we should reset the CurrentInput
 	CurrentInput = PlayerInput();
 
-	// Let go of the trigger
-	CurrentWeapon->ReleaseTrigger();
+	if(CurrentWeapon)
+	{
+		// Let go of the trigger
+		CurrentWeapon->ReleaseTrigger();
+		CurrentWeapon->Destroy();
+	}
 
 	EDOnDeathBP();
 }

@@ -168,7 +168,7 @@ void AEDProjectile::Destruct(AActor* DestroyedActor)
 {
 	EDOnExplode();
 
-	if(!DestroyedActor->IsPendingKill())
+	if(DestroyedActor)
 		DestroyedActor->Destroy();
 }
 

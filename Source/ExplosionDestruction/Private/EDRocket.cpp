@@ -32,7 +32,7 @@ AEDRocket::AEDRocket()
 
 	RadialForceComp->Radius = BlastRadius;
 	RadialForceComp->bImpulseVelChange = true;
-	RadialForceComp->ImpulseStrength = 2000.f;
+	RadialForceComp->ImpulseStrength = 1500.f;
 	RadialForceComp->ForceStrength = 0.f; // we aren't using the force
 	RadialForceComp->Falloff = ERadialImpulseFalloff::RIF_Linear;
 }
