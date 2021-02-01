@@ -24,10 +24,10 @@ void AEDPowerup::OnTickPowerup()
 {
 	TicksProcessed++;
 
-	OnPowerupTicked();
+	EDOnPowerupTicked();
 	if (TicksProcessed >= TotalNumberOfTicks)
 	{
-		OnExpired();
+		EDOnExpired();
 
 		GetWorldTimerManager().ClearTimer(TimerHandle_PowerupTick);
 	}
@@ -35,7 +35,7 @@ void AEDPowerup::OnTickPowerup()
 
 void AEDPowerup::ActivatePowerup()
 {
-	OnActivated();
+	EDOnActivated();
 	if (PowerupInterval > 0.f)
 	{
 		GetWorldTimerManager().SetTimer(TimerHandle_PowerupTick, this, &AEDPowerup::OnTickPowerup, PowerupInterval, true, 0.f);

@@ -8,6 +8,7 @@
 
 class UBoxComponent;
 class AEDGameMode;
+class AEDPlayerStart;
 
 UCLASS()
 class EXPLOSIONDESTRUCTION_API AEDCheckpoint : public AActor
@@ -19,10 +20,22 @@ public:
 	AEDCheckpoint();
 
 	UFUNCTION(BlueprintCallable)
-	int GetCheckpointNumber();
+	int GetCheckpointNumber() const;
+
+	UFUNCTION(BlueprintCallable)
+	AEDPlayerStart* GetRespawnPoint();
+
+	void Reset();
+
+	bool HasBeenReached();
+
+	void SetHasBeenReached(bool NewHasBeenReached);
 
 	// Define what the less than symbol means for this class
-	FORCEINLINE bool operator<(AEDCheckpoint& OtherCheckpoint);
+	FORCEINLINE bool operator<(const AEDCheckpoint& OtherCheckpoint) const
+	{
+		return GetCheckpointNumber() < OtherCheckpoint.GetCheckpointNumber();
+	}
 
 protected:
 
@@ -37,22 +50,30 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animations)
 	class UPaperFlipbook* DoorOpeningAnimation;
 
-	// The sprites to indicate the door being locked, unlocked or open
+	// Animation for a closed door
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animations)
 	class UPaperFlipbook* DoorClosedAnimation;
 
+	// Animation for an open door
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animations)
 	class UPaperFlipbook* DoorOpenAnimation;
 
+	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category = Instance)
+	AEDPlayerStart* RespawnPoint;
+
 	// Depends on the map, where this checkpoint is along the level (start at 0)
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category = Instance)
 	int CheckpointNumber = 0;
 
-	// If the player has touched this spawnpoint yet.
+	// If the player has touched this checkpoint yet.
 	bool HasTouched = false;
 
 	// If the player can respawn at this checkpoint
 	bool CanRespawnAt = true;
+
+	bool DoorClosed = false;
+
+	bool DoorIsOpening = false;
 
 	// Save a pointer to the ED game mode - we'll be calling it multiple times
 	AEDGameMode* GameMode;
@@ -71,11 +92,11 @@ protected:
 	void OnOpeningAnimationDone();
 
 	// Blueprintfuncton for when begin opening door
-	UFUNCTION(BlueprintImplementableEvent)
+	UFUNCTION(BlueprintImplementableEvent, meta = (DisplayName = "On Open Begin"))
 	void EDOnOpenBegin();
 
 	// Blueprintfuncton for when we end opening door
-	UFUNCTION(BlueprintImplementableEvent)
+	UFUNCTION(BlueprintImplementableEvent, meta = (DisplayName = "On Open End"))
 	void EDOnOpenEnd();
 
 };

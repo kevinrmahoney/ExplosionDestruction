@@ -36,14 +36,14 @@ public:
 
 	void ActivatePowerup();
 
-	UFUNCTION(BlueprintImplementableEvent, Category = "Powerups")
-	void OnActivated();
+	UFUNCTION(BlueprintImplementableEvent, Category = "Powerups", meta = (DisplayName = "On Activated"))
+	void EDOnActivated();
 
-	UFUNCTION(BlueprintImplementableEvent, Category = "Powerups")
-	void OnPowerupTicked();
+	UFUNCTION(BlueprintImplementableEvent, Category = "Powerups", meta = (DisplayName = "On Powerup Ticked"))
+	void EDOnPowerupTicked();
 
-	UFUNCTION(BlueprintImplementableEvent, Category = "Powerups")
-	void OnExpired();
+	UFUNCTION(BlueprintImplementableEvent, Category = "Powerups", meta = (DisplayName = "On Expired"))
+	void EDOnExpired();
 
 	virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
 

@@ -18,7 +18,7 @@ AEDExplosive::AEDExplosive()
 	RadialForceComp = CreateDefaultSubobject<URadialForceComponent>(TEXT("Radial Force Comp"));
 
 	if(!RadialForceComp)
-		Logger::Fatal(TEXT("Failed to create radial force component for explosive!"));
+		Logger::Error(TEXT("Failed to create radial force component for explosive!"));
 	else
 		RadialForceComp->SetupAttachment(SpriteComp);
 	

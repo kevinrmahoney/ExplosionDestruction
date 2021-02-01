@@ -14,4 +14,11 @@ class EXPLOSIONDESTRUCTION_API AEDPlayerStart : public APlayerStart
 {
 	GENERATED_BODY()
 
+private:
+	bool Activated = false;
+
+public:
+	void Activate();
+
+	void Deactivate();
 };

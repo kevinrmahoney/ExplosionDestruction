@@ -73,6 +73,12 @@ public:
 		LogMessage(FatalLevel, FColor::Red, Fmt, Args...);
 	}
 
+	template <typename FmtType, typename... Types>
+	static void Screen(const FmtType& Fmt, Types... Args)
+	{
+		LogToScreen(FColor::White, Fmt, Args...);
+	}
+
 private:
 	static long TickCount;
 
@@ -81,7 +87,7 @@ private:
 	{
 		// Only log if we have enabled the logger, and if the verboisty of the message is less than the verbosity setting
 		if(Environment::LogEnabled > 0 && LogVerbosity <= Environment::LogVerbosity)
-		{	
+		{
 			// Create the formatted string
 			FString Message = FString::Printf(Fmt, Args...);
 			FString TickStamp = FString("");
@@ -110,6 +116,14 @@ private:
 			if(Environment::LogToScreen && GEngine)
 				GEngine->AddOnScreenDebugMessage(-1, 15.0f, Color, *Message);
 		}
+	}
+
+	template <typename FmtType, typename... Types>
+	static void LogToScreen(FColor Color, const FmtType& Fmt, Types... Args)
+	{
+		// Create the formatted string
+		FString Message = FString::Printf(Fmt, Args...);
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, Color, *Message);
 	}
 
 	static FString GetTimeStamp();
