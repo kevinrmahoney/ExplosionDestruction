@@ -27,6 +27,14 @@ class AEDCharacter : public APaperCharacter
 {
 	GENERATED_BODY()
 
+	enum Weapon
+	{
+		None,
+		RocketLauncher,
+		GrenadeLauncher,
+		AssaultRifle
+	};
+
 private:
 	struct CharacterState
 	{
@@ -73,6 +81,11 @@ public:
 	// Jumping binds
 	void SetJumpBegin();
 	void SetJumpEnd();
+
+	// Equip binds
+	void EquipRocketLauncher();
+	void EquipGrenadeLauncher();
+	void EquipAssaultRifle();
 
 	// Wall Kick Overlap Events
 	// Top
@@ -123,25 +136,30 @@ private:
 	// Wall kick
 	bool DoWallKick(float DeltaSeconds);
 
+	// Initialize
+	void InitializeHUD();
+	void InitializeDynamicEvents();
+
+	// Updates the HUD (if needed)
+	void UpdateHUD();
+
+	// Update state of character
+	void UpdateState();
+
+	// Updates Character variables
+	void UpdateCharacter();
+
+	// Equip a new weapon (potentially)
+	void EquipWeapon(enum Weapon NewWeapon);
+
 protected:
 	virtual void Tick(float DeltaSeconds) override;
 	virtual void BeginPlay() override;
-	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
-	virtual void BeginDestroy() override;
-
-	void InitializeHUD();
-	void InitializeDynamicEvents();
 
 	/* HUD */
 	UPROPERTY(EditAnywhere, Category = "HUD")
 	TSubclassOf<class UEDBaseHUD> BaseHUDClass;
 	class UEDBaseHUD* BaseHUD;
-
-	// Updates the HUD (if needed)
-	UFUNCTION(BlueprintCallable)
-	void UpdateHUD();
-
-	void UpdateState();
 
 	/** Side view camera */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
@@ -208,14 +226,18 @@ protected:
 
 	float AnimationDuration = 0.f;
 
-	// Updates Character variables
-	void UpdateCharacter();
-
 	/* Weapons */
+	enum Weapon EquippedWeapon = None;
 	AEDWeapon* CurrentWeapon;
 
-	UPROPERTY(EditDefaultsOnly, Category = Weapons)
-	TSubclassOf<AEDWeapon> StarterWeaponClass;
+	UPROPERTY(EditAnywhere, Category = "Weapons")
+	TSubclassOf<class AEDWeapon> RocketLauncherClass;
+
+	UPROPERTY(EditAnywhere, Category = "Weapons")
+	TSubclassOf<class AEDWeapon> GrenadeLauncherClass;
+
+	UPROPERTY(EditAnywhere, Category = "Weapons")
+	TSubclassOf<class AEDWeapon> AssaultRifleClass;
 
 	UPROPERTY(VisibleDefaultsOnly, Category = Weapons)
 	FName WeaponSocketName;
@@ -227,9 +249,12 @@ protected:
 	void EDOnHealthChanged(UEDHealthComponent* OwnedHealthComp, float Health, float HealthDelta, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
 
 	UFUNCTION()
-	void EDOnDeath();
+	void EDOnDeath(AActor* DestroyedActor);
 
 	/* Blueprint Implementable Events (for sounds, graphics, etc) */
+	UFUNCTION(BlueprintImplementableEvent, meta = (DisplayName = "On Spawn"))
+	void EDOnSpawnBP();
+
 	UFUNCTION(BlueprintImplementableEvent, meta = (DisplayName = "On Death"))
 	void EDOnDeathBP();
 

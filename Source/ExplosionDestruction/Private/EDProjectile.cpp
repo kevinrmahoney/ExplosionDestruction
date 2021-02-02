@@ -10,14 +10,14 @@
 // Sets default values
 AEDProjectile::AEDProjectile()
 {
-	// All projectiles should tick (TODO: might want to reconsider this, use timers instead?)
-	SetActorTickEnabled(true);
+	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	SetActorTickEnabled(false);
 
 	// Create sprite component
 	SpriteComp = CreateDefaultSubobject<UPaperSpriteComponent>(TEXT("SpriteComp"));
-
+	SpriteComp->BodyInstance.SetCollisionProfileName(TEXT("Projectile"));
 	if(!SpriteComp)
-		Logger::Fatal(TEXT("Failed to create sprite component in projectile!"));
+		Logger::Error(TEXT("Failed to create sprite component in projectile!"));
 	else
 	{
 		// Sprites should use a non-default collision profile called Projectile
@@ -31,8 +31,8 @@ AEDProjectile::AEDProjectile()
 	// Create movement component
 	MovementComp = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("MovementComp"));
 
-	if(!MovementComp)
-		Logger::Fatal(TEXT("Failed to create sprite component in projectile!"));
+	RootComponent = SpriteComp;
+		Logger::Error(TEXT("Failed to create sprite component in projectile!"));
 
 	// NOTE: Child classes should set default values. This should be considered a mostly abstract class with
 	// with minimal base functionality to handle damage, hits, and overlaps. Copy+paste the below to new 

@@ -45,7 +45,7 @@ AEDCharacter::AEDCharacter()
 		WallKickTopComponent->SetupAttachment(GetCapsuleComponent());
 	}
 	else
-		Logger::Fatal(TEXT("Failed to create wall kick components!"));
+		Logger::Error(TEXT("Failed to create wall kick components!"));
 
 
 	// Create a camera boom attached to the root (capsule)
@@ -62,7 +62,7 @@ AEDCharacter::AEDCharacter()
 		CameraBoom->SetUsingAbsoluteRotation(true);
 	}
 	else
-		Logger::Fatal(TEXT("Failed to create camera boom!"));
+		Logger::Error(TEXT("Failed to create camera boom!"));
 
 
 	// Create an orthographic camera (no perspective) and attach it to the boom
@@ -77,7 +77,7 @@ AEDCharacter::AEDCharacter()
 		SideViewCameraComponent->bAutoActivate = true;
 	}
 	else
-		Logger::Fatal(TEXT("Failed to create side view camera!"));
+		Logger::Error(TEXT("Failed to create side view camera!"));
 
 	// Create component to manage health
 	HealthComp = CreateDefaultSubobject<UEDHealthComponent>(TEXT("HealthComp"));
@@ -116,26 +116,22 @@ void AEDCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
-	FActorSpawnParameters SpawnParams;
-	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-	SpawnParams.Owner = this;
-
 	if(!GetWorld())
-		Logger::Fatal(TEXT("Could not get the World!"));
+		Logger::Error(TEXT("Could not get the World!"));
 
 	if(!WallKickTopComponent || !WallKickBottomComponent || !WallKickLeftComponent || !WallKickRightComponent)
-		Logger::Fatal(TEXT("Could not create one or more of the Wall Kick Components!"));
+		Logger::Error(TEXT("Could not create one or more of the Wall Kick Components!"));
 
 	if(!HealthComp)
-		Logger::Fatal(TEXT("Could not create Health Component!"));
+		Logger::Error(TEXT("Could not create Health Component!"));
 
-	CurrentWeapon = GetWorld()->SpawnActor<AEDWeapon>(StarterWeaponClass, FVector::ZeroVector, FRotator::ZeroRotator, SpawnParams);
-
-	if(CurrentWeapon)
+	// Make sure weapon classes are specified
+	if(!RocketLauncherClass || !GrenadeLauncherClass || !AssaultRifleClass)
 	{
-		CurrentWeapon->SetOwner(this);
-		CurrentWeapon->AttachToComponent(GetCapsuleComponent(), FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+		Logger::Error(TEXT("One or more weapon classes are unspecified for this character! Check the blueprint!"));
 	}
+
+	EquipWeapon(RocketLauncher);
 
 	// Facing right by default
 	CurrentState.Rotation = FACING_RIGHT;
@@ -145,30 +141,21 @@ void AEDCharacter::BeginPlay()
 
 	// Add any dynamic events.
 	InitializeDynamicEvents();
-}
 
-
-void AEDCharacter::EndPlay(const EEndPlayReason::Type EndPlayReason)
-{
-	EDOnDeath();
-
-	// Call Super AFTER our logic because otherwise our logic will be delayed
-	Super::EndPlay(EndPlayReason);
-}
-
-void AEDCharacter::BeginDestroy()
-{
-	// Call Super AFTER our logic because otherwise our logic will be delayed
-	Super::BeginDestroy();
+	EDOnSpawnBP();
 }
 
 // Call this to initialize the HUD
 void AEDCharacter::InitializeHUD()
 {
 	// Create the HUD if it doesn't already exist.
-	if(BaseHUDClass && !BaseHUD)
+	if(BaseHUDClass)
 	{
 		BaseHUD = CreateWidget<UEDBaseHUD>(GetWorld(), BaseHUDClass);
+	}
+	else
+	{
+		Logger::Error(TEXT("Failed to create HUD! Make sure the character BP has a HUD class assigned to it!"));
 	}
 
 	// Give the HUD a character reference so it can update character specific
@@ -199,7 +186,9 @@ void AEDCharacter::InitializeDynamicEvents()
 	if(HealthComp)
 		HealthComp->OnHealthChanged.AddDynamic(this, &AEDCharacter::EDOnHealthChanged);
 	else
-		Logger::Fatal(TEXT("Could not add events to health component!"));
+		Logger::Error(TEXT("Could not add events to health component!"));
+
+	OnDestroyed.AddDynamic(this, &AEDCharacter::EDOnDeath);
 }
 
 
@@ -296,7 +285,7 @@ bool AEDCharacter::DoShootWeapon(float DeltaSeconds)
 		if(CurrentInput.TryShoot)
 			IsShooting = CurrentWeapon->PullTrigger();
 
-		if(CurrentInput.TryShoot)
+		if(!CurrentInput.TryShoot)
 			IsShooting = CurrentWeapon->ReleaseTrigger();
 	}
 
@@ -315,6 +304,8 @@ bool AEDCharacter::DoJump(float DeltaSeconds)
 	GetCharacterMovement()->SetMovementMode(MOVE_Falling); // If we don't do this, the movement isn't applied.
 	ShouldUpdateHUD = true; // Our speed changes
 	EDOnJumpBP(); // Trigger jump event
+
+	Logger::Verbose(TEXT("Character %s jumped"), *GetName());
 
 	return true;
 }
@@ -354,6 +345,8 @@ bool AEDCharacter::DoWallKick(float DeltaSeconds)
 	CurrentState.IsWallKicking = true;
 
 	EDOnWallKickBP();
+
+	Logger::Verbose(TEXT("Character %s wallkicked with velocity %s (%f)"), *GetName(), *WallKickDeltaV.ToString(), WallKickDeltaV.Size());
 
 	return true;
 }
@@ -509,6 +502,55 @@ void AEDCharacter::UpdateHUD()
 	}
 }
 
+// Equip new weapon
+void AEDCharacter::EquipWeapon(enum Weapon NewWeapon)
+{
+	// Don't equip a new weapon if its the same as the old one
+	if(NewWeapon == EquippedWeapon)
+		return;
+
+	FActorSpawnParameters SpawnParams;
+	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	SpawnParams.Owner = this;
+
+	// Destroy the current weapon before making a new one.
+	if(CurrentWeapon)
+	{
+		Logger::Verbose(TEXT("Character %s's weapon %s is being destroyed."), *GetName(), *CurrentWeapon->GetName());
+		CurrentWeapon->Destroy();
+		CurrentWeapon = nullptr;
+	}
+
+	// Create the requested weapon and save the pointer for later use.
+	if(NewWeapon == RocketLauncher)
+	{
+		CurrentWeapon = GetWorld()->SpawnActor<AEDWeapon>(RocketLauncherClass, FVector::ZeroVector, FRotator::ZeroRotator, SpawnParams);
+	}
+	else if(NewWeapon == GrenadeLauncher)
+	{
+		CurrentWeapon = GetWorld()->SpawnActor<AEDWeapon>(GrenadeLauncherClass, FVector::ZeroVector, FRotator::ZeroRotator, SpawnParams);
+	}
+	else if(NewWeapon == AssaultRifle)
+	{
+		CurrentWeapon = GetWorld()->SpawnActor<AEDWeapon>(AssaultRifleClass, FVector::ZeroVector, FRotator::ZeroRotator, SpawnParams);
+	}
+	else
+	{
+		Logger::Error(TEXT("Character %s has attempted to equip a weapon that doesnt exist."), *GetName());
+		return;
+	}
+
+	// Make sure to set the owner.
+	if(CurrentWeapon)
+	{
+		CurrentWeapon->SetOwner(this);
+		CurrentWeapon->AttachToComponent(GetCapsuleComponent(), FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+		EquippedWeapon = NewWeapon;
+
+		Logger::Verbose(TEXT("Character %s has equipped weapon %s."), *GetName(), *CurrentWeapon->GetName());
+	}
+}
+
 //
 // Events
 //
@@ -535,7 +577,7 @@ void AEDCharacter::EDOnHealthChanged(UEDHealthComponent* OwnedHealthComp, float 
 }
 
 // Called on death of character
-void AEDCharacter::EDOnDeath()
+void AEDCharacter::EDOnDeath(AActor* DestroyedActor)
 {
 	// Remove the HUD related to this character from the player's screen.
 	if(BaseHUD)
@@ -550,6 +592,8 @@ void AEDCharacter::EDOnDeath()
 		CurrentWeapon->ReleaseTrigger();
 		CurrentWeapon->Destroy();
 	}
+
+	Logger::Verbose(TEXT("Character %s has died!"), *GetName());
 
 	EDOnDeathBP();
 }
@@ -633,7 +677,6 @@ float AEDCharacter::GetAmmo()
 
 float AEDCharacter::GetSpeed()
 {
-
 	return CurrentState.Velocity.Size();
 }
 
@@ -683,4 +726,20 @@ void AEDCharacter::MoveLeftEnd()
 {
 	// Stop trying to move left
 	CurrentInput.TryMoveLeft = false;
+}
+
+// These methods equip weapons.
+void AEDCharacter::EquipRocketLauncher()
+{
+	EquipWeapon(RocketLauncher);
+}
+
+void AEDCharacter::EquipGrenadeLauncher()
+{
+	EquipWeapon(GrenadeLauncher);
+}
+
+void AEDCharacter::EquipAssaultRifle()
+{
+	EquipWeapon(AssaultRifle);
 }

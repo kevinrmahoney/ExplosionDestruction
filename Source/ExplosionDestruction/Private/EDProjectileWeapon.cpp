@@ -12,7 +12,7 @@ void AEDProjectileWeapon::BeginPlay()
 	Super::BeginPlay();
 
 	if(!ProjectileClass)
-		Logger::Fatal(TEXT("Projectile weapon has no projectile!"));
+		Logger::Error(TEXT("Projectile weapon has no projectile!"));
 }
 
 void AEDProjectileWeapon::Shoot()

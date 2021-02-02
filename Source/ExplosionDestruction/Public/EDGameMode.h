@@ -9,6 +9,7 @@
 class AEDPlayerController;
 class AEDCharacter;
 class AEDPlayerStart;
+class AEDCheckpoint;
 
 /**
  * The GameMode defines the game being played. It governs the game rules, scoring, what actors
@@ -38,12 +39,22 @@ public:
     UFUNCTION(BlueprintCallable)
     float GetBestTime();
 
+    void RestartGameMode(); 
+
+    void CheckpointReached(AEDCheckpoint* Checkpoint);
+
+private:
+    AEDPlayerStart* GetFurthestSpawnPoint();
+
+    void FindCheckPoints();
+
 protected:
     virtual void Tick(float DeltaSeconds) override;
     virtual void BeginPlay() override;
 
     float Timer = 0.f;
     float BestTime = 0.f;
+    AEDCheckpoint* FirstCheckpoint;
 
     // This is the class we should spawn for characters
     UPROPERTY(EditAnywhere, Category = "Spawnable Characters")
@@ -53,7 +64,17 @@ protected:
     UPROPERTY(EditAnywhere, Category = "Spawn Point")
     TSubclassOf<class AEDPlayerStart> SpawnPointClass;
 
+    // The specific spawn point type we should find in the map
+    UPROPERTY(EditAnywhere, Category = "Spawn Point")
+    TSubclassOf<class AEDCheckpoint> CheckpointClass;
+
     // An array of spawn points to reference
-    TArray<AActor*> SpawnPoints;
+    TArray<AEDCheckpoint*> Checkpoints;
+
+    UFUNCTION(BlueprintImplementableEvent, meta = (DisplayName = "On New Record"))
+    void EDOnNewRecordBP();
+
+    UFUNCTION(BlueprintImplementableEvent, meta = (DisplayName = "On Checkpoint Reached"))
+    void EDOnCheckpontReachedBP();
 
 };
