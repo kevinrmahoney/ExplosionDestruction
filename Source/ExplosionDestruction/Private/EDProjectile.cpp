@@ -10,11 +10,12 @@
 // Sets default values
 AEDProjectile::AEDProjectile()
 {
-	PrimaryActorTick.bCanEverTick = false;
+	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	SetActorTickEnabled(false);
 
 	// Create sprite component
 	SpriteComp = CreateDefaultSubobject<UPaperSpriteComponent>(TEXT("SpriteComp"));
-
+	SpriteComp->BodyInstance.SetCollisionProfileName(TEXT("Projectile"));
 	if(!SpriteComp)
 		Logger::Error(TEXT("Failed to create sprite component in projectile!"));
 	else
@@ -30,7 +31,7 @@ AEDProjectile::AEDProjectile()
 	// Create movement component
 	MovementComp = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("MovementComp"));
 
-	if(!MovementComp)
+	RootComponent = SpriteComp;
 		Logger::Error(TEXT("Failed to create sprite component in projectile!"));
 
 	// NOTE: Child classes should set default values. This should be considered a mostly abstract class with
