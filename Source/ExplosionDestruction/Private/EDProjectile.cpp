@@ -32,6 +32,8 @@ AEDProjectile::AEDProjectile()
 	MovementComp = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("MovementComp"));
 
 	RootComponent = SpriteComp;
+
+	if(!SpriteComp)
 		Logger::Error(TEXT("Failed to create sprite component in projectile!"));
 
 	// NOTE: Child classes should set default values. This should be considered a mostly abstract class with
