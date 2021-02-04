@@ -28,7 +28,7 @@ void AEDPickupActor::NotifyActorBeginOverlap(AActor* OtherActor)
 {
 	Super::NotifyActorBeginOverlap(OtherActor);
 
-	if (PickupInstance)
+	if (PickupInstance && Cast<AEDCharacter>(OtherActor))
 	{
 		PickupInstance->Activate();
 		PickupInstance = nullptr;
