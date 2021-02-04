@@ -106,6 +106,10 @@ AEDCharacter::AEDCharacter()
 
 	// Enable replication on the Sprite component so animations show up when networked
 	GetSprite()->SetIsReplicated(true);
+
+	WeaponPivotPoint = CreateDefaultSubobject<USceneComponent>(TEXT("Weapon Pivot Point"));
+	WeaponPivotPoint->AttachToComponent(GetCapsuleComponent(), FAttachmentTransformRules::SnapToTargetIncludingScale);
+
 	bReplicates = true;
 
 	JumpMaxCount = 1;
@@ -491,6 +495,22 @@ void AEDCharacter::UpdateAnimation(float DeltaSeconds)
 		GetSprite()->SetFlipbook(DesiredAnimation);
 		AnimationDuration = 0.f;
 	}
+
+	if(CurrentWeapon)
+	{
+		// Now lets update the weapon animation (where its pointing)
+		FVector ActorLocation = GetActorLocation();
+		FVector MouseWorldLocation;
+		FVector MouseWorldDirection;
+		FVector Target;
+
+		// Get location of the mouse cursor. Make sure to remove the Y component since this is 2D
+		ActorLocation.Y = 0.f;
+		GetWorld()->GetFirstPlayerController()->DeprojectMousePositionToWorld(MouseWorldLocation, MouseWorldDirection);
+		MouseWorldLocation.Y = 0.f;
+		Target = (MouseWorldLocation - ActorLocation);
+		CurrentWeapon->SetActorRotation(Target.Rotation());
+	}
 }
 
 void AEDCharacter::UpdateHUD()
@@ -544,8 +564,11 @@ void AEDCharacter::EquipWeapon(enum Weapon NewWeapon)
 	if(CurrentWeapon)
 	{
 		CurrentWeapon->SetOwner(this);
-		CurrentWeapon->AttachToComponent(GetCapsuleComponent(), FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+		CurrentWeapon->PivotPoint->SetupAttachment(WeaponPivotPoint);
+		CurrentWeapon->AttachToComponent(WeaponPivotPoint, FAttachmentTransformRules::SnapToTargetIncludingScale);
+		//CurrentWeapon->AttachToComponent(WeaponPivotPoint, FAttachmentTransformRules::KeepWorldTransform);
 		EquippedWeapon = NewWeapon;
+		Logger::Verbose(TEXT("THIS IS BULLSHIT: %s"), *WeaponPivotPoint->GetComponentLocation().ToString());
 
 		Logger::Verbose(TEXT("Character %s has equipped weapon %s."), *GetName(), *CurrentWeapon->GetName());
 	}

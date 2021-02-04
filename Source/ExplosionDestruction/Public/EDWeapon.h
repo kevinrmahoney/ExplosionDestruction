@@ -17,7 +17,13 @@ public:
 	// Sets default values for this actor's properties
 	AEDWeapon();
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	USceneComponent* PivotPoint;
+
 protected:
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	USceneComponent* Muzzle;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	UPaperSpriteComponent* SpriteComp;

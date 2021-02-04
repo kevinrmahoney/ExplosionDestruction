@@ -10,6 +10,7 @@ class UBoxComponent;
 class AEDWeapon;
 class UEDBaseHUD;
 class UEDHealthComponent;
+class USceneComponent;
 
 #define FACING_RIGHT 1.f
 #define FACING_LEFT -1.f
@@ -157,7 +158,7 @@ protected:
 	virtual void BeginPlay() override;
 
 	/* HUD */
-	UPROPERTY(EditAnywhere, Category = "HUD")
+	UPROPERTY(EditAnywhere, Category = HUD)
 	TSubclassOf<class UEDBaseHUD> BaseHUDClass;
 	class UEDBaseHUD* BaseHUD;
 
@@ -169,7 +170,6 @@ protected:
 	/** Camera boom positioning the camera beside the character */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class USpringArmComponent* CameraBoom;
-
 
 	/* Wall Kick Collision Boxes */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Movement)
@@ -199,7 +199,7 @@ protected:
 	/* Animations */
 
 	// The animation to play while running around
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Animations)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animations)
 	class UPaperFlipbook* RunningAnimation;
 
 	// The animation to play while idle (standing still)
@@ -230,19 +230,22 @@ protected:
 	enum Weapon EquippedWeapon = None;
 	AEDWeapon* CurrentWeapon;
 
-	UPROPERTY(EditAnywhere, Category = "Weapons")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Pivots)
+	USceneComponent* WeaponPivotPoint;
+
+	UPROPERTY(EditAnywhere, Category = Weapons)
 	TSubclassOf<class AEDWeapon> RocketLauncherClass;
 
-	UPROPERTY(EditAnywhere, Category = "Weapons")
+	UPROPERTY(EditAnywhere, Category = Weapons)
 	TSubclassOf<class AEDWeapon> GrenadeLauncherClass;
 
-	UPROPERTY(EditAnywhere, Category = "Weapons")
+	UPROPERTY(EditAnywhere, Category = Weapons)
 	TSubclassOf<class AEDWeapon> AssaultRifleClass;
 
 	UPROPERTY(VisibleDefaultsOnly, Category = Weapons)
 	FName WeaponSocketName;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Components)
 	UEDHealthComponent* HealthComp;
 
 	UFUNCTION()

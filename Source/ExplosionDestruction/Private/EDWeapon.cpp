@@ -10,9 +10,15 @@ AEDWeapon::AEDWeapon()
 {
 	PrimaryActorTick.bCanEverTick = false;
 
+	PivotPoint = CreateDefaultSubobject<USceneComponent>(TEXT("Pivot Point"));
+	SetRootComponent(PivotPoint);
+
 	SpriteComp = CreateDefaultSubobject<UPaperSpriteComponent>(TEXT("SpriteComp"));
 	SpriteComp->BodyInstance.SetCollisionProfileName(TEXT("NoCollision"));
-	RootComponent = SpriteComp;
+	SpriteComp->AttachToComponent(PivotPoint, FAttachmentTransformRules::SnapToTargetIncludingScale);
+
+	Muzzle = CreateDefaultSubobject<USceneComponent>(TEXT("Muzzle"));
+	Muzzle->AttachToComponent(SpriteComp, FAttachmentTransformRules::SnapToTargetIncludingScale);
 }
 
 void AEDWeapon::Shoot()
