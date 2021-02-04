@@ -33,9 +33,10 @@ void AEDPowerup::OnTickPowerup()
 	}
 }
 
-void AEDPowerup::ActivatePowerup()
+void AEDPowerup::Activate()
 {
-	EDOnActivated();
+	Super::Activate();
+
 	if (PowerupInterval > 0.f)
 	{
 		GetWorldTimerManager().SetTimer(TimerHandle_PowerupTick, this, &AEDPowerup::OnTickPowerup, PowerupInterval, true, 0.f);
@@ -44,9 +45,5 @@ void AEDPowerup::ActivatePowerup()
 	{
 		OnTickPowerup();
 	}
-}
-
-void AEDPowerup::NotifyActorBeginOverlap(AActor* OtherActor)
-{
 }
 

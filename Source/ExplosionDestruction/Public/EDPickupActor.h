@@ -7,7 +7,7 @@
 #include "EDPickupActor.generated.h"
 
 class USphereComponent;
-class AEDPowerup;
+class AEDPickupItem;
 
 UCLASS()
 class EXPLOSIONDESTRUCTION_API AEDPickupActor : public AActor
@@ -25,9 +25,9 @@ protected:
 	USphereComponent* SphereComp;
 
 	UPROPERTY(EditDefaultsOnly, Category = "PickupActor")
-	TSubclassOf<AEDPowerup> PowerupClass;
+	TSubclassOf<AEDPickupItem> PickupClass;
 
-	AEDPowerup* PowerupInstance;
+	AEDPickupItem* PickupInstance;
 
 	UPROPERTY(EditDefaultsOnly, Category = "PickupActor")
 	float CooldownDuration;
