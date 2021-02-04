@@ -3,11 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
+#include "EDPickupItem.h"
 #include "EDPowerup.generated.h"
 
 UCLASS()
-class EXPLOSIONDESTRUCTION_API AEDPowerup : public AActor
+class EXPLOSIONDESTRUCTION_API AEDPowerup : public AEDPickupItem
 {
 	GENERATED_BODY()
 	
@@ -34,17 +34,8 @@ protected:
 
 public:	
 
-	void ActivatePowerup();
-
-	UFUNCTION(BlueprintImplementableEvent, Category = "Powerups", meta = (DisplayName = "On Activated"))
-	void EDOnActivated();
+	void Activate() override;
 
 	UFUNCTION(BlueprintImplementableEvent, Category = "Powerups", meta = (DisplayName = "On Powerup Ticked"))
 	void EDOnPowerupTicked();
-
-	UFUNCTION(BlueprintImplementableEvent, Category = "Powerups", meta = (DisplayName = "On Expired"))
-	void EDOnExpired();
-
-	virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
-
 };
