@@ -47,7 +47,7 @@ protected:
 	UParticleSystem* BlastEffect;
 
 	// Make it hidden to blueprint, we edit the values in code, expose some vars to BP that write to this
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	URadialForceComponent* RadialForceComp;
 
 	// Explosive damage properties
