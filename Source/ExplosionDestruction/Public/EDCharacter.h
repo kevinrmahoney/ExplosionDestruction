@@ -15,6 +15,85 @@ class USceneComponent;
 #define FACING_RIGHT 1.f
 #define FACING_LEFT -1.f
 
+USTRUCT(BlueprintType)
+struct FControllerInput
+{
+	GENERATED_USTRUCT_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	bool TryJump = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	bool TryMoveLeft = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	bool TryMoveRight = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	bool TryShoot = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	bool TryWallKick = false;
+};
+
+USTRUCT(BlueprintType)
+struct FCharacterState
+{
+	GENERATED_USTRUCT_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	bool IsJumping = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	bool IsMoving = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	bool IsFalling = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	bool IsWallKicking = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	bool IsGrounded = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	bool IsDead = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	bool IsShooting = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	bool CanWallKick = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	float Rotation = 0.f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	int JumpCount = 0;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	FVector Velocity = FVector::ZeroVector;
+};
+
+// Represents each Animation State. IMPORTANT: The names of these enums MUST match
+// the names in the Creature Animation Asset! If the enum does not match EXACTLY
+// the animation name in the Creature Animation Asset, it will not switch to the animation
+// in our animataion state machine.
+UENUM(BlueprintType)
+enum EAnimationState
+{
+	Idle,
+	Walk,
+	Jump,
+	Falling,
+	Land,
+	WallSlide,
+	WallKick,
+	Slide,
+	Sliding,
+	SlideJump
+};
+
 /**
  * This class is the default character for ExplosionDestruction, and it is responsible for all
  * physical interaction between the player and the world.
@@ -34,31 +113,6 @@ class AEDCharacter : public APaperCharacter
 		RocketLauncher,
 		GrenadeLauncher,
 		AssaultRifle
-	};
-
-private:
-	struct CharacterState
-	{
-		bool IsJumping = false;
-		bool IsMoving = false;
-		bool IsFalling = false;
-		bool IsWallKicking = false;
-		bool IsGrounded = false;
-		bool IsDead = false;
-		bool IsShooting = false;
-		bool CanWallKick = false;
-		float Rotation = 0.f;
-		int JumpCount = 0;
-		FVector Velocity = FVector::ZeroVector;
-	};
-
-	struct PlayerInput
-	{
-		bool TryJump = false;
-		bool TryMoveLeft = false;
-		bool TryMoveRight = false;
-		bool TryShoot = false;
-		bool TryWallKick = false;
 	};
 
 public:
@@ -154,6 +208,7 @@ private:
 	void EquipWeapon(enum Weapon NewWeapon);
 
 protected:
+
 	virtual void Tick(float DeltaSeconds) override;
 	virtual void BeginPlay() override;
 
@@ -222,6 +277,7 @@ protected:
 	class UPaperFlipbook* FallingAnimation;
 
 	/** Called to choose the correct animation to play based on the character's movement state */
+	UFUNCTION(BlueprintImplementableEvent, meta = (DisplayName = "Update Animation"))
 	void UpdateAnimation(float DeltaSeconds);
 
 	float AnimationDuration = 0.f;
@@ -289,11 +345,18 @@ protected:
 	void EDOnWalkEndBP();
 
 	// Character states. The current state, and the state from the previous tick
-	CharacterState PreviousState;
-	CharacterState CurrentState;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	FCharacterState PreviousState;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	FCharacterState CurrentState;
 
 	// Player Input current state
-	PlayerInput CurrentInput;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	FControllerInput CurrentInput;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TEnumAsByte<EAnimationState> CurrentAnimation;
 
 	// Counters
 	float Ammo = 10.f;

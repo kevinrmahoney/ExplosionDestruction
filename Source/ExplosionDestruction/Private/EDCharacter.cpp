@@ -243,6 +243,23 @@ void AEDCharacter::Tick(float DeltaSeconds)
 	// Update animation to match the motion
 	UpdateAnimation(DeltaSeconds);
 
+	// Update current weapon
+	if(CurrentWeapon)
+	{
+		// Now lets update the weapon animation (where its pointing)
+		FVector ActorLocation = GetActorLocation();
+		FVector MouseWorldLocation;
+		FVector MouseWorldDirection;
+		FVector Target;
+
+		// Get location of the mouse cursor. Make sure to remove the Y component since this is 2D
+		ActorLocation.Y = 0.f;
+		GetWorld()->GetFirstPlayerController()->DeprojectMousePositionToWorld(MouseWorldLocation, MouseWorldDirection);
+		MouseWorldLocation.Y = 0.f;
+		Target = (MouseWorldLocation - ActorLocation);
+		CurrentWeapon->SetActorRotation(Target.Rotation());
+	}
+
 	// Update some character stuff
 	UpdateCharacter();
 
@@ -403,7 +420,7 @@ void AEDCharacter::UpdateState()
 	CurrentState.Velocity = GetVelocity();
 
 	// Set if we're moving
-	CurrentState.IsMoving = CurrentState.Velocity.IsNearlyZero();
+	CurrentState.IsMoving = !CurrentState.Velocity.IsNearlyZero();
 
 	// Check if character has begun walking or ended walking
 	if(PreviousState.Velocity.IsNearlyZero() && !CurrentState.Velocity.IsNearlyZero())
@@ -453,6 +470,7 @@ void AEDCharacter::UpdateState()
 		EDOnLandedBP();
 }
 
+/*
 void AEDCharacter::UpdateAnimation(float DeltaSeconds)
 {
 	const FVector PlayerVelocity = GetVelocity();
@@ -495,23 +513,8 @@ void AEDCharacter::UpdateAnimation(float DeltaSeconds)
 		GetSprite()->SetFlipbook(DesiredAnimation);
 		AnimationDuration = 0.f;
 	}
-
-	if(CurrentWeapon)
-	{
-		// Now lets update the weapon animation (where its pointing)
-		FVector ActorLocation = GetActorLocation();
-		FVector MouseWorldLocation;
-		FVector MouseWorldDirection;
-		FVector Target;
-
-		// Get location of the mouse cursor. Make sure to remove the Y component since this is 2D
-		ActorLocation.Y = 0.f;
-		GetWorld()->GetFirstPlayerController()->DeprojectMousePositionToWorld(MouseWorldLocation, MouseWorldDirection);
-		MouseWorldLocation.Y = 0.f;
-		Target = (MouseWorldLocation - ActorLocation);
-		CurrentWeapon->SetActorRotation(Target.Rotation());
-	}
 }
+*/
 
 void AEDCharacter::UpdateHUD()
 {
@@ -607,7 +610,7 @@ void AEDCharacter::EDOnDeath(AActor* DestroyedActor)
 		BaseHUD->Remove();
 
 	// If we die, we should reset the CurrentInput
-	CurrentInput = PlayerInput();
+	CurrentInput = FControllerInput();
 
 	if(CurrentWeapon)
 	{
