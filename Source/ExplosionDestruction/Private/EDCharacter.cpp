@@ -13,6 +13,7 @@
 #include "Logger.h"
 #include "Blueprint/UserWidget.h"
 #include "EDHealthComponent.h"
+#include "CreatureMeshComponent.h"
 
 DEFINE_LOG_CATEGORY_STATIC(SideScrollerCharacter, Log, All);
 
@@ -22,6 +23,7 @@ DEFINE_LOG_CATEGORY_STATIC(SideScrollerCharacter, Log, All);
 
 AEDCharacter::AEDCharacter()
 {
+
 	// Use only Yaw from the controller and ignore the rest of the rotation.
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationYaw = true;
@@ -30,6 +32,15 @@ AEDCharacter::AEDCharacter()
 	// Set the size of our collision capsule.
 	GetCapsuleComponent()->SetCapsuleHalfHeight(96.0f);
 	GetCapsuleComponent()->SetCapsuleRadius(40.0f);
+
+	CreatureMeshComponent = CreateDefaultSubobject<UCreatureMeshComponent>(TEXT("CreatureMesh"));
+
+	if(CreatureMeshComponent)
+	{
+		CreatureMeshComponent->SetupAttachment(RootComponent);
+	}
+	else
+		Logger::Error(TEXT("Failed to create creature mesh component!"));
 
 	// Hit boxes for the wallkicks. Attach to the capsule so we don't rotate with the sprite
 	WallKickTopComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("WallKickTopComponent"));
@@ -396,11 +407,11 @@ void AEDCharacter::UpdateCharacter()
 	{
 		if(CurrentState.Rotation < 0.f)
 		{
-			GetSprite()->SetRelativeRotation(FRotator(0.0, 180.0f, 0.0f));
+			CreatureMeshComponent->SetRelativeRotation(FRotator(0.0, 180.0f, 0.0f));
 		}
 		else if(CurrentState.Rotation > 0.f)
 		{
-			GetSprite()->SetRelativeRotation(FRotator(0.0, 0.0f, 0.0f));
+			CreatureMeshComponent->SetRelativeRotation(FRotator(0.0, 0.0f, 0.0f));
 		}
 	}
 }

@@ -11,6 +11,7 @@ class AEDWeapon;
 class UEDBaseHUD;
 class UEDHealthComponent;
 class USceneComponent;
+class UCreatureMeshComponent;
 
 #define FACING_RIGHT 1.f
 #define FACING_LEFT -1.f
@@ -212,6 +213,9 @@ protected:
 	virtual void Tick(float DeltaSeconds) override;
 	virtual void BeginPlay() override;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Mesh, meta = (AllowPrivateAccess = "true"))
+	class UCreatureMeshComponent* CreatureMeshComponent;
+
 	/* HUD */
 	UPROPERTY(EditAnywhere, Category = HUD)
 	TSubclassOf<class UEDBaseHUD> BaseHUDClass;
@@ -357,6 +361,9 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TEnumAsByte<EAnimationState> CurrentAnimation;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TEnumAsByte<EAnimationState> PreviousAnimation;
 
 	// Counters
 	float Ammo = 10.f;
