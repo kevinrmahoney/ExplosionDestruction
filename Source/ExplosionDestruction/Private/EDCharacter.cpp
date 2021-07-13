@@ -13,6 +13,7 @@
 #include "Logger.h"
 #include "Blueprint/UserWidget.h"
 #include "EDHealthComponent.h"
+#include "CreatureMeshComponent.h"
 
 DEFINE_LOG_CATEGORY_STATIC(SideScrollerCharacter, Log, All);
 
@@ -22,6 +23,7 @@ DEFINE_LOG_CATEGORY_STATIC(SideScrollerCharacter, Log, All);
 
 AEDCharacter::AEDCharacter()
 {
+
 	// Use only Yaw from the controller and ignore the rest of the rotation.
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationYaw = true;
@@ -30,6 +32,15 @@ AEDCharacter::AEDCharacter()
 	// Set the size of our collision capsule.
 	GetCapsuleComponent()->SetCapsuleHalfHeight(96.0f);
 	GetCapsuleComponent()->SetCapsuleRadius(40.0f);
+
+	CreatureMeshComponent = CreateDefaultSubobject<UCreatureMeshComponent>(TEXT("CreatureMesh"));
+
+	if(CreatureMeshComponent)
+	{
+		CreatureMeshComponent->SetupAttachment(RootComponent);
+	}
+	else
+		Logger::Error(TEXT("Failed to create creature mesh component!"));
 
 	// Hit boxes for the wallkicks. Attach to the capsule so we don't rotate with the sprite
 	WallKickTopComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("WallKickTopComponent"));
@@ -106,6 +117,10 @@ AEDCharacter::AEDCharacter()
 
 	// Enable replication on the Sprite component so animations show up when networked
 	GetSprite()->SetIsReplicated(true);
+
+	WeaponPivotPoint = CreateDefaultSubobject<USceneComponent>(TEXT("Weapon Pivot Point"));
+	WeaponPivotPoint->AttachToComponent(GetCapsuleComponent(), FAttachmentTransformRules::SnapToTargetIncludingScale);
+
 	bReplicates = true;
 
 	JumpMaxCount = 1;
@@ -239,6 +254,23 @@ void AEDCharacter::Tick(float DeltaSeconds)
 	// Update animation to match the motion
 	UpdateAnimation(DeltaSeconds);
 
+	// Update current weapon
+	if(CurrentWeapon)
+	{
+		// Now lets update the weapon animation (where its pointing)
+		FVector ActorLocation = GetActorLocation();
+		FVector MouseWorldLocation;
+		FVector MouseWorldDirection;
+		FVector Target;
+
+		// Get location of the mouse cursor. Make sure to remove the Y component since this is 2D
+		ActorLocation.Y = 0.f;
+		GetWorld()->GetFirstPlayerController()->DeprojectMousePositionToWorld(MouseWorldLocation, MouseWorldDirection);
+		MouseWorldLocation.Y = 0.f;
+		Target = (MouseWorldLocation - ActorLocation);
+		CurrentWeapon->SetActorRotation(Target.Rotation());
+	}
+
 	// Update some character stuff
 	UpdateCharacter();
 
@@ -368,6 +400,21 @@ void AEDCharacter::UpdateCharacter()
 		else if(WallKickVectorsAvailable.X > 0.f) // Wall to right, face left
 			CurrentState.Rotation = FACING_LEFT;
 	}
+	else
+	{
+		FVector MouseLocation = FVector::ZeroVector;
+		FVector MouseRotation = FVector::ZeroVector;
+		GetWorld()->GetFirstPlayerController()->DeprojectMousePositionToWorld(MouseLocation, MouseRotation);
+
+		if(MouseLocation.X < GetActorLocation().X)
+		{
+			CurrentState.Rotation = FACING_LEFT;
+		}
+		else
+		{
+			CurrentState.Rotation = FACING_RIGHT;
+		}
+	}
 
 	// Set the rotation so that the character faces the direction they wish
 	// to move
@@ -375,11 +422,11 @@ void AEDCharacter::UpdateCharacter()
 	{
 		if(CurrentState.Rotation < 0.f)
 		{
-			GetSprite()->SetRelativeRotation(FRotator(0.0, 180.0f, 0.0f));
+			CreatureMeshComponent->SetRelativeRotation(FRotator(0.0, 180.0f, 0.0f));
 		}
 		else if(CurrentState.Rotation > 0.f)
 		{
-			GetSprite()->SetRelativeRotation(FRotator(0.0, 0.0f, 0.0f));
+			CreatureMeshComponent->SetRelativeRotation(FRotator(0.0, 0.0f, 0.0f));
 		}
 	}
 }
@@ -399,7 +446,7 @@ void AEDCharacter::UpdateState()
 	CurrentState.Velocity = GetVelocity();
 
 	// Set if we're moving
-	CurrentState.IsMoving = CurrentState.Velocity.IsNearlyZero();
+	CurrentState.IsMoving = !CurrentState.Velocity.IsNearlyZero();
 
 	// Check if character has begun walking or ended walking
 	if(PreviousState.Velocity.IsNearlyZero() && !CurrentState.Velocity.IsNearlyZero())
@@ -449,6 +496,7 @@ void AEDCharacter::UpdateState()
 		EDOnLandedBP();
 }
 
+/*
 void AEDCharacter::UpdateAnimation(float DeltaSeconds)
 {
 	const FVector PlayerVelocity = GetVelocity();
@@ -492,6 +540,7 @@ void AEDCharacter::UpdateAnimation(float DeltaSeconds)
 		AnimationDuration = 0.f;
 	}
 }
+*/
 
 void AEDCharacter::UpdateHUD()
 {
@@ -544,8 +593,11 @@ void AEDCharacter::EquipWeapon(enum Weapon NewWeapon)
 	if(CurrentWeapon)
 	{
 		CurrentWeapon->SetOwner(this);
-		CurrentWeapon->AttachToComponent(GetCapsuleComponent(), FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+		CurrentWeapon->PivotPoint->SetupAttachment(WeaponPivotPoint);
+		CurrentWeapon->AttachToComponent(WeaponPivotPoint, FAttachmentTransformRules::SnapToTargetIncludingScale);
+		//CurrentWeapon->AttachToComponent(WeaponPivotPoint, FAttachmentTransformRules::KeepWorldTransform);
 		EquippedWeapon = NewWeapon;
+		Logger::Verbose(TEXT("THIS IS BULLSHIT: %s"), *WeaponPivotPoint->GetComponentLocation().ToString());
 
 		Logger::Verbose(TEXT("Character %s has equipped weapon %s."), *GetName(), *CurrentWeapon->GetName());
 	}
@@ -584,7 +636,7 @@ void AEDCharacter::EDOnDeath(AActor* DestroyedActor)
 		BaseHUD->Remove();
 
 	// If we die, we should reset the CurrentInput
-	CurrentInput = PlayerInput();
+	CurrentInput = FControllerInput();
 
 	if(CurrentWeapon)
 	{

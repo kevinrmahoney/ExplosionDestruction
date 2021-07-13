@@ -17,7 +17,19 @@ public:
 	// Sets default values for this actor's properties
 	AEDWeapon();
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	USceneComponent* PivotPoint;
+
 protected:
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	USceneComponent* LeftHandGrip;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	USceneComponent* RightHandGrip;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	USceneComponent* Muzzle;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	UPaperSpriteComponent* SpriteComp;
@@ -37,6 +49,8 @@ protected:
 
 	// A timer for handling cooldowns of consecutive shots
 	FTimerHandle CooldownTimer;
+
+	virtual void BeginPlay() override;
 
 	// What happens when this gun is shot, and if it can shoot to begin with
 	virtual void Shoot();
@@ -71,4 +85,11 @@ public:
 
 	// Get if the trigger is pulled
 	virtual bool GetIsTriggerPulled();
+
+	// The locations of where the grips of either hand is, in world space
+	UFUNCTION(BlueprintCallable)
+	FVector GetRightHandGripLocation();
+
+	UFUNCTION(BlueprintCallable)
+	FVector GetLeftHandGripLocation();
 };

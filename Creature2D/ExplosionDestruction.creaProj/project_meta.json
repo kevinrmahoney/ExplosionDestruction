@@ -1,0 +1,76 @@
+{
+    "GroupBones": [],
+    "MOCAP_BINDS": {},
+    "MorphTargets": {
+        "CenterData": [
+            false,
+            ""
+        ],
+        "MorphShape": [
+            [
+                "",
+                [
+                    10.0,
+                    0.0
+                ]
+            ],
+            [
+                "",
+                [
+                    -5.000000476837158,
+                    8.660253524780273
+                ]
+            ],
+            [
+                "",
+                [
+                    -4.999999046325684,
+                    -8.66025447845459
+                ]
+            ]
+        ]
+    },
+    "composite_clips": {},
+    "override_frame_ranges": {
+        "Falling": {
+            "end": 60,
+            "start": 0
+        },
+        "Idle": {
+            "end": 120,
+            "start": 0
+        },
+        "Jump": {
+            "end": 21,
+            "start": 0
+        },
+        "Land": {
+            "end": 21,
+            "start": 0
+        },
+        "Slide": {
+            "end": 18,
+            "start": 0
+        },
+        "SlideJump": {
+            "end": 30,
+            "start": 0
+        },
+        "Sliding": {
+            "end": 60,
+            "start": 0
+        },
+        "Walk": {
+            "end": 59,
+            "start": 0
+        },
+        "WallKick": {
+            "end": 30,
+            "start": 0
+        },
+        "WallSlide": {
+            "end": 60,
+            "start": 0
+        }
+    }
+}
