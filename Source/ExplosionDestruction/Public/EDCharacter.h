@@ -288,6 +288,8 @@ protected:
 
 	/* Weapons */
 	enum Weapon EquippedWeapon = None;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Weapons)
 	AEDWeapon* CurrentWeapon;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Pivots)

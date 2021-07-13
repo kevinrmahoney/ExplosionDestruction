@@ -23,4 +23,5 @@ static Type Name; \
 	DECLARE_CVAR(int32, LogToScreen)
 	DECLARE_CVAR(int32, LogShowTick)
 	DECLARE_CVAR(int32, LogShowTimestamp)
+	DECLARE_CVAR(float, DebugWeaponAlpha)
 };

@@ -17,8 +17,20 @@ AEDWeapon::AEDWeapon()
 	SpriteComp->BodyInstance.SetCollisionProfileName(TEXT("NoCollision"));
 	SpriteComp->AttachToComponent(PivotPoint, FAttachmentTransformRules::SnapToTargetIncludingScale);
 
+	LeftHandGrip = CreateDefaultSubobject<USceneComponent>(TEXT("Left Hand Grip"));
+	LeftHandGrip->AttachToComponent(SpriteComp, FAttachmentTransformRules::SnapToTargetIncludingScale);
+
+	RightHandGrip = CreateDefaultSubobject<USceneComponent>(TEXT("Right Hand Grip"));
+	RightHandGrip->AttachToComponent(SpriteComp, FAttachmentTransformRules::SnapToTargetIncludingScale);
+
 	Muzzle = CreateDefaultSubobject<USceneComponent>(TEXT("Muzzle"));
 	Muzzle->AttachToComponent(SpriteComp, FAttachmentTransformRules::SnapToTargetIncludingScale);
+}
+
+void AEDWeapon::BeginPlay()
+{
+	Super::BeginPlay();
+	SpriteComp->SetSpriteColor(FLinearColor(1.f, 1.f, 1.f, Environment::DebugWeaponAlpha));
 }
 
 void AEDWeapon::Shoot()
@@ -65,4 +77,14 @@ bool AEDWeapon::ReleaseTrigger()
 bool AEDWeapon::GetIsTriggerPulled()
 {
 	return IsTriggerPulled;
+}
+
+FVector AEDWeapon::GetRightHandGripLocation()
+{
+	return RightHandGrip->GetComponentLocation();
+}
+
+FVector AEDWeapon::GetLeftHandGripLocation()
+{
+	return LeftHandGrip->GetComponentLocation();
 }

@@ -400,6 +400,21 @@ void AEDCharacter::UpdateCharacter()
 		else if(WallKickVectorsAvailable.X > 0.f) // Wall to right, face left
 			CurrentState.Rotation = FACING_LEFT;
 	}
+	else
+	{
+		FVector MouseLocation = FVector::ZeroVector;
+		FVector MouseRotation = FVector::ZeroVector;
+		GetWorld()->GetFirstPlayerController()->DeprojectMousePositionToWorld(MouseLocation, MouseRotation);
+
+		if(MouseLocation.X < GetActorLocation().X)
+		{
+			CurrentState.Rotation = FACING_LEFT;
+		}
+		else
+		{
+			CurrentState.Rotation = FACING_RIGHT;
+		}
+	}
 
 	// Set the rotation so that the character faces the direction they wish
 	// to move
