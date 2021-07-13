@@ -146,7 +146,7 @@ void AEDCharacter::BeginPlay()
 		Logger::Error(TEXT("One or more weapon classes are unspecified for this character! Check the blueprint!"));
 	}
 
-	EquipWeapon(RocketLauncher);
+	EquipWeapon(AssaultRifle);
 
 	// Facing right by default
 	CurrentState.Rotation = FACING_RIGHT;
@@ -556,7 +556,10 @@ void AEDCharacter::EquipWeapon(enum Weapon NewWeapon)
 {
 	// Don't equip a new weapon if its the same as the old one
 	if(NewWeapon == EquippedWeapon)
+	{
+		Logger::Verbose(TEXT("Can't switch to the same weapon!"));
 		return;
+	}
 
 	FActorSpawnParameters SpawnParams;
 	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;

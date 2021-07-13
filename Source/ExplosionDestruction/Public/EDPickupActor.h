@@ -24,12 +24,12 @@ protected:
 
 	USphereComponent* SphereComp;
 
-	UPROPERTY(EditDefaultsOnly, Category = "PickupActor")
+	UPROPERTY(EditAnywhere, Category = "PickupActor")
 	TSubclassOf<AEDPickupItem> PickupClass;
 
 	AEDPickupItem* PickupInstance;
 
-	UPROPERTY(EditDefaultsOnly, Category = "PickupActor")
+	UPROPERTY(EditAnywhere, Category = "PickupActor")
 	float CooldownDuration;
 
 	FTimerHandle TimerHandle_RespawnTimer;

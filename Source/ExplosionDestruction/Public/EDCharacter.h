@@ -180,13 +180,13 @@ public:
 	float GetSpeed();
 
 	// Equipped Weapons
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Weapons")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapons")
 	bool bHasRocketLauncher = false;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Weapons")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapons")
 	bool bHasGrenadeLauncher = false;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Weapons")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapons")
 	bool bHasAssaultRifle = true;
 
 private:

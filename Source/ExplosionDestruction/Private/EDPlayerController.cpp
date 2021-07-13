@@ -36,13 +36,13 @@ void AEDPlayerController::SetupInputComponent()
     InputComponent->BindAction("MoveLeft", IE_Pressed,  this, &AEDPlayerController::MoveLeftPressed);
     InputComponent->BindAction("MoveLeft", IE_Released, this, &AEDPlayerController::MoveLeftReleased);
 
-    // Kill the current character (if it is a character) if it exists, and respawn
+    // Switch to the rocket launcher
     InputComponent->BindAction("RocketLauncher", IE_Pressed, this, &AEDPlayerController::RocketLauncherPressed);
 
-    // Kill the current character (if it is a character) if it exists, and respawn
+    // Switch to the grenade launcher
     InputComponent->BindAction("GrenadeLauncher", IE_Pressed, this, &AEDPlayerController::GrenadeLauncherPressed);
 
-    // Kill the current character (if it is a character) if it exists, and respawn
+    // Switch to the Assault Rifle
     InputComponent->BindAction("AssaultRifle", IE_Pressed, this, &AEDPlayerController::AssaultRiflePressed);
 
     // Kill the current character (if it is a character) if it exists, and respawn
