@@ -125,13 +125,13 @@ public:
 
 	// Equipped Weapons
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Weapons")
-	bool bHasRocketLauncher = true;
+	bool bHasRocketLauncher = false;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Weapons")
 	bool bHasGrenadeLauncher = false;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Weapons")
-	bool bHasAssaultRifle = false;
+	bool bHasAssaultRifle = true;
 
 private:
 	// Movement
