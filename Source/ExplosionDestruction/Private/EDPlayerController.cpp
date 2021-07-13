@@ -137,19 +137,19 @@ void AEDPlayerController::JumpReleased()
 
 void AEDPlayerController::RocketLauncherPressed()
 {
-    if(PossessedIsEDCharacter && EDCharacter)
+    if(PossessedIsEDCharacter && EDCharacter && EDCharacter->bHasRocketLauncher)
         EDCharacter->EquipRocketLauncher();
 }
 
 void AEDPlayerController::GrenadeLauncherPressed()
 {
-    if(PossessedIsEDCharacter && EDCharacter)
+    if(PossessedIsEDCharacter && EDCharacter && EDCharacter->bHasGrenadeLauncher)
         EDCharacter->EquipGrenadeLauncher();
 }
 
 void AEDPlayerController::AssaultRiflePressed()
 {
-    if(PossessedIsEDCharacter && EDCharacter)
+    if(PossessedIsEDCharacter && EDCharacter && EDCharacter->bHasAssaultRifle)
         EDCharacter->EquipAssaultRifle();
 }
 

@@ -60,6 +60,7 @@ bool AEDWeapon::PullTrigger()
 	// Only shoot the gun if we can shoot!
 	if(CanShoot())
 	{
+		EDOnShootBegin();
 		Shoot();
 		return true;
 	}
@@ -70,6 +71,7 @@ bool AEDWeapon::PullTrigger()
 bool AEDWeapon::ReleaseTrigger()
 {
 	IsTriggerPulled = false;
+	EDOnShootEnd();
 
 	return true;
 }

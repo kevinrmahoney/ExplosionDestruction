@@ -28,10 +28,10 @@ void AEDPickupActor::NotifyActorBeginOverlap(AActor* OtherActor)
 {
 	Super::NotifyActorBeginOverlap(OtherActor);
 
-	if (PowerupInstance)
+	if (PickupInstance && Cast<AEDCharacter>(OtherActor))
 	{
-		PowerupInstance->ActivatePowerup();
-		PowerupInstance = nullptr;
+		PickupInstance->Activate();
+		PickupInstance = nullptr;
 
 		GetWorldTimerManager().SetTimer(TimerHandle_RespawnTimer, this, &AEDPickupActor::Respawn, CooldownDuration);
 	}
@@ -39,15 +39,15 @@ void AEDPickupActor::NotifyActorBeginOverlap(AActor* OtherActor)
 
 void AEDPickupActor::Respawn()
 {
-	if (!PowerupClass)
+	if (!PickupClass)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Powerup class not set in %s!"), *GetName());
+		UE_LOG(LogTemp, Warning, TEXT("Pickup class not set in %s!"), *GetName());
 		return;
 	}
 
 	FActorSpawnParameters SpawnParams;
 	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-	PowerupInstance = GetWorld()->SpawnActor<AEDPowerup>(PowerupClass, GetTransform(), SpawnParams);
+	PickupInstance = GetWorld()->SpawnActor<AEDPickupItem>(PickupClass, GetTransform(), SpawnParams);
 
 	// check if any actors are overlapping on respawn, call activation method for first actor instance
 	TArray<AActor*> OutActors;

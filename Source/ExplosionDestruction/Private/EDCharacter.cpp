@@ -218,7 +218,7 @@ void AEDCharacter::Tick(float DeltaSeconds)
 		CurrentState.IsMoving = DoMove(DeltaSeconds);
 
 	// Fire weapon if we are firing
-	if(CurrentInput.TryShoot && CurrentWeapon)
+	if(CurrentWeapon)
 		CurrentState.IsShooting = DoShootWeapon(DeltaSeconds);
 
 	// Try to perform a jump

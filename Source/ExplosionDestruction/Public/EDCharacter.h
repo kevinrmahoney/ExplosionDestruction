@@ -179,6 +179,16 @@ public:
 	UFUNCTION(BlueprintCallable)
 	float GetSpeed();
 
+	// Equipped Weapons
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Weapons")
+	bool bHasRocketLauncher = false;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Weapons")
+	bool bHasGrenadeLauncher = false;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Weapons")
+	bool bHasAssaultRifle = true;
+
 private:
 	// Movement
 	bool DoMove(float DeltaSeconds);
