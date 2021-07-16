@@ -81,6 +81,11 @@ bool AEDWeapon::GetIsTriggerPulled()
 	return IsTriggerPulled;
 }
 
+FVector AEDWeapon::GetMuzzleLocation()
+{
+	return Muzzle->GetComponentLocation();
+}
+
 FVector AEDWeapon::GetRightHandGripLocation()
 {
 	return RightHandGrip->GetComponentLocation();

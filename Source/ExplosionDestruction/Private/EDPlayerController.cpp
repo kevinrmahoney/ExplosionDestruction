@@ -36,6 +36,10 @@ void AEDPlayerController::SetupInputComponent()
     InputComponent->BindAction("MoveLeft", IE_Pressed,  this, &AEDPlayerController::MoveLeftPressed);
     InputComponent->BindAction("MoveLeft", IE_Released, this, &AEDPlayerController::MoveLeftReleased);
 
+    // Begin and end slide
+    InputComponent->BindAction("Slide", IE_Pressed, this, &AEDPlayerController::SlidePressed);
+    InputComponent->BindAction("Slide", IE_Released, this, &AEDPlayerController::SlideReleased);
+
     // Switch to the rocket launcher
     InputComponent->BindAction("RocketLauncher", IE_Pressed, this, &AEDPlayerController::RocketLauncherPressed);
 
@@ -133,6 +137,18 @@ void AEDPlayerController::JumpReleased()
 {
     if(PossessedIsEDCharacter && EDCharacter)
         EDCharacter->SetJumpEnd();
+}
+
+void AEDPlayerController::SlidePressed()
+{
+    if(PossessedIsEDCharacter && EDCharacter)
+        EDCharacter->SetSlideBegin();
+}
+
+void AEDPlayerController::SlideReleased()
+{
+    if(PossessedIsEDCharacter && EDCharacter)
+        EDCharacter->SetSlideEnd();
 }
 
 void AEDPlayerController::RocketLauncherPressed()

@@ -7,6 +7,7 @@
 #include "EDCharacter.h"
 #include "DrawDebugHelpers.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Environment.h"
 
 void AEDHitscanWeapon::Shoot()
 {
@@ -36,12 +37,13 @@ void AEDHitscanWeapon::Shoot()
 	// Find actors in the line to the mouse cursor
 	FVector TraceEndPoint = TraceEnd;
 	FHitResult Hit;
-	if(GetWorld()->LineTraceSingleByChannel(Hit, ActorLocation, TraceEnd, ECC_Visibility, QueryParams))
+	if(GetWorld()->LineTraceSingleByChannel(Hit, ActorLocation, TraceEnd, ECC_Hitscan, QueryParams))
 	{
 		// calculate damage
 		AActor* HitActor = Hit.GetActor();
+		//UGameplayStatics::ApplyPointDamage(HitActor, BaseDamage, Shooter->GetActorRotation().Vector(), Hit, Shooter->GetInstigatorController(), this, nullptr);
 
-		UGameplayStatics::ApplyPointDamage(HitActor, BaseDamage, Shooter->GetActorRotation().Vector(), Hit, Shooter->GetInstigatorController(), this, nullptr);
+		HitActor->TakeDamage(BaseDamage, FDamageEvent(), nullptr, Shooter);
 	}
 
 	// Find the kickback vectors. its in the opposite direction of where we shot.
@@ -57,5 +59,5 @@ void AEDHitscanWeapon::Shoot()
 	}
 
 	// Draw a debug line (TODO: Add some actual effects.
-	DrawDebugLine(GetWorld(), ActorLocation, TraceEnd, FColor::Red, false, 0.5f, 0, 5.f);
+	DrawDebugLine(GetWorld(), ActorLocation, Hit.ImpactPoint, FColor::Red, false, 0.5f, 0, 5.f);
 }
