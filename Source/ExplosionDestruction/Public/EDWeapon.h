@@ -86,6 +86,8 @@ public:
 	// Get if the trigger is pulled
 	virtual bool GetIsTriggerPulled();
 
+	virtual FVector GetMuzzleLocation();
+
 	// The locations of where the grips of either hand is, in world space
 	UFUNCTION(BlueprintCallable)
 	FVector GetRightHandGripLocation();

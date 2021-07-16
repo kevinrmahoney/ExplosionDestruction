@@ -11,9 +11,9 @@ AEDPickupActor::AEDPickupActor()
 {
 	SphereComp = CreateDefaultSubobject<USphereComponent>(TEXT("SphereComp"));
 	SphereComp->SetSphereRadius(30.f);
+	SphereComp->CanCharacterStepUpOn = ECB_No;
+	SphereComp->SetCollisionProfileName("Pickups");
 	RootComponent = SphereComp;
-
-	
 }
 
 // Called when the game starts or when spawned

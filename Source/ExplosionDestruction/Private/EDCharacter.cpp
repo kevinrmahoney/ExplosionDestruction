@@ -14,6 +14,8 @@
 #include "Blueprint/UserWidget.h"
 #include "EDHealthComponent.h"
 #include "CreatureMeshComponent.h"
+#include "Components/ArrowComponent.h"
+#include "DrawDebugHelpers.h"
 
 DEFINE_LOG_CATEGORY_STATIC(SideScrollerCharacter, Log, All);
 
@@ -30,9 +32,23 @@ AEDCharacter::AEDCharacter()
 	bUseControllerRotationRoll = false;
 
 	// Set the size of our collision capsule.
-	GetCapsuleComponent()->SetCapsuleHalfHeight(96.0f);
+	GetCapsuleComponent()->SetCapsuleHalfHeight(70.0f);
 	GetCapsuleComponent()->SetCapsuleRadius(40.0f);
 
+
+	// Tracers, to determine slope of floor
+	LeftFloorTracer = CreateDefaultSubobject<USceneComponent>(TEXT("Left Floor Tracer"));
+	LeftFloorTracer->SetupAttachment(GetCapsuleComponent());
+	LeftFloorTracer->SetRelativeLocation(FVector(-GetCapsuleComponent()->GetScaledCapsuleRadius() + 5.f, 0.f, -GetCapsuleComponent()->GetScaledCapsuleHalfHeight() + 25.f));
+	CenterFloorTracer = CreateDefaultSubobject<USceneComponent>(TEXT("Center Floor Tracer"));
+	CenterFloorTracer->SetupAttachment(GetCapsuleComponent());
+	CenterFloorTracer->SetRelativeLocation(FVector(0.f, 0.f, -GetCapsuleComponent()->GetScaledCapsuleHalfHeight() + 25.f));
+	RightFloorTracer = CreateDefaultSubobject<USceneComponent>(TEXT("Right Floor Tracer"));
+	RightFloorTracer->SetupAttachment(GetCapsuleComponent());
+	RightFloorTracer->SetRelativeLocation(FVector(GetCapsuleComponent()->GetScaledCapsuleRadius() - 5.f, 0.f, -GetCapsuleComponent()->GetScaledCapsuleHalfHeight() + 25.f));
+
+
+	// Creature Mesh Component for character animation
 	CreatureMeshComponent = CreateDefaultSubobject<UCreatureMeshComponent>(TEXT("CreatureMesh"));
 
 	if(CreatureMeshComponent)
@@ -213,9 +229,22 @@ void AEDCharacter::Tick(float DeltaSeconds)
 
 	UpdateState();
 
-	// Apply the input to the character motion from left/right input
-	if(CurrentInput.TryMoveLeft || CurrentInput.TryMoveRight)
-		CurrentState.IsMoving = DoMove(DeltaSeconds);
+	// If sliding, you cant control left/right movement
+	if(CurrentState.IsSliding)
+	{
+		GetCharacterMovement()->BrakingDecelerationWalking = SlidingBrakingDeceleration;
+		GetCharacterMovement()->GroundFriction = SlidingGroundFriction;
+	}
+	// If not sliding, you can.
+	else
+	{
+		GetCharacterMovement()->BrakingDecelerationWalking = WalkingBrakingDeceleration;
+		GetCharacterMovement()->GroundFriction = WalkingGroundFriction;
+
+		// Apply the input to the character motion from left/right input
+		if(CurrentInput.TryMoveLeft || CurrentInput.TryMoveRight)
+			CurrentState.IsMoving = DoMove(DeltaSeconds);
+	}
 
 	// Fire weapon if we are firing
 	if(CurrentWeapon)
@@ -227,7 +256,16 @@ void AEDCharacter::Tick(float DeltaSeconds)
 		// We can jump from the ground
 		if(CurrentState.IsGrounded)
 		{
-			CurrentState.IsJumping = DoJump(DeltaSeconds);
+			// Slide jump
+			if(CurrentState.IsSliding)
+			{
+				CurrentState.IsJumping = DoJump(DeltaSeconds);
+			}
+			// Regular jump
+			else
+			{
+				CurrentState.IsJumping = DoJump(DeltaSeconds);
+			}
 		}
 		// If we're in midair, we have two options
 		else
@@ -251,23 +289,25 @@ void AEDCharacter::Tick(float DeltaSeconds)
 		CurrentInput.TryJump = false;
 	}
 
+
+
 	// Update animation to match the motion
 	UpdateAnimation(DeltaSeconds);
 
-	// Update current weapon
+	// Update current weapon rotation
 	if(CurrentWeapon)
 	{
 		// Now lets update the weapon animation (where its pointing)
-		FVector ActorLocation = GetActorLocation();
+		FVector PivotLocation = WeaponPivotPoint->GetComponentLocation();
 		FVector MouseWorldLocation;
 		FVector MouseWorldDirection;
 		FVector Target;
 
 		// Get location of the mouse cursor. Make sure to remove the Y component since this is 2D
-		ActorLocation.Y = 0.f;
+		PivotLocation.Y = 0.f;
 		GetWorld()->GetFirstPlayerController()->DeprojectMousePositionToWorld(MouseWorldLocation, MouseWorldDirection);
 		MouseWorldLocation.Y = 0.f;
-		Target = (MouseWorldLocation - ActorLocation);
+		Target = (MouseWorldLocation - PivotLocation);
 		CurrentWeapon->SetActorRotation(Target.Rotation());
 	}
 
@@ -337,8 +377,6 @@ bool AEDCharacter::DoJump(float DeltaSeconds)
 	ShouldUpdateHUD = true; // Our speed changes
 	EDOnJumpBP(); // Trigger jump event
 
-	Logger::Verbose(TEXT("Character %s jumped"), *GetName());
-
 	return true;
 }
 
@@ -378,8 +416,6 @@ bool AEDCharacter::DoWallKick(float DeltaSeconds)
 
 	EDOnWallKickBP();
 
-	Logger::Verbose(TEXT("Character %s wallkicked with velocity %s (%f)"), *GetName(), *WallKickDeltaV.ToString(), WallKickDeltaV.Size());
-
 	return true;
 }
 
@@ -400,6 +436,22 @@ void AEDCharacter::UpdateCharacter()
 		else if(WallKickVectorsAvailable.X > 0.f) // Wall to right, face left
 			CurrentState.Rotation = FACING_LEFT;
 	}
+	else if(FMath::Abs(CurrentState.FloorAngle) > GetCharacterMovement()->GetWalkableFloorAngle())
+	{
+		if(CurrentState.FloorAngle < 0)
+			CurrentState.Rotation = FACING_LEFT; // If the slope is going down to the left, face left.
+		else
+			CurrentState.Rotation = FACING_RIGHT;// If the slope is going down to the right, face right.
+	}
+	// There is also the case where a player is sliding. In this case,
+	// They will always face the direction of their velocity in the X direction
+	else if(CurrentState.IsSliding)
+	{
+		if(CurrentState.Velocity.X > 0) 
+			CurrentState.Rotation = FACING_RIGHT; // Sliding right, face right
+		else
+			CurrentState.Rotation = FACING_LEFT; // Sliding left, face left
+	}
 	else
 	{
 		FVector MouseLocation = FVector::ZeroVector;
@@ -417,18 +469,33 @@ void AEDCharacter::UpdateCharacter()
 	}
 
 	// Set the rotation so that the character faces the direction they wish
-	// to move
+	// to move. In certain cases, the character will be locked into a specific
+	// direction.
+	FRotator CreatureMeshRotation = FRotator::ZeroRotator;
+
 	if(Controller != nullptr)
 	{
 		if(CurrentState.Rotation < 0.f)
 		{
-			CreatureMeshComponent->SetRelativeRotation(FRotator(0.0, 180.0f, 0.0f));
+			CreatureMeshRotation.Yaw = 180.f;
 		}
 		else if(CurrentState.Rotation > 0.f)
 		{
-			CreatureMeshComponent->SetRelativeRotation(FRotator(0.0, 0.0f, 0.0f));
+			CreatureMeshRotation.Yaw = 0.f;
 		}
 	}
+
+	// Set the pitch of the mesh sometimes to match the floor angle.
+	if(CurrentState.IsSliding || FMath::Abs(CurrentState.FloorAngle) > 30.f)
+	{
+		CreatureMeshRotation.Pitch = -1.f * CurrentState.Rotation * CurrentState.FloorAngle;
+	}
+	else
+	{
+		CreatureMeshRotation.Pitch = 0.f;
+	}
+
+	CreatureMeshComponent->SetRelativeRotation(CreatureMeshRotation);
 }
 
 void AEDCharacter::UpdateState()
@@ -440,6 +507,7 @@ void AEDCharacter::UpdateState()
 	CurrentState.IsWallKicking = false;
 	CurrentState.IsGrounded = false;
 	CurrentState.IsShooting = false;
+	CurrentState.IsSliding = false;
 	WallKickVectorsAvailable = FVector::ZeroVector;
 
 	// Get current states
@@ -447,6 +515,8 @@ void AEDCharacter::UpdateState()
 
 	// Set if we're moving
 	CurrentState.IsMoving = !CurrentState.Velocity.IsNearlyZero();
+
+	CurrentState.FloorAngle = GetFloorAngle();
 
 	// Check if character has begun walking or ended walking
 	if(PreviousState.Velocity.IsNearlyZero() && !CurrentState.Velocity.IsNearlyZero())
@@ -457,6 +527,46 @@ void AEDCharacter::UpdateState()
 	// Set if the character is on the grounded
 	CurrentState.IsFalling = GetCharacterMovement()->IsFalling();
 	CurrentState.IsGrounded = !CurrentState.IsFalling;
+
+	// Certain cases where the game says we're falling, but we are grounded. When the slope is too high
+	// to walk on, and we're "sliding" down it, we want to consider that grounded.
+	if(CurrentState.IsFalling && FMath::Abs(CurrentState.FloorAngle) > GetCharacterMovement()->GetWalkableFloorAngle())
+	{
+		CurrentState.IsGrounded = true;
+		CurrentState.IsFalling = false;
+	}
+	// HACKY: This catches the case where we're going down a slope and transitioning to flat ground. The
+	// Character Movement IsFalling() methoid does not capture this. Might want to find a better way.
+	else if(CurrentState.IsFalling && FMath::Abs(CurrentState.FloorAngle) > 10.f)
+	{
+		CurrentState.IsGrounded = true;
+		CurrentState.IsFalling = false;
+	}
+
+	// Set if the character is sliding. Only players who are trying to slide, and are grounded, can slide, 
+	// except if going fast enough on steeper slopes than character can walk on
+	if(CurrentState.IsGrounded)
+	{
+		// You always slide while on a surface at a greater angle than you can walk. Additionally, you're always moving too.
+		if(FMath::Abs(CurrentState.FloorAngle) > GetCharacterMovement()->GetWalkableFloorAngle() /*&& FMath::Abs(CurrentState.Velocity.Size()) > CrouchSpeed*/ )
+		{
+			CurrentState.IsSliding = true;
+			CurrentState.IsMoving = true;
+		}
+		else if(CurrentInput.TrySlide)
+		{
+			// Characters in mid slide can only continue sliding if they're going faster than crouch speed
+			if(PreviousState.IsSliding && FMath::Abs(CurrentState.Velocity.X) > CrouchSpeed)
+			{
+				CurrentState.IsSliding = true;
+			}
+			// Characters that are starting a slide can only start one if they're going fast enough.
+			else if(!PreviousState.IsSliding && FMath::Abs(CurrentState.Velocity.X) > GetCharacterMovement()->MaxWalkSpeed - 1.f)
+			{
+				CurrentState.IsSliding = true;
+			}
+		}
+	}
 
 	// If the character has landed after being in air.
 	if(CurrentState.IsGrounded && PreviousState.IsFalling)
@@ -596,14 +706,105 @@ void AEDCharacter::EquipWeapon(enum Weapon NewWeapon)
 	if(CurrentWeapon)
 	{
 		CurrentWeapon->SetOwner(this);
-		CurrentWeapon->PivotPoint->SetupAttachment(WeaponPivotPoint);
 		CurrentWeapon->AttachToComponent(WeaponPivotPoint, FAttachmentTransformRules::SnapToTargetIncludingScale);
-		//CurrentWeapon->AttachToComponent(WeaponPivotPoint, FAttachmentTransformRules::KeepWorldTransform);
 		EquippedWeapon = NewWeapon;
-		Logger::Verbose(TEXT("THIS IS BULLSHIT: %s"), *WeaponPivotPoint->GetComponentLocation().ToString());
 
 		Logger::Verbose(TEXT("Character %s has equipped weapon %s."), *GetName(), *CurrentWeapon->GetName());
 	}
+}
+
+// Get the angle of the floor by averaging the angles of the floor below the left, center and right
+// of the character
+float AEDCharacter::GetFloorAngle()
+{
+	float FloorAngle = 0.f;
+	int32 Hits = 0;
+
+	FCollisionQueryParams QueryParams;
+	QueryParams.AddIgnoredActor(this);
+	QueryParams.bTraceComplex = true;
+	QueryParams.bReturnPhysicalMaterial = true;
+
+	// Create the TraceEnd vector, which points directly down.
+	FVector TraceEnd = FVector(0.f, 0.f, -GetCapsuleComponent()->GetScaledCapsuleHalfHeight());
+
+	// Hit result for the left, center and right
+	FHitResult HitLeft;
+	FHitResult HitCenter;
+	FHitResult HitRight;
+
+	// The origin vectors for the traces
+	FVector LeftSlopeVector = LeftFloorTracer->GetComponentLocation();
+	FVector CenterSlopeVector = CenterFloorTracer->GetComponentLocation();
+	FVector RightSlopeVector = RightFloorTracer->GetComponentLocation();
+
+	// Perform the trace from the left, center and right
+	GetWorld()->LineTraceSingleByChannel(HitLeft, LeftSlopeVector, LeftFloorTracer->GetComponentLocation() + TraceEnd, ECC_Hitscan, QueryParams);
+	GetWorld()->LineTraceSingleByChannel(HitCenter, CenterSlopeVector, CenterFloorTracer->GetComponentLocation() + TraceEnd, ECC_Hitscan, QueryParams);
+	GetWorld()->LineTraceSingleByChannel(HitRight, RightSlopeVector, RightFloorTracer->GetComponentLocation() + TraceEnd, ECC_Hitscan, QueryParams);
+
+	if(HitLeft.bBlockingHit)
+	{
+		float Angle = FMath::RadiansToDegrees(FMath::Atan(HitLeft.ImpactNormal.X / HitLeft.ImpactNormal.Z));
+		Hits++;
+		FloorAngle += Angle;
+
+		if(Environment::DebugFloorAngle)
+		{
+			DrawDebugLine(GetWorld(), LeftSlopeVector, HitLeft.ImpactPoint, FColor::Blue, false, 0.5f, 0, 5.f);
+			Logger::Info(TEXT("LeftSlope: %f"), Angle);
+		}
+	}
+
+	if(HitCenter.bBlockingHit)
+	{
+		float Angle = FMath::RadiansToDegrees(FMath::Atan(HitCenter.ImpactNormal.X / HitCenter.ImpactNormal.Z));
+		Hits++;
+		FloorAngle += Angle;
+
+		if(Environment::DebugFloorAngle)
+		{
+			DrawDebugLine(GetWorld(), CenterSlopeVector, HitCenter.ImpactPoint, FColor::Green, false, 0.5f, 0, 5.f);
+			Logger::Info(TEXT("CenterSlope: %f"), Angle);
+		}
+	}
+
+	if(HitRight.bBlockingHit)
+	{
+		float Angle = FMath::RadiansToDegrees(FMath::Atan(HitRight.ImpactNormal.X / HitRight.ImpactNormal.Z));
+		Hits++;
+		FloorAngle += Angle;
+
+		if(Environment::DebugFloorAngle)
+		{
+			DrawDebugLine(GetWorld(), RightSlopeVector, HitRight.ImpactPoint, FColor::Red, false, 0.5f, 0, 5.f);
+			Logger::Info(TEXT("RightSlope: %f"), Angle);
+		}
+	}
+
+	// If we didnt get any hits, probably midair, so just return 0
+	if(Hits == 0)
+		return 0.f;
+
+	// Calculate average
+	FloorAngle = FloorAngle / (float)Hits;
+
+	if(Environment::DebugFloorAngle)
+	{
+		Logger::Info(TEXT("FloorAngle: %f\n"), FloorAngle);
+	}
+
+	return FloorAngle;
+}
+
+float AEDCharacter::TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser)
+{
+	if(Environment::Invincible != 0)
+	{
+		return 0.f; // Apply zero damage
+	}
+
+	return Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 }
 
 //
@@ -675,7 +876,7 @@ void AEDCharacter::OnWallKickBottomComponentBeginOverlap(UPrimitiveComponent* Ov
 {
 	if(OtherActor == this)
 		return;
-
+	
 	CurrentState.CanWallKick = OverlapBottom = true;
 }
 
@@ -757,6 +958,16 @@ void AEDCharacter::SetJumpBegin()
 void AEDCharacter::SetJumpEnd()
 {
 	CurrentInput.TryJump = false;
+}
+
+void AEDCharacter::SetSlideBegin()
+{
+	CurrentInput.TrySlide = true;
+}
+
+void AEDCharacter::SetSlideEnd()
+{
+	CurrentInput.TrySlide = false;
 }
 
 void AEDCharacter::MoveRightBegin()

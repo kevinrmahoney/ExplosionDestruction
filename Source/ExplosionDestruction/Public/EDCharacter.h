@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "PaperCharacter.h"
+
 #include "EDCharacter.generated.h"
 
 class UBoxComponent;
@@ -35,6 +36,9 @@ struct FControllerInput
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	bool TryWallKick = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	bool TrySlide = false;
 };
 
 USTRUCT(BlueprintType)
@@ -50,6 +54,9 @@ struct FCharacterState
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	bool IsFalling = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	bool IsSliding = false;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	bool IsWallKicking = false;
@@ -74,6 +81,9 @@ struct FCharacterState
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	FVector Velocity = FVector::ZeroVector;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	float FloorAngle = 0.f;
 };
 
 // Represents each Animation State. IMPORTANT: The names of these enums MUST match
@@ -124,6 +134,9 @@ public:
 	/** Returns CameraBoom subobject **/
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 
+	// Override for taking damage
+	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
+
 	/** Called for side to side input */
 	void MoveRightBegin();
 	void MoveRightEnd();
@@ -137,6 +150,10 @@ public:
 	// Jumping binds
 	void SetJumpBegin();
 	void SetJumpEnd();
+
+	// Slide binds
+	void SetSlideBegin();
+	void SetSlideEnd();
 
 	// Equip binds
 	void EquipRocketLauncher();
@@ -218,20 +235,36 @@ private:
 	// Equip a new weapon (potentially)
 	void EquipWeapon(enum Weapon NewWeapon);
 
+	// Calculate the angle of the floor below (degrees)
+	float GetFloorAngle();
+
 protected:
 
 	virtual void Tick(float DeltaSeconds) override;
 	virtual void BeginPlay() override;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	USceneComponent* LeftFloorTracer;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	USceneComponent* CenterFloorTracer;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	USceneComponent* RightFloorTracer;
+
+
+	// Creature2D Mesh
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Mesh, meta = (AllowPrivateAccess = "true"))
 	class UCreatureMeshComponent* CreatureMeshComponent;
 
-	/* HUD */
+
+	// The base character HUD
 	UPROPERTY(EditAnywhere, Category = HUD)
 	TSubclassOf<class UEDBaseHUD> BaseHUDClass;
 	class UEDBaseHUD* BaseHUD;
 
-	/** Side view camera */
+
+	// 2D camera
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class UCameraComponent* SideViewCameraComponent;
 
@@ -239,6 +272,7 @@ protected:
 	/** Camera boom positioning the camera beside the character */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class USpringArmComponent* CameraBoom;
+
 
 	/* Wall Kick Collision Boxes */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Movement)
@@ -265,46 +299,49 @@ protected:
 	int JumpSpeed = 1000.f;
 
 
+	/* Sliding */
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Movement)
+	float CrouchSpeed = 300.f;
+
+	/* Braking */
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Movement)
+	float WalkingBrakingDeceleration = 2048.f;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Movement)
+	float SlidingBrakingDeceleration = 512.f;
+
+
+	/* Ground Friction */
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Movement)
+	float WalkingGroundFriction = 4.f;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Movement)
+	float SlidingGroundFriction = 0.f;
+
+
 	/* Animations */
 
-	// The animation to play while running around
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animations)
-	class UPaperFlipbook* RunningAnimation;
-
-	// The animation to play while idle (standing still)
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animations)
-	class UPaperFlipbook* IdleAnimation;
-
-	// The animation to play while jumping
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animations)
-	class UPaperFlipbook* JumpingAnimation;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animations)
-	float JumpingAnimationMaxDuration;
-
-	// The animation to play while hanging of a wall/ledge
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animations)
-	class UPaperFlipbook* HangingAnimation;
-
-	// The animation to play while falling
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animations)
-	class UPaperFlipbook* FallingAnimation;
-
-	/** Called to choose the correct animation to play based on the character's movement state */
+	// Blueprint event, updates the currently playing animation. Contains a state machine that changes based on
+	// input and other factors. See the blueprint event named "Event Update Animation"
 	UFUNCTION(BlueprintImplementableEvent, meta = (DisplayName = "Update Animation"))
 	void UpdateAnimation(float DeltaSeconds);
 
-	float AnimationDuration = 0.f;
 
 	/* Weapons */
+
+	// The currently equipped weapon. See the "Weapon" enum at the top for possibilities.
 	enum Weapon EquippedWeapon = None;
 
+	// An object representing the currently equipped weapon.
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Weapons)
 	AEDWeapon* CurrentWeapon;
 
+	// The weapon pivot point, defined in blueprint
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Pivots)
 	USceneComponent* WeaponPivotPoint;
 
+	// The following are to be defined in the character blueprint. They should be set
+	// to the blueprint class version of each weapon.
 	UPROPERTY(EditAnywhere, Category = Weapons)
 	TSubclassOf<class AEDWeapon> RocketLauncherClass;
 
@@ -314,17 +351,21 @@ protected:
 	UPROPERTY(EditAnywhere, Category = Weapons)
 	TSubclassOf<class AEDWeapon> AssaultRifleClass;
 
-	UPROPERTY(VisibleDefaultsOnly, Category = Weapons)
-	FName WeaponSocketName;
-
+	// Component for saving player health
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Components)
 	UEDHealthComponent* HealthComp;
 
+
+	/* Events */
+
+	// Whenver the health changes, call this
 	UFUNCTION()
 	void EDOnHealthChanged(UEDHealthComponent* OwnedHealthComp, float Health, float HealthDelta, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
 
+	// Called on Death
 	UFUNCTION()
 	void EDOnDeath(AActor* DestroyedActor);
+
 
 	/* Blueprint Implementable Events (for sounds, graphics, etc) */
 	UFUNCTION(BlueprintImplementableEvent, meta = (DisplayName = "On Spawn"))
@@ -359,6 +400,7 @@ protected:
 
 	UFUNCTION(BlueprintImplementableEvent, meta = (DisplayName = "On Walk End"))
 	void EDOnWalkEndBP();
+
 
 	// Character states. The current state, and the state from the previous tick
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)

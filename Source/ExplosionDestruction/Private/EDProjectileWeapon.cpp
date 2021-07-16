@@ -22,6 +22,7 @@ void AEDProjectileWeapon::Shoot()
 	AActor* MyOwner = GetOwner();
 	if (MyOwner && ProjectileClass && GetWorld())
 	{
+		/* Shouldnt deproject mouse postion because the mouse position can be between the weapon pivot and the weapon muzzle.
 		// Get the mouse location on screen.
 		FVector MouseWorldLocation;
 		FVector MouseWorldDirection;
@@ -30,18 +31,20 @@ void AEDProjectileWeapon::Shoot()
 		// Reset the Y plane because its unnecessary in 2d
 		MouseWorldLocation.Y = 0.f;
 
+		*/
+
 		// Find the muzzle location on the gun
-		FVector MuzzleLocation = SpriteComp->GetComponentLocation();
+		FVector MuzzleLocation = Muzzle->GetComponentLocation();
 		MuzzleLocation.Y = 0.f;
 		FActorSpawnParameters SpawnParams;
 		SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 		SpawnParams.Owner = MyOwner;
 
-		// Calculate rotation
-		FRotator MouseRotation = (MouseWorldLocation - MuzzleLocation).Rotation();
+		// Calculate rotation (NOTE: See above note about not using deprojected mouse position
+		// FRotator MouseRotation = (MouseWorldLocation - MuzzleLocation).Rotation();
 
 		// Spawn the projectile into the world.
-		FiredProjectile = GetWorld()->SpawnActor<AEDProjectile>(ProjectileClass, MuzzleLocation, MouseRotation, SpawnParams);
+		FiredProjectile = GetWorld()->SpawnActor<AEDProjectile>(ProjectileClass, MuzzleLocation, Muzzle->GetComponentRotation(), SpawnParams);
 
 		// Play events
 		EDOnShootBegin();
