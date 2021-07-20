@@ -1,1 +1,1 @@
-{"default":{"Keys":{}},"Slide":{"Keys":{}},"Walk":{"Keys":{}},"WallSlide":{"Keys":{}},"Land":{"Keys":{}},"WallKick":{"Keys":{}},"Jump":{"Keys":{}},"SlideJump":{"Keys":{}},"Falling":{"Keys":{}},"Idle":{"Keys":{}}}
+{"default":{"Keys":{}},"Slide":{"Keys":{}},"Walk":{"Keys":{}},"WallSlide":{"Keys":{}},"Land":{"Keys":{}},"WallKick":{"Keys":{}},"Jump":{"Keys":{}},"SlideJump":{"Keys":{}},"Falling":{"Keys":{}},"Idle":{"Keys":{}},"Sliding":{"Keys":{}}}

@@ -34,6 +34,8 @@ public:
 
 	static void AddTick();
 
+	// Verbosity on a grading scale
+	// Set via the LogVerbosity INI
 	enum Verbosity
 	{
 		VerboseLevel = 4,
@@ -41,8 +43,52 @@ public:
 		WarningLevel = 2,
 		ErrorLevel = 1,
 		FatalLevel = 0
-	};
+	}; 
+	
+	// The following methods log messages depending on if the passed in condition is true or not
+	template <typename FmtType, typename... Types>
+	static void Verbose(bool Condition, const FmtType& Fmt, Types... Args)
+	{
+		if(Condition)
+			LogMessage(VerboseLevel, FColor::Cyan, Fmt, Args...);
+	}
 
+	template <typename FmtType, typename... Types>
+	static void Info(bool Condition, const FmtType& Fmt, Types... Args)
+	{
+		if(Condition)
+			LogMessage(InfoLevel, FColor::White, Fmt, Args...);
+	}
+
+	template <typename FmtType, typename... Types>
+	static void Warning(bool Condition, const FmtType& Fmt, Types... Args)
+	{
+		if(Condition)
+			LogMessage(WarningLevel, FColor::Yellow, Fmt, Args...);
+	}
+
+	template <typename FmtType, typename... Types>
+	static void Error(bool Condition, const FmtType& Fmt, Types... Args)
+	{
+		if(Condition)
+			LogMessage(ErrorLevel, FColor::Orange, Fmt, Args...);
+	}
+
+	template <typename FmtType, typename... Types>
+	static void Fatal(bool Condition, const FmtType& Fmt, Types... Args)
+	{
+		if(Condition)
+			LogMessage(FatalLevel, FColor::Red, Fmt, Args...);
+	}
+
+	template <typename FmtType, typename... Types>
+	static void Screen(bool Condition, const FmtType& Fmt, Types... Args)
+	{
+		if(Condition)
+			LogToScreen(FColor::White, Fmt, Args...);
+	}
+
+	// The following methods log messages
 	template <typename FmtType, typename... Types>
 	static void Verbose(const FmtType& Fmt, Types... Args)
 	{
@@ -82,6 +128,7 @@ public:
 private:
 	static long TickCount;
 
+	// Logs a message to the log
 	template <typename FmtType, typename... Types>
 	static void LogMessage(enum Verbosity LogVerbosity, FColor Color, const FmtType& Fmt, Types... Args)
 	{
@@ -118,6 +165,7 @@ private:
 		}
 	}
 
+	// Logs a message to the screen
 	template <typename FmtType, typename... Types>
 	static void LogToScreen(FColor Color, const FmtType& Fmt, Types... Args)
 	{

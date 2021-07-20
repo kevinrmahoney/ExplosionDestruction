@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "PaperCharacter.h"
+#include "EDGlobal.h"
 
 #include "EDCharacter.generated.h"
 
@@ -13,6 +14,7 @@ class UEDBaseHUD;
 class UEDHealthComponent;
 class USceneComponent;
 class UCreatureMeshComponent;
+struct FWeaponType;
 
 #define FACING_RIGHT 1.f
 #define FACING_LEFT -1.f
@@ -118,14 +120,6 @@ class AEDCharacter : public APaperCharacter
 {
 	GENERATED_BODY()
 
-	enum Weapon
-	{
-		None,
-		RocketLauncher,
-		GrenadeLauncher,
-		AssaultRifle
-	};
-
 public:
 	AEDCharacter();
 
@@ -159,6 +153,7 @@ public:
 	void EquipRocketLauncher();
 	void EquipGrenadeLauncher();
 	void EquipAssaultRifle();
+	void EquipRailgun();
 
 	// Wall Kick Overlap Events
 	// Top
@@ -206,6 +201,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapons")
 	bool bHasAssaultRifle = true;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapons")
+	bool bHasRailgun = false;
+
 private:
 	// Movement
 	bool DoMove(float DeltaSeconds);
@@ -230,10 +228,10 @@ private:
 	void UpdateState();
 
 	// Updates Character variables
-	void UpdateCharacter();
+	void UpdateCharacter(float DeltaTime);
 
 	// Equip a new weapon (potentially)
-	void EquipWeapon(enum Weapon NewWeapon);
+	void EquipWeapon(enum WeaponType NewWeapon);
 
 	// Calculate the angle of the floor below (degrees)
 	float GetFloorAngle();
@@ -330,7 +328,7 @@ protected:
 	/* Weapons */
 
 	// The currently equipped weapon. See the "Weapon" enum at the top for possibilities.
-	enum Weapon EquippedWeapon = None;
+	enum WeaponType EquippedWeapon;
 
 	// An object representing the currently equipped weapon.
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Weapons)
@@ -350,6 +348,9 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = Weapons)
 	TSubclassOf<class AEDWeapon> AssaultRifleClass;
+
+	UPROPERTY(EditAnywhere, Category = Weapons)
+	TSubclassOf<class AEDWeapon> RailgunClass;
 
 	// Component for saving player health
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Components)

@@ -10,4 +10,5 @@ AEDAssaultRifle::AEDAssaultRifle()
 	BaseDamage = 20.f;
 	HitImpulse = 10.f;
 	Kickback = 5000.f;
+	Range = 500.f;
 }

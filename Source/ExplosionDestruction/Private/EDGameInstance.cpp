@@ -3,3 +3,18 @@
 
 #include "EDGameInstance.h"
 
+void UEDGameInstance::Init()
+{
+	Super::Init();
+}
+
+void UEDGameInstance::Shutdown()
+{
+	Super::Shutdown();
+}
+
+
+void UEDGameInstance::StartGameInstance()
+{
+	Super::StartGameInstance();
+}

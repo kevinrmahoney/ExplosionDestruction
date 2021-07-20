@@ -162,8 +162,6 @@ void AEDCharacter::BeginPlay()
 		Logger::Error(TEXT("One or more weapon classes are unspecified for this character! Check the blueprint!"));
 	}
 
-	EquipWeapon(AssaultRifle);
-
 	// Facing right by default
 	CurrentState.Rotation = FACING_RIGHT;
 
@@ -174,6 +172,8 @@ void AEDCharacter::BeginPlay()
 	InitializeDynamicEvents();
 
 	EDOnSpawnBP();
+
+	EquipWeapon(WeaponType::AssaultRifle);
 }
 
 // Call this to initialize the HUD
@@ -289,8 +289,6 @@ void AEDCharacter::Tick(float DeltaSeconds)
 		CurrentInput.TryJump = false;
 	}
 
-
-
 	// Update animation to match the motion
 	UpdateAnimation(DeltaSeconds);
 
@@ -298,7 +296,7 @@ void AEDCharacter::Tick(float DeltaSeconds)
 	if(CurrentWeapon)
 	{
 		// Now lets update the weapon animation (where its pointing)
-		FVector PivotLocation = WeaponPivotPoint->GetComponentLocation();
+		FVector PivotLocation = GetActorLocation();
 		FVector MouseWorldLocation;
 		FVector MouseWorldDirection;
 		FVector Target;
@@ -312,7 +310,7 @@ void AEDCharacter::Tick(float DeltaSeconds)
 	}
 
 	// Update some character stuff
-	UpdateCharacter();
+	UpdateCharacter(DeltaSeconds);
 
 	// Update the HUD
 	if(ShouldUpdateHUD)
@@ -423,7 +421,7 @@ bool AEDCharacter::DoWallKick(float DeltaSeconds)
 // Updaters
 //
 
-void AEDCharacter::UpdateCharacter()
+void AEDCharacter::UpdateCharacter(float DeltaTime)
 {
 	// One time where we force the character to face a different direction
 	// is when the character is near a wall. This is due to the wall
@@ -488,7 +486,10 @@ void AEDCharacter::UpdateCharacter()
 	// Set the pitch of the mesh sometimes to match the floor angle.
 	if(CurrentState.IsSliding || FMath::Abs(CurrentState.FloorAngle) > 30.f)
 	{
-		CreatureMeshRotation.Pitch = -1.f * CurrentState.Rotation * CurrentState.FloorAngle;
+		float CurrentPitch = CreatureMeshComponent->GetRelativeRotation().Pitch * -1.f;
+
+		// Interp between current creature mesh angle and a target (the slope of the floor), so the transition is smooth
+		CreatureMeshRotation.Pitch = -1.f * CurrentState.Rotation * FMath::Sign(CurrentState.FloorAngle) * FMath::FInterpConstantTo(FMath::Abs(CurrentPitch), FMath::Abs(CurrentState.FloorAngle), DeltaTime, 150.f);
 	}
 	else
 	{
@@ -662,7 +663,7 @@ void AEDCharacter::UpdateHUD()
 }
 
 // Equip new weapon
-void AEDCharacter::EquipWeapon(enum Weapon NewWeapon)
+void AEDCharacter::EquipWeapon(enum WeaponType NewWeapon)
 {
 	// Don't equip a new weapon if its the same as the old one
 	if(NewWeapon == EquippedWeapon)
@@ -695,6 +696,10 @@ void AEDCharacter::EquipWeapon(enum Weapon NewWeapon)
 	else if(NewWeapon == AssaultRifle)
 	{
 		CurrentWeapon = GetWorld()->SpawnActor<AEDWeapon>(AssaultRifleClass, FVector::ZeroVector, FRotator::ZeroRotator, SpawnParams);
+	}
+	else if(NewWeapon == Railgun)
+	{
+		CurrentWeapon = GetWorld()->SpawnActor<AEDWeapon>(RailgunClass, FVector::ZeroVector, FRotator::ZeroRotator, SpawnParams);
 	}
 	else
 	{
@@ -799,7 +804,7 @@ float AEDCharacter::GetFloorAngle()
 
 float AEDCharacter::TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser)
 {
-	if(Environment::Invincible != 0)
+	if(Environment::InfiniteHealth != 0)
 	{
 		return 0.f; // Apply zero damage
 	}
@@ -1008,4 +1013,9 @@ void AEDCharacter::EquipGrenadeLauncher()
 void AEDCharacter::EquipAssaultRifle()
 {
 	EquipWeapon(AssaultRifle);
+}
+
+void AEDCharacter::EquipRailgun()
+{
+	EquipWeapon(Railgun);
 }

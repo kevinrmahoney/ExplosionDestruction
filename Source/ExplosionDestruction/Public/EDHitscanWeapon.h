@@ -25,5 +25,8 @@ protected:
 	// How much impulse is applied to objects hit with this gun.
 	UPROPERTY(EditDefaultsOnly)
 	float HitImpulse;
+
+	UPROPERTY(EditDefaultsOnly)
+	float Range;
 	
 };

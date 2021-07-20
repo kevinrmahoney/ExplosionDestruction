@@ -4,9 +4,23 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "EDGlobal.h"
+
 #include "EDWeapon.generated.h"
 
 class UPaperSpriteComponent;
+
+USTRUCT()
+struct FWeaponData
+{
+	GENERATED_USTRUCT_BODY()
+
+	bool HasWeapon = false;
+	float Ammo = 0.f;
+	float AmmoMax = 0.f;
+	float SwitchTimestamp = 0.f;
+	float CooldownRemaining = 0.f;
+};
 
 UCLASS()
 class EXPLOSIONDESTRUCTION_API AEDWeapon : public AActor
@@ -21,6 +35,8 @@ public:
 	USceneComponent* PivotPoint;
 
 protected:
+	UPROPERTY()
+	TArray<FWeaponData> WeaponInventory;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	USceneComponent* LeftHandGrip;
@@ -43,6 +59,9 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
 	float BaseDamage = 20.f;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
+	float AmmoMax = 10.f;
+
 	bool IsCoolingDown = false;
 
 	bool IsTriggerPulled = false;
@@ -51,6 +70,8 @@ protected:
 	FTimerHandle CooldownTimer;
 
 	virtual void BeginPlay() override;
+
+	void Initialize(FWeaponData WeaponData);
 
 	// What happens when this gun is shot, and if it can shoot to begin with
 	virtual void Shoot();
@@ -94,4 +115,6 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	FVector GetLeftHandGripLocation();
+
+	FWeaponData GetWeaponData();
 };

@@ -83,6 +83,9 @@ void AEDFire::Tick(float DeltaTime)
 	if(!Started)
 		return;
 
+	if(Environment::PauseFire > 0)
+		return;
+
 	FVector CurrentLocation = GetActorLocation();
 
 	Speed = FMath::Clamp(Speed, MinSpeed, MaxSpeed);

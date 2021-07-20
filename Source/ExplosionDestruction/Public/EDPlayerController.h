@@ -25,19 +25,32 @@ private:
 	bool PossessedIsEDCharacter = false;
 
 	// Input Binds
+
+	// Shoot key
 	void ShootPressed();
 	void ShootReleased();
+
+	// Movement keys
 	void MoveRightPressed();
 	void MoveRightReleased();
 	void MoveLeftPressed();
 	void MoveLeftReleased();
+
+	// Jump
 	void JumpPressed();
 	void JumpReleased();
+
+	// Slide
 	void SlidePressed();
 	void SlideReleased();
+
+	// Weapon switch keys
 	void RocketLauncherPressed();
 	void GrenadeLauncherPressed();
 	void AssaultRiflePressed();
+	void RailgunPressed();
+
+	// Respawn
 	void RespawnPressed();
 
 protected:

@@ -5,6 +5,8 @@
 #include "Logger.h"
 #include "PaperSpriteComponent.h"
 
+
+
 // Sets default values
 AEDWeapon::AEDWeapon()
 {
@@ -25,6 +27,24 @@ AEDWeapon::AEDWeapon()
 
 	Muzzle = CreateDefaultSubobject<USceneComponent>(TEXT("Muzzle"));
 	Muzzle->AttachToComponent(SpriteComp, FAttachmentTransformRules::SnapToTargetIncludingScale);
+}
+
+void AEDWeapon::Initialize(FWeaponData WeaponData)
+{
+	float CooldownRemaining = GetWorld()->TimeSince(WeaponData.SwitchTimestamp) < WeaponData.CooldownRemaining;
+	Ammo = WeaponData.Ammo;
+	AmmoMax = WeaponData.AmmoMax;
+	
+	// Wait the remaining cooldown.
+	if(CooldownRemaining > 0.f)
+	{
+		GetWorldTimerManager().SetTimer(CooldownTimer, this, &AEDWeapon::CooldownEnd, CooldownRemaining, true);
+	}
+	// Otherwise, we've already passed it since switching weapons
+	else
+	{
+		CooldownEnd();
+	}
 }
 
 void AEDWeapon::BeginPlay()
@@ -94,4 +114,17 @@ FVector AEDWeapon::GetRightHandGripLocation()
 FVector AEDWeapon::GetLeftHandGripLocation()
 {
 	return LeftHandGrip->GetComponentLocation();
+}
+
+FWeaponData AEDWeapon::GetWeaponData()
+{
+	// Construct a representation of this weapon
+	FWeaponData WeaponData;
+	WeaponData.Ammo = Ammo;
+	WeaponData.AmmoMax = AmmoMax;
+	WeaponData.HasWeapon = true;
+	WeaponData.CooldownRemaining = GetWorldTimerManager().GetTimerRemaining(CooldownTimer);
+	WeaponData.SwitchTimestamp = GetWorld()->TimeSeconds;
+
+	return WeaponData;
 }

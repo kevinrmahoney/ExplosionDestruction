@@ -1,0 +1,272 @@
+{
+    "AnchorPoints": {
+        "anchors": [
+            {
+                "anim_clip": "Idle",
+                "name": "Idle",
+                "point": [
+                    60.0,
+                    -23.200000762939457
+                ],
+                "type": "anchorPoint"
+            },
+            {
+                "anim_clip": "Jump",
+                "name": "Jump",
+                "point": [
+                    59.81006622314453,
+                    -23.200000762939457
+                ],
+                "type": "anchorPoint"
+            },
+            {
+                "anim_clip": "Falling",
+                "name": "Falling",
+                "point": [
+                    60.0,
+                    -23.200000762939457
+                ],
+                "type": "anchorPoint"
+            },
+            {
+                "anim_clip": "Land",
+                "name": "Land",
+                "point": [
+                    60.02889633178711,
+                    -23.200000762939457
+                ],
+                "type": "anchorPoint"
+            },
+            {
+                "anim_clip": "Slide",
+                "name": "Slide",
+                "point": [
+                    59.824764251708984,
+                    -23.239484786987305
+                ],
+                "type": "anchorPoint"
+            },
+            {
+                "anim_clip": "SlideJump",
+                "name": "SlideJump",
+                "point": [
+                    61.93481826782227,
+                    -22.440975189208984
+                ],
+                "type": "anchorPoint"
+            },
+            {
+                "anim_clip": "Sliding",
+                "name": "Sliding",
+                "point": [
+                    60.66609191894531,
+                    -22.048999786376953
+                ],
+                "type": "anchorPoint"
+            },
+            {
+                "anim_clip": "Walk",
+                "name": "Walk",
+                "point": [
+                    59.796417236328125,
+                    -22.92868423461914
+                ],
+                "type": "anchorPoint"
+            },
+            {
+                "anim_clip": "WallKick",
+                "name": "WallKick",
+                "point": [
+                    60.00316619873047,
+                    -22.696117401123047
+                ],
+                "type": "anchorPoint"
+            },
+            {
+                "anim_clip": "WallSlide",
+                "name": "WallSlide",
+                "point": [
+                    60.37730026245117,
+                    -22.646289825439457
+                ],
+                "type": "anchorPoint"
+            },
+            {
+                "anim_clip": "SlidingBackwards",
+                "name": "SlidingBackwards",
+                "point": [
+                    60.90979766845703,
+                    -22.02323341369629
+                ],
+                "type": "anchorPoint"
+            }
+        ],
+        "name": "Anchor Points",
+        "type": "anchorPointHolder"
+    },
+    "AnimRegionColors": {
+        "Falling": {},
+        "Idle": {},
+        "Jump": {},
+        "Land": {},
+        "Slide": {},
+        "SlideJump": {},
+        "Sliding": {},
+        "SlidingBackwards": {},
+        "Walk": {},
+        "WallKick": {},
+        "WallSlide": {}
+    },
+    "CompositeClips": {},
+    "VertAttachments": {
+        "attachments": [
+            {
+                "attach_name": "TriggerHand",
+                "idx": 542,
+                "idx_group": [],
+                "name": "TriggerHand",
+                "type": "vertAttachPoint"
+            },
+            {
+                "attach_name": "BarrelHand",
+                "idx": 91,
+                "idx_group": [],
+                "name": "BarrelHand",
+                "type": "vertAttachPoint"
+            },
+            {
+                "attach_name": "WeaponPivot",
+                "idx": 361,
+                "idx_group": [],
+                "name": "WeaponPivot",
+                "type": "vertAttachPoint"
+            }
+        ],
+        "name": "Vert Attachments",
+        "type": "vertAttachHolder"
+    },
+    "eventTriggers": {
+        "Falling": [],
+        "Idle": [],
+        "Jump": [],
+        "Land": [],
+        "Slide": [],
+        "SlideJump": [],
+        "Sliding": [],
+        "SlidingBackwards": [],
+        "Walk": [],
+        "WallKick": [],
+        "WallSlide": []
+    },
+    "meshes": {
+        "Chest": {
+            "endIndex": 1319,
+            "id": 16,
+            "startIndex": 828
+        },
+        "Head": {
+            "endIndex": 1523,
+            "id": 14,
+            "startIndex": 1320
+        },
+        "Hip": {
+            "endIndex": 827,
+            "id": 10,
+            "startIndex": 684
+        },
+        "Jet": {
+            "endIndex": 1607,
+            "id": 2,
+            "startIndex": 1524
+        },
+        "L-Hand": {
+            "endIndex": 683,
+            "id": 7,
+            "startIndex": 618
+        },
+        "L-arm": {
+            "endIndex": 173,
+            "id": 11,
+            "startIndex": 0
+        },
+        "L-foot": {
+            "endIndex": 617,
+            "id": 3,
+            "startIndex": 498
+        },
+        "L-forearm_1": {
+            "endIndex": 365,
+            "id": 13,
+            "startIndex": 258
+        },
+        "L-leg": {
+            "endIndex": 257,
+            "id": 5,
+            "startIndex": 174
+        },
+        "L-shin": {
+            "endIndex": 497,
+            "id": 9,
+            "startIndex": 366
+        },
+        "R-arm": {
+            "endIndex": 2105,
+            "id": 15,
+            "startIndex": 1920
+        },
+        "R-foot_2": {
+            "endIndex": 1919,
+            "id": 6,
+            "startIndex": 1824
+        },
+        "R-forearm_3": {
+            "endIndex": 2303,
+            "id": 12,
+            "startIndex": 2106
+        },
+        "R-leg": {
+            "endIndex": 1703,
+            "id": 4,
+            "startIndex": 1608
+        },
+        "R-shin": {
+            "endIndex": 1823,
+            "id": 8,
+            "startIndex": 1704
+        }
+    },
+    "physicsData": {
+        "Falling": {},
+        "Idle": {},
+        "Jump": {},
+        "Land": {},
+        "Slide": {},
+        "SlideJump": {},
+        "Sliding": {},
+        "SlidingBackwards": {},
+        "Walk": {},
+        "WallKick": {},
+        "WallSlide": {}
+    },
+    "regionOrders": {
+        "Falling": [],
+        "Idle": [],
+        "Jump": [],
+        "Land": [],
+        "Slide": [],
+        "SlideJump": [],
+        "Sliding": [],
+        "SlidingBackwards": [],
+        "Walk": [],
+        "WallKick": [],
+        "WallSlide": []
+    },
+    "skinSwapList": {
+        "Default": {
+            "swap": {
+                "name": "Default",
+                "swap_items": []
+            }
+        }
+    }
+}

@@ -49,6 +49,9 @@ void AEDPlayerController::SetupInputComponent()
     // Switch to the Assault Rifle
     InputComponent->BindAction("AssaultRifle", IE_Pressed, this, &AEDPlayerController::AssaultRiflePressed);
 
+    // Switch to the Assault Rifle
+    InputComponent->BindAction("Railgun", IE_Pressed, this, &AEDPlayerController::RailgunPressed);
+
     // Kill the current character (if it is a character) if it exists, and respawn
     InputComponent->BindAction("Respawn", IE_Pressed, this, &AEDPlayerController::RespawnPressed);
 }
@@ -167,6 +170,12 @@ void AEDPlayerController::AssaultRiflePressed()
 {
     if(PossessedIsEDCharacter && EDCharacter && EDCharacter->bHasAssaultRifle)
         EDCharacter->EquipAssaultRifle();
+}
+
+void AEDPlayerController::RailgunPressed()
+{
+    if(PossessedIsEDCharacter && EDCharacter && EDCharacter->bHasRailgun)
+        EDCharacter->EquipRailgun();
 }
 
 // If we pressed the respawn button
