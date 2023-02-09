@@ -1,0 +1,27 @@
+{
+	"FileVersion" : 3,
+	
+	"FriendlyName" : "Creature Animation Pack Plugin",
+	"Version" : 1,
+	"VersionName" : "1.0",
+	"CreatedBy" : "Kestrel Moon Studios Pte Ltd.",
+	"CreatedByURL" : "",
+	"EngineVersion" : "4.27.0",
+	"Description" : "",
+	"Category" : "Creature Pack Plugin",
+	"EnabledByDefault" : true,
+	
+	"Modules" :
+	[
+        {
+            "Name": "CreaturePackRuntimePlugin",
+            "Type": "Runtime",
+            "LoadingPhase": "PreDefault"
+        },
+		{
+			"Name" : "CreaturePackEditor",
+			"Type" : "Editor",
+            "LoadingPhase": "PostEngineInit"
+		}
+	]
+}

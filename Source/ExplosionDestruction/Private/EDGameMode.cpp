@@ -39,7 +39,9 @@ void AEDGameMode::Tick(float DeltaSeconds)
 {
 	// Keep track of how much time has passed in this particular run.
 	Super::Tick(DeltaSeconds);
-	Timer += DeltaSeconds;
+
+	if(!CharDead)
+		Timer += DeltaSeconds;
 }
 
 void AEDGameMode::FindCheckPoints()
@@ -160,6 +162,7 @@ AEDPlayerStart* AEDGameMode::GetFurthestSpawnPoint()
 bool AEDGameMode::KillPlayerCharacter(AEDPlayerController* Controller)
 {
 	AEDCharacter* Char;
+ 	CharDead = true;
 
 	if(!Controller)
 	{

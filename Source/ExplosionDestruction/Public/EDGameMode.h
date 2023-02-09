@@ -54,6 +54,10 @@ protected:
 
     float Timer = 0.f;
     float BestTime = 0.f;
+
+    UPROPERTY(BlueprintReadWrite, VisibleAnywhere)
+    bool CharDead = false;
+
     AEDCheckpoint* FirstCheckpoint;
 
     // This is the class we should spawn for characters

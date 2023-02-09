@@ -16,6 +16,8 @@
 #include "CreatureMeshComponent.h"
 #include "Components/ArrowComponent.h"
 #include "DrawDebugHelpers.h"
+#include "EDGameMode.h"
+#include "EDPlayerController.h"
 
 DEFINE_LOG_CATEGORY_STATIC(SideScrollerCharacter, Log, All);
 
@@ -135,7 +137,7 @@ AEDCharacter::AEDCharacter()
 	GetSprite()->SetIsReplicated(true);
 
 	WeaponPivotPoint = CreateDefaultSubobject<USceneComponent>(TEXT("Weapon Pivot Point"));
-	WeaponPivotPoint->AttachToComponent(GetCapsuleComponent(), FAttachmentTransformRules::SnapToTargetIncludingScale);
+	WeaponPivotPoint->SetupAttachment(GetCapsuleComponent());
 
 	bReplicates = true;
 
@@ -706,7 +708,7 @@ void AEDCharacter::EquipWeapon(enum Weapon NewWeapon)
 	if(CurrentWeapon)
 	{
 		CurrentWeapon->SetOwner(this);
-		CurrentWeapon->AttachToComponent(WeaponPivotPoint, FAttachmentTransformRules::SnapToTargetIncludingScale);
+		CurrentWeapon->AttachToComponent(WeaponPivotPoint, FAttachmentTransformRules::KeepRelativeTransform);
 		EquippedWeapon = NewWeapon;
 
 		Logger::Verbose(TEXT("Character %s has equipped weapon %s."), *GetName(), *CurrentWeapon->GetName());
@@ -821,6 +823,8 @@ void AEDCharacter::EDOnHealthChanged(UEDHealthComponent* OwnedHealthComp, float 
 		// die
 		CurrentState.IsDead = true;
 
+		AEDGameMode* EDGameMode = Cast<AEDGameMode>(GetWorld()->GetAuthGameMode());
+
 		GetMovementComponent()->StopMovementImmediately();
 		GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
@@ -828,7 +832,7 @@ void AEDCharacter::EDOnHealthChanged(UEDHealthComponent* OwnedHealthComp, float 
 
 		SetLifeSpan(3.f);
 
-		Destroy();
+		EDGameMode->KillPlayerCharacter(GetController<AEDPlayerController>());
 	}
 }
 

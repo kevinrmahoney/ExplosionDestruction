@@ -1,0 +1,105 @@
+P:\Projects\Unreal\ExplosionDestruction\Plugins\CreaturePackPlugin\CreaturePackPlugin\Intermediate\Build\Win64\UE4Editor\Development\CreaturePackEditor\Definitions.CreaturePackEditor.h
+P:/Projects/Unreal/ExplosionDestruction/Plugins/CreaturePackPlugin/CreaturePackPlugin/Source/CreaturePackEditor/Private/CreaturePackAnimationAssetFactory.cpp
+P:\Projects\Unreal\ExplosionDestruction\Plugins\CreaturePackPlugin\CreaturePackPlugin\Source\CreaturePackEditor\Public\CreaturePackAnimationAssetFactory.h
+P:\Programs\UE_4.27\Engine\Source\Editor\UnrealEd/Public/EditorReimportHandler.h
+P:\Projects\Unreal\ExplosionDestruction\Plugins\CreaturePackPlugin\CreaturePackPlugin\Intermediate\Build\Win64\UE4Editor\Inc\CreaturePackEditor\CreaturePackAnimationAssetFactory.generated.h
+P:\Projects\Unreal\ExplosionDestruction\Plugins\CreaturePackPlugin\CreaturePackPlugin\Source\CreaturePackRuntimePlugin\Public\CreaturePackAnimationAsset.h
+P:\Programs\UE_4.27\Engine\Source\Runtime\Engine\Classes\EditorFramework/AssetImportData.h
+P:\Programs\UE_4.27\Engine\Intermediate\Build\Win64\UE4Editor\Inc\Engine\AssetImportData.generated.h
+P:\Projects\Unreal\ExplosionDestruction\Plugins\CreaturePackPlugin\CreaturePackPlugin\Intermediate\Build\Win64\UE4Editor\Inc\CreaturePackRuntimePlugin\CreaturePackAnimationAsset.generated.h
+P:\Programs\UE_4.27\Engine\Source\Developer/DesktopPlatform/Public/IDesktopPlatform.h
+P:\Programs\UE_4.27\Engine\Source\Developer/DesktopPlatform/Public/DesktopPlatformModule.h
+P:\Programs\UE_4.27\Engine\Source\Editor\UnrealEd/Public/EditorDirectories.h
+P:\Programs\UE_4.27\Engine\Source\Runtime\Core\Public\Misc/FileHelper.h
+P:\Programs\UE_4.27\Engine\Source\Runtime\Core\Public\Serialization/ArchiveSaveCompressedProxy.h
+P:\Programs\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.33.31629\INCLUDE\string
+P:\Programs\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.33.31629\INCLUDE\xstring
+P:\Programs\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.33.31629\INCLUDE\iosfwd
+P:\Programs\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.33.31629\INCLUDE\cstdio
+P:\Programs\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.33.31629\INCLUDE\cwchar
+P:\Programs\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.33.31629\INCLUDE\xmemory
+P:\Programs\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.33.31629\INCLUDE\limits
+P:\Programs\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.33.31629\INCLUDE\cfloat
+P:\Programs\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.33.31629\INCLUDE\isa_availability.h
+P:\Programs\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.33.31629\INCLUDE\cctype
+P:/Projects/Unreal/ExplosionDestruction/Plugins/CreaturePackPlugin/CreaturePackPlugin/Source/CreaturePackEditor/Private/CreaturePackAnimationAssetTypeActions.cpp
+P:\Projects\Unreal\ExplosionDestruction\Plugins\CreaturePackPlugin\CreaturePackPlugin\Source\CreaturePackEditor\Public\CreaturePackAnimationAssetTypeActions.h
+P:\Programs\UE_4.27\Engine\Source\Developer\AssetTools\Public\AssetTypeActions_Base.h
+P:\Programs\UE_4.27\Engine\Source\Developer\AssetTools\Public\IAssetTools.h
+P:\Programs\UE_4.27\Engine\Source\Developer\AssetTools\Public\AssetTypeCategories.h
+P:\Programs\UE_4.27\Engine\Source\Developer\AssetTools\Public\IAssetTypeActions.h
+P:\Programs\UE_4.27\Engine\Source\Developer/Merge/Public/Merge.h
+P:\Programs\UE_4.27\Engine\Source\Editor\UnrealEd\Classes\ThumbnailRendering/ThumbnailManager.h
+P:\Programs\UE_4.27\Engine\Source\Editor\UnrealEd\Classes\ThumbnailRendering/ThumbnailRenderer.h
+P:\Programs\UE_4.27\Engine\Intermediate\Build\Win64\UE4Editor\Inc\UnrealEd\ThumbnailRenderer.generated.h
+P:\Programs\UE_4.27\Engine\Intermediate\Build\Win64\UE4Editor\Inc\UnrealEd\ThumbnailManager.generated.h
+P:\Programs\UE_4.27\Engine\Source\Editor\UnrealEd\Public\AutomatedAssetImportData.h
+P:\Programs\UE_4.27\Engine\Intermediate\Build\Win64\UE4Editor\Inc\UnrealEd\AutomatedAssetImportData.generated.h
+P:\Programs\UE_4.27\Engine\Intermediate\Build\Win64\UE4Editor\Inc\AssetTools\IAssetTools.generated.h
+P:\Programs\UE_4.27\Engine\Source\Developer\AssetTools\Public\AssetToolsModule.h
+P:\Programs\UE_4.27\Engine\Source\Editor\UnrealEd\Public\Toolkits/AssetEditorManager.h
+P:\Programs\UE_4.27\Engine\Source\Editor\UnrealEd\Public\Toolkits/SimpleAssetEditor.h
+P:/Projects/Unreal/ExplosionDestruction/Plugins/CreaturePackPlugin/CreaturePackPlugin/Source/CreaturePackEditor/Private/CreaturePackEditor.cpp
+P:\Projects\Unreal\ExplosionDestruction\Plugins\CreaturePackPlugin\CreaturePackPlugin\Source\CreaturePackEditor\Public\CreaturePackEditor.h
+P:\Projects\Unreal\ExplosionDestruction\Plugins\CreaturePackPlugin\CreaturePackPlugin\Source\CreaturePackRuntimePlugin\Public\CreaturePackMeshComponent.h
+P:\Programs\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.33.31629\INCLUDE\mutex
+P:\Programs\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.33.31629\INCLUDE\__msvc_chrono.hpp
+P:\Programs\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.33.31629\INCLUDE\ratio
+P:\Programs\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.33.31629\INCLUDE\system_error
+P:\Programs\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.33.31629\INCLUDE\__msvc_system_error_abi.hpp
+P:\Programs\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.33.31629\INCLUDE\cerrno
+P:\Programs\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.33.31629\INCLUDE\stdexcept
+P:\Programs\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.33.31629\INCLUDE\xcall_once.h
+P:\Programs\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.33.31629\INCLUDE\xerrc.h
+P:\Programs\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.33.31629\INCLUDE\thread
+P:\Programs\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.33.31629\INCLUDE\memory
+C:\Program Files (x86)\Windows Kits\10\include\10.0.19041.0\ucrt\process.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.19041.0\ucrt\corecrt_startup.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.19041.0\ucrt\math.h
+P:\Programs\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.33.31629\INCLUDE\vcruntime_startup.h
+P:\Programs\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.33.31629\INCLUDE\vector
+P:\Programs\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.33.31629\INCLUDE\map
+P:\Programs\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.33.31629\INCLUDE\xtree
+P:\Projects\Unreal\ExplosionDestruction\Plugins\CreaturePackPlugin\CreaturePackPlugin\Source\CreaturePackRuntimePlugin\Public\CustomPackProceduralMeshComponent.h
+P:\Projects\Unreal\ExplosionDestruction\Plugins\CreaturePackPlugin\CreaturePackPlugin\Intermediate\Build\Win64\UE4Editor\Inc\CreaturePackRuntimePlugin\CustomPackProceduralMeshComponent.generated.h
+P:\Projects\Unreal\ExplosionDestruction\Plugins\CreaturePackPlugin\CreaturePackPlugin\Source\CreaturePackRuntimePlugin\Public\CreaturePackModule.hpp
+P:\Projects\Unreal\ExplosionDestruction\Plugins\CreaturePackPlugin\CreaturePackPlugin\Source\CreaturePackRuntimePlugin\Public\CreaturePackRuntimePluginPCH.h
+P:\Projects\Unreal\ExplosionDestruction\Plugins\CreaturePackPlugin\CreaturePackPlugin\Source\CreaturePackRuntimePlugin\Public\mp.h
+P:\Programs\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.33.31629\INCLUDE\array
+P:\Programs\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.33.31629\INCLUDE\sstream
+P:\Programs\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.33.31629\INCLUDE\istream
+P:\Programs\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.33.31629\INCLUDE\ostream
+P:\Programs\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.33.31629\INCLUDE\ios
+P:\Programs\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.33.31629\INCLUDE\xlocnum
+P:\Programs\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.33.31629\INCLUDE\cmath
+P:\Programs\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.33.31629\INCLUDE\iterator
+P:\Programs\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.33.31629\INCLUDE\streambuf
+P:\Programs\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.33.31629\INCLUDE\xiosbase
+C:\Program Files (x86)\Windows Kits\10\include\10.0.19041.0\ucrt\share.h
+P:\Programs\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.33.31629\INCLUDE\xlocale
+P:\Programs\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.33.31629\INCLUDE\xfacet
+P:\Programs\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.33.31629\INCLUDE\xlocinfo
+P:\Programs\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.33.31629\INCLUDE\__msvc_xlocinfo_types.hpp
+P:\Programs\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.33.31629\INCLUDE\clocale
+C:\Program Files (x86)\Windows Kits\10\include\10.0.19041.0\ucrt\locale.h
+P:\Programs\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.33.31629\INCLUDE\iostream
+P:\Programs\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.33.31629\INCLUDE\functional
+P:\Programs\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.33.31629\INCLUDE\algorithm
+P:\Programs\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.33.31629\INCLUDE\unordered_map
+P:\Programs\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.33.31629\INCLUDE\xhash
+P:\Programs\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.33.31629\INCLUDE\list
+P:\Programs\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.33.31629\INCLUDE\xbit_ops.h
+P:\Programs\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.33.31629\INCLUDE\stack
+P:\Programs\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.33.31629\INCLUDE\deque
+P:\Projects\Unreal\ExplosionDestruction\Plugins\CreaturePackPlugin\CreaturePackPlugin\Intermediate\Build\Win64\UE4Editor\Inc\CreaturePackRuntimePlugin\CreaturePackMeshComponent.generated.h
+P:\Programs\UE_4.27\Engine\Source\Editor\UnrealEd/Public/ComponentVisualizer.h
+P:\Programs\UE_4.27\Engine\Intermediate\Build\Win64\UE4Editor\Inc\UnrealEd\ComponentVisualizer.generated.h
+P:\Programs\UE_4.27\Engine\Source\Editor\UnrealEd/Public/UnrealEdGlobals.h
+P:\Programs\UE_4.27\Engine\Source\Editor/UnrealEd/Classes/Editor/UnrealEdEngine.h
+P:\Programs\UE_4.27\Engine\Source\Editor\UnrealEd\Public\IPackageAutoSaver.h
+P:\Programs\UE_4.27\Engine\Source\Developer\SourceControl\Public\ISourceControlProvider.h
+P:\Programs\UE_4.27\Engine\Source\Developer\SourceControl\Public\ISourceControlOperation.h
+P:\Programs\UE_4.27\Engine\Source\Developer\SourceControl\Public\ISourceControlState.h
+P:\Programs\UE_4.27\Engine\Source\Editor\UnrealEd\Public\IDDCNotifications.h
+P:\Programs\UE_4.27\Engine\Source\Editor\UnrealEd\Public\ComponentVisualizerManager.h
+P:\Programs\UE_4.27\Engine\Intermediate\Build\Win64\UE4Editor\Inc\UnrealEd\UnrealEdEngine.generated.h

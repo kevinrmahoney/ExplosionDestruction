@@ -1,0 +1,14 @@
+{
+	"RemapUnityFiles": 
+	{
+		"Module.CreaturePackEditor.cpp.obj": [
+			"CreaturePackAnimationAssetFactory.cpp.obj",
+			"CreaturePackAnimationAssetTypeActions.cpp.obj",
+			"CreaturePackEditor.cpp.obj"
+		],
+		"Module.CreaturePackEditor.gen.cpp.obj": [
+			"CreaturePackAnimationAssetFactory.gen.cpp.obj",
+			"CreaturePackEditor.init.gen.cpp.obj"
+		]
+	}
+}

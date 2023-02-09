@@ -15,16 +15,16 @@ AEDWeapon::AEDWeapon()
 
 	SpriteComp = CreateDefaultSubobject<UPaperSpriteComponent>(TEXT("SpriteComp"));
 	SpriteComp->BodyInstance.SetCollisionProfileName(TEXT("NoCollision"));
-	SpriteComp->AttachToComponent(PivotPoint, FAttachmentTransformRules::SnapToTargetIncludingScale);
+	SpriteComp->SetupAttachment(PivotPoint);
 
 	LeftHandGrip = CreateDefaultSubobject<USceneComponent>(TEXT("Left Hand Grip"));
-	LeftHandGrip->AttachToComponent(SpriteComp, FAttachmentTransformRules::SnapToTargetIncludingScale);
+	LeftHandGrip->SetupAttachment(SpriteComp);
 
 	RightHandGrip = CreateDefaultSubobject<USceneComponent>(TEXT("Right Hand Grip"));
-	RightHandGrip->AttachToComponent(SpriteComp, FAttachmentTransformRules::SnapToTargetIncludingScale);
+	RightHandGrip->SetupAttachment(SpriteComp);
 
 	Muzzle = CreateDefaultSubobject<USceneComponent>(TEXT("Muzzle"));
-	Muzzle->AttachToComponent(SpriteComp, FAttachmentTransformRules::SnapToTargetIncludingScale);
+	Muzzle->SetupAttachment(SpriteComp);
 }
 
 void AEDWeapon::BeginPlay()

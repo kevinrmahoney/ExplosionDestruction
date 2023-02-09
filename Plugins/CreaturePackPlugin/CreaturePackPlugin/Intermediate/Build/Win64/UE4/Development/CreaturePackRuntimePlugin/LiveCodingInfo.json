@@ -1,0 +1,19 @@
+{
+	"RemapUnityFiles": 
+	{
+		"Module.CreaturePackRuntimePlugin.cpp.obj": [
+			"CreaturePackAnimationAsset.cpp.obj",
+			"CreaturePackMeshComponent.cpp.obj",
+			"CreaturePackRuntimePlugin.cpp.obj",
+			"CustomPackProceduralMesh.cpp.obj",
+			"CustomPackProceduralMeshComponent.cpp.obj",
+			"mp.cpp.obj"
+		],
+		"Module.CreaturePackRuntimePlugin.gen.cpp.obj": [
+			"CreaturePackAnimationAsset.gen.cpp.obj",
+			"CreaturePackMeshComponent.gen.cpp.obj",
+			"CreaturePackRuntimePlugin.init.gen.cpp.obj",
+			"CustomPackProceduralMeshComponent.gen.cpp.obj"
+		]
+	}
+}

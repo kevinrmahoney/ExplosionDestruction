@@ -7,6 +7,7 @@
 #include "EDCharacter.h"
 #include "Logger.h"
 #include "EDGameMode.h"
+#include "Kismet/GameplayStatics.h"
 
 void AEDPlayerController::SetupInputComponent()
 {
@@ -172,15 +173,17 @@ void AEDPlayerController::AssaultRiflePressed()
 // If we pressed the respawn button
 void AEDPlayerController::RespawnPressed()
 {
-    // If currently possessing EDCharacter, kill it first.
-    if(PossessedIsEDCharacter && EDGameMode)
-    {
-        EDGameMode->KillPlayerCharacter(this);
-    }
+    if (!GetWorld() || !EDGameMode)
+        return;
 
     // Spawn a new character.
-    if(GetWorld() && EDGameMode)
+    if (!PossessedIsEDCharacter && SpawnCount < 1)
     {
         EDGameMode->SpawnCharacter(this);
+        SpawnCount++;
+    }
+    else
+    {
+        UGameplayStatics::OpenLevel(this, FName(*GetWorld()->GetName()), false);
     }
 }

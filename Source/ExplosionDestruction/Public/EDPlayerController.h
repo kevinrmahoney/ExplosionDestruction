@@ -23,6 +23,7 @@ private:
 	AEDCharacter* EDCharacter;
 
 	bool PossessedIsEDCharacter = false;
+	int32 SpawnCount = 0;
 
 	// Input Binds
 	void ShootPressed();
