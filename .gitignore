@@ -76,3 +76,7 @@ DerivedDataCache/*
 # Ignore StarterContent
 Content/StarterContent/*
 Config/steamvr_ue_editor_app.json
+
+#Plugins
+Plugins/*
+
