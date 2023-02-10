@@ -68,7 +68,8 @@ void AEDCheckpoint::OnCheckpointBeginOverlap(UPrimitiveComponent* OverlappedComp
 		CanRespawnAt = true;
 	}
 
-	GameMode->CheckpointReached(this);
+	if(GameMode)
+		GameMode->CheckpointReached(this);
 
 	EDOnOpenBegin();
 }
