@@ -77,9 +77,9 @@ DerivedDataCache/*
 Content/StarterContent/*
 Config/steamvr_ue_editor_app.json
 
-# Plugins
-Plugins/*
-
 # VS temp folder
 enc_temp_folder/*
+
+# Plugins
+Plugins/*
 
