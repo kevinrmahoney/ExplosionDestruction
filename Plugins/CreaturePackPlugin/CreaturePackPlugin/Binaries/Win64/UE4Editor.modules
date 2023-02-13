@@ -1,8 +1,0 @@
-{
-	"BuildId": "17155196",
-	"Modules": 
-	{
-		"CreaturePackEditor": "UE4Editor-CreaturePackEditor.dll",
-		"CreaturePackRuntimePlugin": "UE4Editor-CreaturePackRuntimePlugin.dll"
-	}
-}

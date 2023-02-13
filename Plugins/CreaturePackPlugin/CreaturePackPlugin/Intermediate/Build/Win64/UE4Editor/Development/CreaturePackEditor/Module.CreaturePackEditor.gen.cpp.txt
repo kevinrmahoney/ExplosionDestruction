@@ -1,8 +1,0 @@
-P:\Projects\Unreal\ExplosionDestruction\Plugins\CreaturePackPlugin\CreaturePackPlugin\Intermediate\Build\Win64\UE4Editor\Development\CreaturePackEditor\Definitions.CreaturePackEditor.h
-P:/Projects/Unreal/ExplosionDestruction/Plugins/CreaturePackPlugin/CreaturePackPlugin/Intermediate/Build/Win64/UE4Editor/Inc/CreaturePackEditor/CreaturePackAnimationAssetFactory.gen.cpp
-P:\Programs\UE_4.27\Engine\Source\Runtime\CoreUObject\Public\UObject/GeneratedCppIncludes.h
-P:\Programs\UE_4.27\Engine\Source\Runtime\CoreUObject\Public\UObject/MetaData.h
-P:\Projects\Unreal\ExplosionDestruction\Plugins\CreaturePackPlugin\CreaturePackPlugin\Source\CreaturePackEditor/Public/CreaturePackAnimationAssetFactory.h
-P:\Programs\UE_4.27\Engine\Source\Editor\UnrealEd/Public/EditorReimportHandler.h
-P:\Projects\Unreal\ExplosionDestruction\Plugins\CreaturePackPlugin\CreaturePackPlugin\Intermediate\Build\Win64\UE4Editor\Inc\CreaturePackEditor\CreaturePackAnimationAssetFactory.generated.h
-P:/Projects/Unreal/ExplosionDestruction/Plugins/CreaturePackPlugin/CreaturePackPlugin/Intermediate/Build/Win64/UE4Editor/Inc/CreaturePackEditor/CreaturePackEditor.init.gen.cpp
