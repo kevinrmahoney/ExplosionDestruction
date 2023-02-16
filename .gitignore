@@ -80,6 +80,6 @@ Config/steamvr_ue_editor_app.json
 # VS temp folder
 enc_temp_folder/*
 
-# Plugins
+# Plugins 
 Plugins/*
 
